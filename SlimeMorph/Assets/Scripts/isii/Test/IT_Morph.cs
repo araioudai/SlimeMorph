@@ -7,7 +7,7 @@ public class IT_Morph : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == "Player" && !isMorphed)
+        if (other.gameObject.CompareTag("Player") && !isMorphed)
         {
             other.gameObject.GetComponent<IT_Player>().Morph(morphSize);
             isMorphed = true;

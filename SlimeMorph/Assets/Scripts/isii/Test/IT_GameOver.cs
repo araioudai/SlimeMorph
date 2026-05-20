@@ -11,8 +11,12 @@ public class IT_GameOver : MonoBehaviour
 
     void Update()
     {
-        // プレイヤーが触れたらゲームオーバー シーン再ロード
-        if (collider.bounds.Intersects(GameObject.Find("Player").GetComponent<Collider>().bounds))
+
+    }
+
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if (collisionInfo.gameObject.CompareTag("Player"))
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }

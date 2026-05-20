@@ -20,8 +20,9 @@ public class IT_PlayerMove : MonoBehaviour
                 {
                     flickSpeed = flickSpeedMax;
                 }
-                Vector3 moveDirection = new Vector3(deltaPosition.x, 0, deltaPosition.y).normalized;
-                player.transform.Translate(moveDirection * flickSpeed * Time.deltaTime);
+                Vector3 moveDirection = new Vector3(deltaPosition.x, 0, 0).normalized;
+
+                player.transform.Translate(moveDirection * flickSpeed * Time.deltaTime, Space.World);
             }
         }
     }
