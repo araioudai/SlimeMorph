@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: StageObjectList
   m_EditorClassIdentifier: Assembly-CSharp::IT_StageObjectList
   stageObjects:
-  - {fileID: 3437276030383194268, guid: b64676bf98e1c1b4d83e5ab4ef6d1a92, type: 3}
-  - {fileID: 4926806737946589686, guid: a1f1b9fdd98a6eb4cb857a02ad06ae9f, type: 3}
+  - {fileID: 2843701599213850769, guid: 6d7f1628cde9ab94a999d21ea91db8b4, type: 3}
+  - {fileID: 3665335524030613079, guid: 028edcd85ed352b4fa4c491287d393d3, type: 3}
+  - {fileID: 3329386294763198156, guid: 11e68a19aa239a84a99d48c8b3b2aa3b, type: 3}
   startObject: {fileID: 2858145634081081518, guid: 854ff42f745d7014889d876191b2ec8d, type: 3}
   endObject: {fileID: 2858145634081081518, guid: 03c5524a5609c744ca246b0c7780ca1d, type: 3}

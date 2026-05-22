@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "StageObjectList", menuName = "ScriptableObjects/StageObjectList", order = 1)]
-public class IT_StageObjectList : ScriptableObject
+public class StageObjectList : ScriptableObject
 {
     [Header("ステージオブジェクトのリスト")]
     public GameObject[] stageObjects;

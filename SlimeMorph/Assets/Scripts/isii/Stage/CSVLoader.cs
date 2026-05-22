@@ -14,7 +14,6 @@ public class CSVLoader : MonoBehaviour
             foreach (string line in lines)
             {
                 string[] values = line.Split(',');
-                // ここでvalues配列を使用してデータを処理します
                 // Debug.Log("CSVの行: " + line);
                 csvData.Add(values);
             }

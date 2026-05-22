@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.IO;
+using System.Collections.Generic;
 
 public class IT_Player : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class IT_Player : MonoBehaviour
 
     [SerializeField] float gravityValue = 3; // 重力の値
     public float GravityValue { get { return gravityValue; } } // 重力の値を外部から取得できるようにするプロパティ
+
+    [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
 
     [SerializeField] Text coinText; // コインの数を表示するテキスト
 
@@ -51,6 +55,7 @@ public class IT_Player : MonoBehaviour
 
     void MorphDown()
     {
+        if (!isTimeMorphDown) return;
         // 時間経過でサイズを減らす
         transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, 0, 0);
         collider.size -= new Vector3(timeMorphDown * Time.deltaTime, 0, 0); // コライダーのサイズも変更
