@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f3102f3feda771a4bbb58ccc6582153d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/CustomizableSlimes/Scenes/DemoScene/Demo01/Demo01/LightingData.asset
+  uploadId: 624765

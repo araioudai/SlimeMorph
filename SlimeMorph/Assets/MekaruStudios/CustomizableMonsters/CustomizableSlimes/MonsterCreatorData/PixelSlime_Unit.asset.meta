@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fbc91b8a29209aa479cc6bd7cc25fb67
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/CustomizableSlimes/MonsterCreatorData/PixelSlime_Unit.asset
+  uploadId: 624765
