@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 425c44b8d1024512be562a8e9ad04417
+timeCreated: 1694045160
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/MonsterCreatorTool/_Scripts/Editor/View/Window/IWindowTemplate.cs
+  uploadId: 624765
