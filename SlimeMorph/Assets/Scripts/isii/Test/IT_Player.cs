@@ -33,7 +33,7 @@ public class IT_Player : MonoBehaviour
         // 前方に移動
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
-        Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z - 10f);
+        Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z - 5f);
         Dead();
         DeadFall();
         MorphDown();
@@ -44,8 +44,8 @@ public class IT_Player : MonoBehaviour
         if(isMorphed) return;
         isMorphed = true;
         // プレイヤーのサイズを+-変更
-        transform.localScale += new Vector3(morphSize, 0, 0);
-        collider.size += new Vector3(morphSize, 0, 0); // コライダーのサイズも変更
+        transform.localScale += new Vector3(morphSize, morphSize, morphSize);
+        collider.size += new Vector3(morphSize, morphSize, morphSize); // コライダーのサイズも変更
         if (morphSize < 0)
             gravityValue -= 1;
         else
@@ -57,8 +57,8 @@ public class IT_Player : MonoBehaviour
     {
         if (!isTimeMorphDown) return;
         // 時間経過でサイズを減らす
-        transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, 0, 0);
-        collider.size -= new Vector3(timeMorphDown * Time.deltaTime, 0, 0); // コライダーのサイズも変更
+        transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime);
+        collider.size -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime); // コライダーのサイズも変更
         gravityValue -= timeMorphDown * Time.deltaTime;
     }
 
