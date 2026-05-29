@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ab1b6045c61555a429ed04c9105c7bd1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/MonsterCreatorTool/_Scripts/Editor/Observers/IUnitContainerObserver.cs
+  uploadId: 624765

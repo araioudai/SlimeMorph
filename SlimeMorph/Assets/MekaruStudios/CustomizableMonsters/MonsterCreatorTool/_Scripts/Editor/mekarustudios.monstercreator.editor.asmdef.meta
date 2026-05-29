@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b6459c3915d0dd947953d076a870adfe
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/MonsterCreatorTool/_Scripts/Editor/mekarustudios.monstercreator.editor.asmdef
+  uploadId: 624765

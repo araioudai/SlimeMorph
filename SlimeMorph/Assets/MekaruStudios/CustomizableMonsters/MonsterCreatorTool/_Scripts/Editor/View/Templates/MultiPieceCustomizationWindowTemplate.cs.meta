@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 18d51349f5a139a438e7947d3ccd3923
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/MonsterCreatorTool/_Scripts/Editor/View/Templates/MultiPieceCustomizationWindowTemplate.cs
+  uploadId: 624765

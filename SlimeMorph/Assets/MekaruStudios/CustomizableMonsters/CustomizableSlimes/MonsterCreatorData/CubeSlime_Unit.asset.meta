@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c3ae55402294e42458a662858a56b72d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252392
+  packageName: Customizable Slime Pack
+  packageVersion: 1.4
+  assetPath: Assets/MekaruStudios/CustomizableMonsters/CustomizableSlimes/MonsterCreatorData/CubeSlime_Unit.asset
+  uploadId: 624765
