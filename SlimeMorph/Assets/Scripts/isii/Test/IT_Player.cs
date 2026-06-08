@@ -64,7 +64,7 @@ public class IT_Player : MonoBehaviour
 
     IEnumerator MorphTimer()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         isMorphed = false;
     }
 
