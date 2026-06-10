@@ -6,15 +6,23 @@ using System.Collections.Generic;
 
 public class IT_Player : MonoBehaviour
 {
+    [Header("移動速度")]
     [SerializeField] float speed = 5f;
     bool isMorphed = false;
+    [Header("時間経過で減るサイズの量")]
     [SerializeField] float timeMorphDown = 1f; // 時間経過で減るサイズの量
 
+    [Header("重力の値")]
     [SerializeField] float gravityValue = 3; // 重力の値
     public float GravityValue { get { return gravityValue; } } // 重力の値を外部から取得できるようにするプロパティ
 
+    [Header("カメラとの距離")]
+    [SerializeField] float cameraDistance = 3f; // カメラとの距離
+
+    [Header("時間経過でサイズを減らすかどうか")]
     [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
 
+    [Header("コインの数を表示するテキスト")]
     [SerializeField] Text coinText; // コインの数を表示するテキスト
 
     int coinCount = 0; // コインの数をカウントする変数
@@ -33,7 +41,7 @@ public class IT_Player : MonoBehaviour
         // 前方に移動
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
-        Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z - 5f);
+        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
         Dead();
         DeadFall();
         MorphDown();
