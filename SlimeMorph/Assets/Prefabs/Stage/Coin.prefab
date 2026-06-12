@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6746010907154096596}
   - component: {fileID: 1740132859460348524}
   - component: {fileID: 2162016233038667354}
-  - component: {fileID: 713443420478046040}
+  - component: {fileID: -4719496277615281934}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Coin
@@ -114,7 +114,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &713443420478046040
+--- !u!114 &-4719496277615281934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,8 +123,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1445650194637179849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae49fda07a22554b98a02ac01020d77, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f88ae9761454b546adea34311d3b7fe, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IT_Coin
+  m_EditorClassIdentifier: Assembly-CSharp::StageCoin
+  id: 0
+  amount: 0
   coinValue: 1
   coinSpeed: 180

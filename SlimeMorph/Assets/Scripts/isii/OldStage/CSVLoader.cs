@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using common;
+using Unity.Mathematics;
 
 public class CSVLoader : MonoBehaviour
 {
@@ -45,16 +46,24 @@ public class CSVLoader : MonoBehaviour
                 if (string.IsNullOrEmpty(raw)) continue;
 
                 // 数値化
-                if (!int.TryParse(raw, out int objectId)) continue;
+                if (!float.TryParse(raw, out float objectId)) continue;
 
                 int z = col - 2;
+
+                float amount = 0;
+                if (objectId >= 100)
+                {
+                    amount = objectId % 100;
+                    objectId = (int)(objectId / 100);
+                }
 
                 StageCellData cell = new()
                 {
                     stageId = stageId,
                     lane = lane,
                     z = z,
-                    objectId = objectId // ← ここに0も入る
+                    objectId = (int)objectId,
+                    amount = amount,
                 };
 
                 result.Add(cell);

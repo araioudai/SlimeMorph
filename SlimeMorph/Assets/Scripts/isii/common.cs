@@ -19,6 +19,7 @@ namespace common
         public int lane;      // 0=床,1=左,2=右
         public int z;         // 奥行き
         public int objectId;  // オブジェクトID
+        public float amount;    // 値
     }
 
 }

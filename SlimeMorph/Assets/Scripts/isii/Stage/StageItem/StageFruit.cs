@@ -1,15 +1,14 @@
 using UnityEngine;
 
-public class IT_Morph : MonoBehaviour
-{
-    [SerializeField] float morphSize = 1f;
+public class StageFruit : StageObjectItem
+{    
     bool isMorphed = false;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && !isMorphed)
         {
-            other.gameObject.GetComponent<IT_Player>().Morph(morphSize);
+            other.gameObject.GetComponent<IT_Player>().Morph(Amount);
             isMorphed = true;
             this.gameObject.SetActive(false); // オブジェクトを非表示にする
         }

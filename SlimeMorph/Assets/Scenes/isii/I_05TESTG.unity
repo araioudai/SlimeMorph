@@ -1558,7 +1558,7 @@ MonoBehaviour:
   StageID: 1
   stageParent: {fileID: 1166318263}
   groundParent: {fileID: 1933766912}
-  objectOffset: 1
+  objectOffset: 0.75
 --- !u!1 &927821681
 GameObject:
   m_ObjectHideFlags: 0

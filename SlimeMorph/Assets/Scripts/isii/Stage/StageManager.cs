@@ -39,7 +39,7 @@ public class StageManager : MonoBehaviour
         // Debug stagecellのなかみかくにん
         foreach (var cell in stageCells)
         {
-            Debug.Log($"stageId: {cell.stageId}, lane: {cell.lane}, z: {cell.z}, objectId: {cell.objectId}");
+            Debug.Log($"stageId: {cell.stageId}, lane: {cell.lane}, z: {cell.z}, objectId: {cell.objectId}, amount: {cell.amount}");
         }
 
         // CSVデータに基づいてステージオブジェクトを生成
@@ -53,7 +53,12 @@ public class StageManager : MonoBehaviour
             var data = stageObjectDatabase.Get(cell.objectId);
             if (data == null && cell.objectId != 0) continue;
 
-            Instantiate(data.prefab, position + GetObjectOffset(cell.lane), data.prefab.transform.rotation, stageParent);
+            var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane), data.prefab.transform.rotation, stageParent);
+
+            if (obj.TryGetComponent(out StageObjectItem item))
+            {
+                item.Init(data, cell.amount);
+            }
 
             // 穴でなければ生成
             if (data.type == StageObjectType.Hole)
@@ -70,8 +75,6 @@ public class StageManager : MonoBehaviour
             {
                 Instantiate(stageObjectDatabase.wallPrefab, position, Quaternion.identity, groundParent);
             }
-
-
         }
 
 

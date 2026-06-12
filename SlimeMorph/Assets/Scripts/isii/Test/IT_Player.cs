@@ -39,7 +39,7 @@ public class IT_Player : MonoBehaviour
     void Update()
     {
         // 前方に移動
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
         Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
         Dead();
@@ -87,9 +87,9 @@ public class IT_Player : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Coin"))
+        if (other.TryGetComponent(out StageCoin coin))
         {
-            coinCount++;
+            coinCount += (int)coin.Amount;
             coinText.text = "Coins: " + coinCount;
             Destroy(other.gameObject);
         }
