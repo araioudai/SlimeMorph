@@ -68,8 +68,7 @@ MonoBehaviour:
   m_text: NA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
-  m_sharedMaterial: {fileID: 2517202264660172603, guid: 5c5ee151f9307453bad78be36b51a077,
-    type: 2}
+  m_sharedMaterial: {fileID: 2517202264660172603, guid: 5c5ee151f9307453bad78be36b51a077, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -269,7 +268,7 @@ GameObject:
   - component: {fileID: 1048130894177178643}
   - component: {fileID: 1956059426406666505}
   - component: {fileID: 1582308158292875715}
-  - component: {fileID: 4982747837631437110}
+  - component: {fileID: 1190845364744799333}
   m_Layer: 5
   m_Name: Display_CurrencyGold
   m_TagString: Untagged
@@ -337,7 +336,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4982747837631437110
+--- !u!114 &1190845364744799333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -346,15 +345,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5818165092378826223}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 679d2c4252c3a6849ada59d3477876bb, type: 3}
+  m_Script: {fileID: 11500000, guid: d0af72de13c39284299d332a65ba4bbc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  currencyID: GO
-  currencyAmount: {fileID: 6935832556943045120}
-  currencyIcon: {fileID: 4553928643465751308}
-  isRechargeable: 0
-  rechargeAmount: {fileID: 0}
-  nextRechargeTime: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeMorph.UI.CoinDisplay
+  currencyAmountText: {fileID: 0}
+  currencyIcon: {fileID: 0}
+  coinIconSprite: {fileID: 0}
 --- !u!1 &7977996574303305768
 GameObject:
   m_ObjectHideFlags: 0
