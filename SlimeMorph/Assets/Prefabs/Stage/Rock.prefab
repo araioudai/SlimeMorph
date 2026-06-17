@@ -397,6 +397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageRock
   id: 0
   amount: 0
+  hitSound: {fileID: 8300000, guid: 003ee1c7284c5054cb22a7ab7c7c3944, type: 3}
 --- !u!1 &9222270231794795012
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CSVLoader))]
 public class StageManager : MonoBehaviour
 {
+    public static StageManager Instance { get; private set; }
+
     [Header("ステージオブジェクトのデータベース")]
     [SerializeField] private StageObjectDatabase stageObjectDatabase;
 
@@ -21,6 +23,16 @@ public class StageManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         stageObjectDatabase.Init();
     }
     
@@ -53,6 +65,15 @@ public class StageManager : MonoBehaviour
             var data = stageObjectDatabase.Get(cell.objectId);
             if (data == null && cell.objectId != 0) continue;
 
+            if (cell.objectId == 99)
+            {
+                // ゴールなので床と壁を生成せず 床壁があるところにこれを生成する
+                Instantiate(data.prefab, position, data.prefab.transform.rotation, stageParent);
+
+                continue;
+            }
+
+
             var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane), data.prefab.transform.rotation, stageParent);
 
             if (obj.TryGetComponent(out StageObjectItem item))
@@ -76,11 +97,6 @@ public class StageManager : MonoBehaviour
                 Instantiate(stageObjectDatabase.wallPrefab, position, Quaternion.identity, groundParent);
             }
         }
-
-
-
-
-
     }
 
 

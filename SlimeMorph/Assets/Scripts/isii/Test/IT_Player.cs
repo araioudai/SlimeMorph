@@ -25,6 +25,8 @@ public class IT_Player : MonoBehaviour
     [Header("コインの数を表示するテキスト")]
     [SerializeField] Text coinText; // コインの数を表示するテキスト
 
+    bool isGoal = false; // ゴールに到達したかどうかを管理するフラグ
+
     int coinCount = 0; // コインの数をカウントする変数
     public int CoinCount { get { return coinCount; } } // コインの数を外部から取得できるようにするプロパティ
 
@@ -38,6 +40,8 @@ public class IT_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isGoal) return; // ゴールに到達している場合は移動しない
+
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
@@ -103,6 +107,11 @@ public class IT_Player : MonoBehaviour
             // ゲームオーバー シーン再ロード
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
+    }
+
+    public void ReachGoal()
+    {
+        isGoal = true; // ゴールに到達したことを設定
     }
 
 }

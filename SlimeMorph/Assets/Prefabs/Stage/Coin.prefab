@@ -130,3 +130,4 @@ MonoBehaviour:
   amount: 0
   coinValue: 1
   coinSpeed: 180
+  coinSound: {fileID: 8300000, guid: 8fd2d8df575513b4fa35cb258c7cdd3d, type: 3}
