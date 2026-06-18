@@ -13,6 +13,7 @@ public class StageManager : MonoBehaviour
     [Header("使用するステージID")]
     [SerializeField] int StageID = 1; // 現在のステージID
     float blockLength = 5f; // ブロックの長さ
+    int currentMas = 0; // 現在のマス
     
     [Header("ステージオブジェクトの親")]
     [SerializeField] Transform stageParent; // ステージオブジェクトの親
@@ -48,11 +49,11 @@ public class StageManager : MonoBehaviour
         List<string[]> csvData = csvLoader.LoadCSV("Stage"); // CSVファイル
         List<StageCellData> stageCells = CSVLoader.Parse(csvData);
 
-        // Debug stagecellのなかみかくにん
-        foreach (var cell in stageCells)
-        {
-            Debug.Log($"stageId: {cell.stageId}, lane: {cell.lane}, z: {cell.z}, objectId: {cell.objectId}, amount: {cell.amount}");
-        }
+        // // Debug stageCellの内容を確認
+        // foreach (var cell in stageCells)
+        // {
+        //     Debug.Log($"stageId: {cell.stageId}, lane: {cell.lane}, z: {cell.z}, objectId: {cell.objectId}, amount: {cell.amount}");
+        // }
 
         // CSVデータに基づいてステージオブジェクトを生成
         foreach (StageCellData cell in stageCells)
@@ -78,7 +79,7 @@ public class StageManager : MonoBehaviour
 
             if (obj.TryGetComponent(out StageObjectItem item))
             {
-                item.Init(data, cell.amount);
+                item.Init(data, cell.amount, cell.z + 1);
             }
 
             // 穴でなければ生成
@@ -139,6 +140,7 @@ public class StageManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         blockLength = 0f; // ブロックの長さをリセット
+        currentMas = 0; // 現在のマスをリセット
     }
 
     [ContextMenu("CreateStage")]

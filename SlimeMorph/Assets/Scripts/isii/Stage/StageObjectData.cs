@@ -6,6 +6,7 @@ public class StageObjectData : ScriptableObject
 {
     public int id;
     public StageObjectType type;
-    public int param;
+    public float param;
     public GameObject prefab;
+    public int mas;
 }

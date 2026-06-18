@@ -51,6 +51,7 @@ public class CSVLoader : MonoBehaviour
                 int z = col - 2;
 
                 float amount = 0;
+
                 if (objectId >= 100)
                 {
                     amount = objectId % 100;

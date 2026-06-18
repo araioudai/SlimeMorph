@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c248f2a3fc3ed8145916a7bab831c1a4, type: 3}
-  m_Name: Rock
+  m_Name: Move
   m_EditorClassIdentifier: Assembly-CSharp::StageObjectData
-  id: 4
+  id: 5
   type: 2
   param: 0.3
-  prefab: {fileID: 3924208630933634463, guid: b66a6e44d9ae27540b93e35aa49f09ae, type: 3}
+  prefab: {fileID: 8803665203913457406, guid: f26ad6e68ae3b9b4aae66390b6a63338, type: 3}
   mas: 0

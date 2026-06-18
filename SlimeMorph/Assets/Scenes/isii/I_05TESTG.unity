@@ -1599,7 +1599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
   stageObjectDatabase: {fileID: 11400000, guid: f6ccff86e501c24468f72ffc96c8885a, type: 2}
-  StageID: 1
+  StageID: -1
   stageParent: {fileID: 1166318263}
   groundParent: {fileID: 1933766912}
   objectOffset: 0.75
@@ -2685,6 +2685,9 @@ PrefabInstance:
       addedObject: {fileID: 1877810472}
     - targetCorrespondingSourceObject: {fileID: 6627647947091849706, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1877810476}
+    - targetCorrespondingSourceObject: {fileID: 6627647947091849706, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1877810471}
     - targetCorrespondingSourceObject: {fileID: 6627647947091849706, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
       insertIndex: -1
@@ -3166,6 +3169,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1877810476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1877810469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1623c711baae6c94aa60b9f641507652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IT_PlayerPosCheck
+  nowMas: 0
 --- !u!1 &1933766911
 GameObject:
   m_ObjectHideFlags: 0
@@ -3540,7 +3556,7 @@ Transform:
   m_GameObject: {fileID: 1991796451}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 6.602, z: -10}
+  m_LocalPosition: {x: 0, y: 4.602, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3799,9 +3815,9 @@ SceneRoots:
   - {fileID: 284609456}
   - {fileID: 1951579691}
   - {fileID: 621838454}
+  - {fileID: 1511094843}
   - {fileID: 918739376}
   - {fileID: 1166318263}
   - {fileID: 1933766912}
-  - {fileID: 1511094843}
-  - {fileID: 576556334}
   - {fileID: 815341151}
+  - {fileID: 576556334}

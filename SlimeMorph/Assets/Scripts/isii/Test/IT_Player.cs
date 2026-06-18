@@ -63,6 +63,7 @@ public class IT_Player : MonoBehaviour
         else
             gravityValue += 1;
         StartCoroutine(MorphTimer());
+        Debug.Log($"Morph: {morphSize}");
     }
 
     void MorphDown()
@@ -76,7 +77,7 @@ public class IT_Player : MonoBehaviour
 
     IEnumerator MorphTimer()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         isMorphed = false;
     }
 

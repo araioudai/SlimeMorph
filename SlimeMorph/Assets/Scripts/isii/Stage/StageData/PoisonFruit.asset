@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageObjectData
   id: 3
   type: 2
-  param: 3
+  param: 0.3
   prefab: {fileID: 2562994308932591335, guid: b38edfc894f9f494a917544559a89918, type: 3}
+  mas: 0

@@ -20,6 +20,7 @@ namespace common
         Decrease = 2,       // 減少
         Hole = 3,            // 穴
         Wall = 4,           // 壁
+        Enemy = 5,          // 敵
     }
 
     [Serializable]
