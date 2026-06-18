@@ -182,8 +182,9 @@ public class OnLineManager : MonoBehaviour
 
                 if (responseData.success)
                 {
-                    //コイン数をローカル（PlayerPrefs）にも保存（キャッシュ）しておく
+                    //コイン数、クリアステージをローカル（PlayerPrefs）にも保存（キャッシュ）しておく
                     PlayerPrefs.SetInt("UserCoin", responseData.coin);
+                    PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);
                     PlayerPrefs.Save();
 
                     onResponse?.Invoke(true, responseData);

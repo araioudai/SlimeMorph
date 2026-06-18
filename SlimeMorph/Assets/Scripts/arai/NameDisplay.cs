@@ -22,10 +22,8 @@ namespace SlimeMorph.UI
         /// <returns>現在のユーザ名</returns>
         private string GetSavedNameAmount()
         {
-            //仮
+            //サーバーから取得しておいたUserNameを表示
             return PlayerPrefs.GetString("UserName", "abc");
-            //サーバーから取得
-
         }
 
         #endregion

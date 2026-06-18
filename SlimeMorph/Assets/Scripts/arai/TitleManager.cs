@@ -90,7 +90,7 @@ public class TitleManager : MonoBehaviour
         DrawLogin();
 
         //フェード処理
-        MaskFade();
+        ShaderFade();
     }
 
     // Update is called once per frame
@@ -224,8 +224,8 @@ public class TitleManager : MonoBehaviour
         }
     }
 
-    #region マスク処理
-    void MaskFade()
+    #region フェード処理
+    void ShaderFade()
     {
         //if (StageIndex.Instance.GetIsFirst()) { return; }
 
@@ -251,6 +251,7 @@ public class TitleManager : MonoBehaviour
 
     #region ボタン関連
 
+    #region ログイン、新規登録関連
     /// <summary>
     /// ログインボタンが押された時
     /// </summary>
@@ -468,8 +469,11 @@ public class TitleManager : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
+    #endregion
+
+    #region メニュー関連
     /// <summary>
-    /// ポーズメニューボタン押下処理
+    /// メニューボタン押下処理
     /// </summary>
     public void PushMenu()
     {
@@ -478,7 +482,7 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ポーズメニューボタン(戻る)押下処理
+    /// メニューボタン(戻る)押下処理
     /// </summary>
     public void PushMenuBack()
     {
@@ -486,6 +490,9 @@ public class TitleManager : MonoBehaviour
         standPanel.SetActive(true);
     }
 
+    #endregion
+
+    #region タイトル内完結処理
     /// <summary>
     /// スキンボタン押下処理
     /// </summary>
@@ -495,12 +502,22 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 強化(育成)ボタン押下処理
+    /// </summary>
+    public void PushGrow()
+    {
+        FadeCommon(standPanel, growPanel);
+    }
+
+    /// <summary>
     /// 待機画面に戻る
     /// </summary>
     public void PushBackStand()
     {
         FadeCommon(new GameObject[] { skinPanel, growPanel }, new GameObject[] { standPanel });
     }
+
+    #endregion
 
     #region タイトル内でのフェード処理の共通化
     /// <summary>
@@ -539,6 +556,29 @@ public class TitleManager : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// ゲーム開始ボタン押下処理
+    /// </summary>
+    public void PushPlay()
+    {
+        //フェードアウト処理
+        StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+        {
+            //ゲームシーン読み込み
+            StartCoroutine(GameLoad());
+        }));
+    }
+
+    /// <summary>
+    /// ゲームシーン読み込み処理
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GameLoad()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("GameScene");
+    }
 
     #endregion
 }
