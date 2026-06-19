@@ -17,7 +17,7 @@ public class StageMoveObstacle : StageObjectItem
         playerPosCheck = FindFirstObjectByType<IT_PlayerPosCheck>();
 
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + firstMoveMas * 5);
-
+        speed = FindFirstObjectByType<IT_Player>().Speed; // プレイヤーの移動速度を取得して障害物の移動速度に設定
 
     }
 

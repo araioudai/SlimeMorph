@@ -3,11 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
 public class IT_Player : MonoBehaviour
 {
     [Header("移動速度")]
     [SerializeField] float speed = 5f;
+    public float Speed { get { return speed; } } // 移動速度を外部から取得できるようにするプロパティ
     bool isMorphed = false;
     [Header("時間経過で減るサイズの量")]
     [SerializeField] float timeMorphDown = 1f; // 時間経過で減るサイズの量
@@ -22,25 +24,20 @@ public class IT_Player : MonoBehaviour
     [Header("時間経過でサイズを減らすかどうか")]
     [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
 
-    [Header("コインの数を表示するテキスト")]
-    [SerializeField] Text coinText; // コインの数を表示するテキスト
-
     bool isGoal = false; // ゴールに到達したかどうかを管理するフラグ
-
-    int coinCount = 0; // コインの数をカウントする変数
-    public int CoinCount { get { return coinCount; } } // コインの数を外部から取得できるようにするプロパティ
+    bool isDead = false; // 死亡しているかどうかを管理するフラグ
 
     BoxCollider collider;
     void Start()
     {
         collider = GetComponent<BoxCollider>();
-        coinText.text = "Coins: " + coinCount;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (isGoal) return; // ゴールに到達している場合は移動しない
+        if (isDead) return; // 死亡している場合は移動しない
 
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);
@@ -86,7 +83,7 @@ public class IT_Player : MonoBehaviour
         if(transform.localScale.x <= 0.01f)
         {
             // ゲームオーバー シーン再ロード
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Die(); // プレイヤーの死亡処理を呼び出す
         }
     }
 
@@ -94,8 +91,7 @@ public class IT_Player : MonoBehaviour
     {
         if (other.TryGetComponent(out StageCoin coin))
         {
-            coinCount += (int)coin.Amount;
-            coinText.text = "Coins: " + coinCount;
+            IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
             Destroy(other.gameObject);
         }
     }
@@ -106,7 +102,8 @@ public class IT_Player : MonoBehaviour
         if(transform.position.y < -10f)
         {
             // ゲームオーバー シーン再ロード
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Die(); // プレイヤーの死亡処理を呼び出す
         }
     }
 
@@ -114,5 +111,24 @@ public class IT_Player : MonoBehaviour
     {
         isGoal = true; // ゴールに到達したことを設定
     }
+
+    public void Die()
+    {
+        isDead = true; // 死亡したことを設定
+    }
+
+
+
+
+#region Debug
+    [ContextMenu("MorphDebug")]
+    void MorphDebug()
+    {
+        Morph(-0.3f);
+
+    }
+
+#endregion
+
 
 }
