@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 655051306148720923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8278781950723787081}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   m_Component:
   - component: {fileID: 699029507168975843}
   - component: {fileID: 3476877721901614010}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4088398953003882286}
   - component: {fileID: 1734088689387068330}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1036896554794389558}
-  m_Layer: 0
+  - component: {fileID: 1984074587345364121}
+  m_Layer: 6
   m_Name: DefaultSkin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,6 +292,28 @@ Transform:
   - {fileID: 699029507168975843}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1984074587345364121
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6627647947091849706}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6823177212231603875
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2778953502463967260}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1170374444561217344}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,7 +386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5508082211018804409}
   - component: {fileID: 4629818098529747565}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -457,7 +480,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1279448252694106348}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
