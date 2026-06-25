@@ -95,7 +95,7 @@ public class StageManager : MonoBehaviour
             }
             else // 壁
             {
-                Instantiate(stageObjectDatabase.wallPrefab, position, Quaternion.identity, groundParent);
+                Instantiate(stageObjectDatabase.wallPrefab, position, Quaternion.Euler(GetLaneRotation(cell.lane)), groundParent);
             }
         }
     }
@@ -106,19 +106,31 @@ public class StageManager : MonoBehaviour
         return lane switch
         {
             0 => new Vector3(0, 0, 0),     // 床
-            1 => new Vector3(-4, 3, 0),    // 左壁
-            2 => new Vector3(4, 3, 0),     // 右壁
+            1 => new Vector3(-4, 1, 0),    // 左壁
+            2 => new Vector3(4, 1, 0),     // 右壁
             _ => Vector3.zero
         };
     }
+
+    Vector3 GetLaneRotation(int lane)
+    {
+        return lane switch
+        {
+            0 => new Vector3(0, 0, 0),     // 床
+            1 => new Vector3(0, 0,60),    // 左壁
+            2 => new Vector3(0, 0, -60),     // 右壁
+            _ => Vector3.zero
+        };
+    }
+    
 
     Vector3 GetObjectOffset(int lane)
     {
         return lane switch
         {
             0 => new Vector3(0, objectOffset, 0),     // 床
-            1 => new Vector3(objectOffset, 0, 0),    // 左壁
-            2 => new Vector3(-objectOffset, 0, 0),     // 右壁
+            1 => new Vector3(objectOffset, objectOffset, 0),    // 左壁
+            2 => new Vector3(-objectOffset, objectOffset, 0),     // 右壁
             _ => Vector3.zero
         };
     }

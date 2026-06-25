@@ -38,4 +38,27 @@ public class StageObjectDatabase : ScriptableObject
 
         Debug.LogWarning($"IDが見つからない: {id}", this);
         return null;
-    }}
+    }
+
+    /// <summary>
+    /// データ
+    /// </summary>
+    public List<StageObjectData> GetAll()
+    {
+        return dataList;
+    }
+
+    public bool IDCheck(int id)
+    {
+        foreach (var data in dataList)
+        {
+            if (id == data.id)
+                return true;
+        }
+        return false;
+    }
+
+
+
+
+}
