@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7767878055282562136}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2183869498643410291}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5457733597240244027}
   - component: {fileID: 2409963703110853711}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8137616092137902190}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6420079894670894322}
   - component: {fileID: 6090794270381241920}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7211410896873669172}
   - component: {fileID: 8160247628439609295}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,7 +390,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6490142038319376686}
-  m_Layer: 0
+  - component: {fileID: 6458983457730697657}
+  m_Layer: 6
   m_Name: Skin_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,6 +417,28 @@ Transform:
   - {fileID: 5457733597240244027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6458983457730697657
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6893204713220639553}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7307984103349663303
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1966459848224070261}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,7 +479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8548904400798270974}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -71,6 +71,10 @@ public class LoginLocalizedText : MonoBehaviour
         {
             myTextMeshPro.fontStyle = FontStyles.Bold;
         }
+        else
+        {
+            myTextMeshPro.fontStyle = FontStyles.Normal;
+        }
 
         if (lang == LanguageManager.Language.JAPAN)
         {

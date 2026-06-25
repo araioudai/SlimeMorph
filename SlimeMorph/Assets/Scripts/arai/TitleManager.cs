@@ -58,6 +58,7 @@ public class TitleManager : MonoBehaviour
 
     [Header("スキン画面関連")]
     [SerializeField] private GameObject skinPanel;
+    [SerializeField] private SkinListController skinController;
 
     [Header("設定画面関連")]
     [SerializeField] private GameObject settingPanel;
@@ -90,7 +91,7 @@ public class TitleManager : MonoBehaviour
         DrawLogin();
 
         //フェード処理
-        MaskFade();
+        ShaderFade();
     }
 
     // Update is called once per frame
@@ -125,7 +126,7 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 指定された状態（State）に応じたテキストとフォントサイズを適用する（翻訳の集約場所）
+    /// 指定された状態（State）に応じたテキストとフォントサイズを適用（翻訳の集約場所）
     /// </summary>
     private void ApplyStatusText(int value, StatusState state)
     {
@@ -199,6 +200,8 @@ public class TitleManager : MonoBehaviour
 
         loginPanel.SetActive(true);
         createAccountPanel.SetActive(false);
+        growPanel.SetActive(false);
+        skinPanel.SetActive(false);
         standPanel.SetActive(false);
         settingPanel.SetActive(false);
     }
@@ -224,8 +227,8 @@ public class TitleManager : MonoBehaviour
         }
     }
 
-    #region マスク処理
-    void MaskFade()
+    #region フェード処理
+    void ShaderFade()
     {
         //if (StageIndex.Instance.GetIsFirst()) { return; }
 
@@ -251,6 +254,7 @@ public class TitleManager : MonoBehaviour
 
     #region ボタン関連
 
+    #region ログイン、新規登録関連
     /// <summary>
     /// ログインボタンが押された時
     /// </summary>
@@ -441,11 +445,13 @@ public class TitleManager : MonoBehaviour
     {
         StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
         {
-            OnLineManager.Instance.ResetId();          //IDの削除
-            PlayerPrefs.DeleteKey("OnlineUserID");     //ユーザ情報を削除する
-            PlayerPrefs.DeleteKey("Tutorial_Cleared"); //チュートリアルのクリアフラグを削除する
+            OnLineManager.Instance.ResetId();                //IDの削除
+            PlayerPrefs.DeleteKey("OnlineUserID");           //ユーザ情報を削除する
+            PlayerPrefs.DeleteKey("SavedSelectedSkinIndex"); //スキン情報削除
+            PlayerPrefs.DeleteKey("UserCoin");               //コイン情報削除
+            PlayerPrefs.DeleteKey("Tutorial_Cleared");       //チュートリアルのクリアフラグを削除する
 
-            PlayerPrefs.Save();                        //セーブする
+            PlayerPrefs.Save();                              //セーブする
             Debug.Log("ログアウトしました（PlayerPrefsを削除）");
 
             if (StageIndex.Instance != null)
@@ -468,8 +474,11 @@ public class TitleManager : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
+    #endregion
+
+    #region メニュー関連
     /// <summary>
-    /// ポーズメニューボタン押下処理
+    /// メニューボタン押下処理
     /// </summary>
     public void PushMenu()
     {
@@ -478,7 +487,7 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ポーズメニューボタン(戻る)押下処理
+    /// メニューボタン(戻る)押下処理
     /// </summary>
     public void PushMenuBack()
     {
@@ -486,12 +495,29 @@ public class TitleManager : MonoBehaviour
         standPanel.SetActive(true);
     }
 
+    #endregion
+
+    #region タイトル内完結処理
     /// <summary>
     /// スキンボタン押下処理
     /// </summary>
     public void PushSkin()
     {
-        FadeCommon(standPanel, skinPanel);
+        FadeCommon(standPanel, skinPanel, () =>
+        {
+            if (skinController != null)
+            {
+                skinController.InitializeSkinList();
+            }
+        });
+    }
+
+    /// <summary>
+    /// 強化(育成)ボタン押下処理
+    /// </summary>
+    public void PushGrow()
+    {
+        FadeCommon(standPanel, growPanel);
     }
 
     /// <summary>
@@ -502,15 +528,17 @@ public class TitleManager : MonoBehaviour
         FadeCommon(new GameObject[] { skinPanel, growPanel }, new GameObject[] { standPanel });
     }
 
+    #endregion
+
     #region タイトル内でのフェード処理の共通化
     /// <summary>
     /// フェード処理共通(オーバーロード)
     /// 1つのGameObject同士を切り替えるためのオーバーロード
     /// </summary>
-    void FadeCommon(GameObject hidden, GameObject display)
+    void FadeCommon(GameObject hidden, GameObject display, System.Action onPanelOpened = null)
     {
         //単体のときは、配列に包み直し本体のメソッドになげる
-        FadeCommon(new GameObject[] { hidden }, new GameObject[] { display });
+        FadeCommon(new GameObject[] { hidden }, new GameObject[] { display }, onPanelOpened);
     }
 
     /// <summary>
@@ -518,7 +546,8 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     /// <param name="hidden">非表示にするもの</param>
     /// <param name="display">表示にするもの</param>
-    void FadeCommon(GameObject[] hidden, GameObject[] display)
+    /// <param name="onPanelOpened">ラムダ式（Action）を受け取れるように変更</param>
+    void FadeCommon(GameObject[] hidden, GameObject[] display, System.Action onPanelOpened = null)
     {
         StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
         {
@@ -533,12 +562,41 @@ public class TitleManager : MonoBehaviour
                 d.SetActive(true);
             }
 
+            //画面が完全に表示された直後にメソッドを実行
+            onPanelOpened?.Invoke();
+
             //フェードイン（画面を開く）
             StartCoroutine(fader.PlayFadeIn(data.MaskSpeed(MaskData.MaskType.IN)));
         }));
     }
 
     #endregion
+
+    /// <summary>
+    /// ゲーム開始ボタン押下処理
+    /// </summary>
+    public void PushPlay()
+    {
+        //フェードアウト処理
+        StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+        {
+            //スタミナを消費
+            StaminaManager.Instance.StaminaConsume();
+
+            //ゲームシーン読み込み
+            StartCoroutine(GameLoad());
+        }));
+    }
+
+    /// <summary>
+    /// ゲームシーン読み込み処理
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GameLoad()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("GameScene");
+    }
 
     #endregion
 }

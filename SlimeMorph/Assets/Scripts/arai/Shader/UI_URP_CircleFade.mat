@@ -35,7 +35,7 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _EdgeSmoothness: 0.05
-    - _FadeRadius: 1.5
+    - _FadeRadius: 1.4919542
     - _MaxScale: 4
     - _ScaleMultiplier: 30
     - _Smoothness: 0.01
