@@ -41,4 +41,24 @@ namespace common
         public float seVolume = 0.5f;
     }
 
+
+
+
+
+
+    #region SoundManager
+    public enum SE
+    {
+        Decision,
+        Cancel,
+        HitDamage,
+        Heal,
+        Max
+    }
+
+
+
+
+
+    #endregion
 }
