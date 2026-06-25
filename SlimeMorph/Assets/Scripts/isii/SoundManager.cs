@@ -25,7 +25,7 @@ public class SoundManager : MonoBehaviour
 
     #region Variables
 
-    [SerializeField, EnumIndex(typeof(SE))] AudioClip[] seClips;
+    [SerializeField, EnumIndex(typeof(SE))] AudioClip[] seClips = new AudioClip[(int)SE.Max];
 
     private AudioSource bgmSource;
     private AudioSource seSource;
