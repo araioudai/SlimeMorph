@@ -24,12 +24,22 @@ public class SoundManager : MonoBehaviour
     #endregion
 
     #region Variables
+
+    [SerializeField, EnumIndex(typeof(SE))] AudioClip[] seClips;
+
     private AudioSource bgmSource;
     private AudioSource seSource;
     private SoundSettings settings;
 
     // 設定JSON保存パス
     private string SavePath;
+
+
+
+    
+
+
+
     #endregion
 
     #region Initialization
@@ -162,26 +172,27 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// SEを再生する
     /// </summary>
-    public void PlaySE(AudioClip seClip)
+    // public void PlaySE(AudioClip seClip)
+    // {
+    //     if (seClip == null)
+    //     {
+    //         Debug.LogWarning("SEクリップがnullです");
+    //         return;
+    //     }
+
+    //     seSource.PlayOneShot(seClip);
+    // }
+
+    public void PlaySE(SE se)
     {
-        if (seClip == null)
+        if (seClips[(int)se] == null)
         {
             Debug.LogWarning("SEクリップがnullです");
             return;
         }
 
-        seSource.PlayOneShot(seClip);
+        seSource.PlayOneShot(seClips[(int)se]);
     }
-
-    /// <summary>
-    /// SEを停止する
-    /// </summary>
-    public void StopSE()
-    {
-        seSource.Stop();
-    }
-
-
 
     #endregion
 
