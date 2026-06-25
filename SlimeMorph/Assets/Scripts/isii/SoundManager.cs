@@ -172,16 +172,16 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// SEを再生する
     /// </summary>
-    // public void PlaySE(AudioClip seClip)
-    // {
-    //     if (seClip == null)
-    //     {
-    //         Debug.LogWarning("SEクリップがnullです");
-    //         return;
-    //     }
+    public void PlaySE(AudioClip seClip)
+    {
+        if (seClip == null)
+        {
+            Debug.LogWarning("SEクリップがnullです");
+            return;
+        }
 
-    //     seSource.PlayOneShot(seClip);
-    // }
+        seSource.PlayOneShot(seClip);
+    }
 
     public void PlaySE(SE se)
     {
