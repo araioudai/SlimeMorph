@@ -84,6 +84,26 @@ public class StageIndex : MonoBehaviour
     void Init()
     {
         //LoadTutorialProgress();
+
+        //初期（ローカルに保存されている前回のステージクリア数を代入、無ければ1）
+        stageIndex = PlayerPrefs.GetInt("ClearStage", 1);
+
+        //サーバーから最新のステージクリア数を非同期で取得
+        if (OnLineManager.Instance != null)
+        {
+            OnLineManager.Instance.LoadPlayer((success, playerData) =>
+            {
+                if (success && playerData != null)
+                {
+                    //サーバーから無事に取得できたら、ステージクリアを代入
+                    stageIndex = playerData.clear_stage;
+                }
+                else
+                {
+                    Debug.LogWarning("サーバーからのステージデータ取得に失敗しました。");
+                }
+            });
+        }
     }
 
     /// <summary>
