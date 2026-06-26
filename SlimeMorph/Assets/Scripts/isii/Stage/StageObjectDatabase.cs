@@ -57,8 +57,4 @@ public class StageObjectDatabase : ScriptableObject
         }
         return false;
     }
-
-
-
-
 }

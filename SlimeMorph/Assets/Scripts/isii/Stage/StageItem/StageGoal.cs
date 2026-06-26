@@ -19,6 +19,12 @@ public class StageGoal : MonoBehaviour
                 player.ReachGoal(); // プレイヤーにゴール到達を通知
             }
 
+            GoalCamera goalCamera = FindFirstObjectByType<GoalCamera>();
+            if (goalCamera != null)
+            {
+                goalCamera.StartGoalSequence(other.transform);
+            }
+
             // ステージクリアの処理を非同期で実行
             ClearStageAsync().Forget();
         }

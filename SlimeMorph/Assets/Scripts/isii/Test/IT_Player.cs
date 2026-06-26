@@ -42,9 +42,9 @@ public class IT_Player : MonoBehaviour
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
-        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
+        // Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
         Dead();
-        DeadFall();
+        // DeadFall();
         MorphDown();
     }
 

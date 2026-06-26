@@ -13,11 +13,18 @@ public class CsvEditorWindow : EditorWindow
     private List<List<string>> csvData = new();
     private List<int> inData = new();
 
-    StageObjectDatabase stageObjectDatabase;
+    private List<string> idName = new();
 
+
+    StageObjectDatabase stageObjectDatabase;
 
     string path;
     Vector2 scrollPos;
+
+    Vector2 scrollPosName;
+
+
+
     private int stageID;
     #endregion
 
@@ -34,17 +41,28 @@ public class CsvEditorWindow : EditorWindow
     private void OnGUI()
     {
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Load CSV"))       { LoadCSV(); }
-        if (GUILayout.Button("Save CSV"))       { SaveCSV(); }
-        if (GUILayout.Button("New Save CSV"))   { SaveCSV(true); }
+        if (GUILayout.Button("Load CSV")) { LoadCSV(); }
+        if (GUILayout.Button("Save CSV")) { SaveCSV(); }
+        if (GUILayout.Button("New Save CSV")) { SaveCSV(true); }
         EditorGUILayout.EndHorizontal();
 
         // StageObjectDatabaseを入れられるようにする
         stageObjectDatabase = (StageObjectDatabase)EditorGUILayout.ObjectField("Stage Object Database", stageObjectDatabase, typeof(StageObjectDatabase), false);
 
-        CSVView();
+        if (stageObjectDatabase == null)
+        {
+            EditorGUILayout.HelpBox("Stage Object Databaseが設定されていません", MessageType.Warning);
+            return;
+        }
 
+
+
+        CSVView();
+        IdNameView();
+        PreLoad();
         DataCheck();
+
+
     }
 
     void CSVView()
@@ -126,6 +144,69 @@ public class CsvEditorWindow : EditorWindow
         EditorGUILayout.EndScrollView();
         // DataCheck();
     }
+
+    void IdNameView()
+    {
+        if (stageObjectDatabase == null)
+        {
+            EditorGUILayout.HelpBox("Stage Object Databaseが設定されていません", MessageType.Warning);
+            return;
+        }
+
+        idName.Clear();
+
+        // スクロール開始
+        scrollPosName = EditorGUILayout.BeginScrollView(scrollPosName, GUILayout.Height(100));
+
+        foreach (var data in stageObjectDatabase.GetAll())
+        {
+            idName.Add($"ID: {data.id}, Name: {data.name}");
+        }
+
+        foreach (var name in idName)
+        {
+            EditorGUILayout.LabelField(name);
+        }
+
+        EditorGUILayout.EndScrollView();
+
+        if (GUILayout.Button("ID順に並べ替え"))
+        {
+            stageObjectDatabase.GetAll().Sort((a, b) => a.id.CompareTo(b.id));
+            EditorUtility.SetDirty(stageObjectDatabase);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
+
+    void PreLoad()
+    {
+        // ステージをロードするボタン
+        if (GUILayout.Button("Load Stage"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                // プレイモード中の場合、ステージをロードする処理を実行
+                StageManager.Instance.debugMode = true; // デバッグモードを有効化
+                StageManager.Instance.CreateStage(stageID);
+            }
+            else
+            {
+                // プレイモードにする
+                EditorApplication.isPlaying = true;
+                // プレイモードが開始された後にステージをロードする処理を実行
+                EditorApplication.delayCall += () =>
+                {
+                    StageManager.Instance.debugMode = true; // デバッグモードを有効化
+                    StageManager.Instance.CreateStage(stageID);
+                };
+            }
+        }
+    }
+
+
+
+
 
     void DataIn(int x)
     {
@@ -209,7 +290,7 @@ public class CsvEditorWindow : EditorWindow
     void LoadCSV()
     {
         path = EditorUtility.OpenFilePanel("CSVを選択", "", "csv");
-        
+
         if (!string.IsNullOrEmpty(path))
         {
             string text = File.ReadAllText(path);
@@ -235,7 +316,7 @@ public class CsvEditorWindow : EditorWindow
         {
             List<string> lines = new();
 
-            foreach(var row in csvData)
+            foreach (var row in csvData)
             {
                 string line = string.Join(",", row);
                 lines.Add(line);

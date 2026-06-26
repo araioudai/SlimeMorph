@@ -67,6 +67,15 @@ public class IT_GameManager : MonoBehaviour
             gameOver.SetActive(true);
             isGameOver = true;
         }
+
+        if (player.transform.position.y < -10f && !isGameOver)
+        {
+            Debug.Log("プレイヤーが落下して死亡しました。");
+            // ここでゲームオーバー処理を実装する
+            player.Die(); // プレイヤーの死亡処理を呼び出す
+            gameOver.SetActive(true);
+            isGameOver = true;
+        }
     }
 
     public void GetCoin(int amount)
