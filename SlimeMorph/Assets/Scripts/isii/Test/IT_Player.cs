@@ -3,37 +3,46 @@ using System.Collections;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
 public class IT_Player : MonoBehaviour
 {
+    [Header("移動速度")]
     [SerializeField] float speed = 5f;
+    public float Speed { get { return speed; } } // 移動速度を外部から取得できるようにするプロパティ
     bool isMorphed = false;
+    [Header("時間経過で減るサイズの量")]
     [SerializeField] float timeMorphDown = 1f; // 時間経過で減るサイズの量
 
+    [Header("重力の値")]
     [SerializeField] float gravityValue = 3; // 重力の値
     public float GravityValue { get { return gravityValue; } } // 重力の値を外部から取得できるようにするプロパティ
 
+    [Header("カメラとの距離")]
+    [SerializeField] float cameraDistance = 3f; // カメラとの距離
+
+    [Header("時間経過でサイズを減らすかどうか")]
     [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
 
-    [SerializeField] Text coinText; // コインの数を表示するテキスト
-
-    int coinCount = 0; // コインの数をカウントする変数
-    public int CoinCount { get { return coinCount; } } // コインの数を外部から取得できるようにするプロパティ
+    bool isGoal = false; // ゴールに到達したかどうかを管理するフラグ
+    bool isDead = false; // 死亡しているかどうかを管理するフラグ
 
     BoxCollider collider;
     void Start()
     {
         collider = GetComponent<BoxCollider>();
-        coinText.text = "Coins: " + coinCount;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isGoal) return; // ゴールに到達している場合は移動しない
+        if (isDead) return; // 死亡している場合は移動しない
+
         // 前方に移動
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
-        Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z - 5f);
+        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
         Dead();
         DeadFall();
         MorphDown();
@@ -51,6 +60,7 @@ public class IT_Player : MonoBehaviour
         else
             gravityValue += 1;
         StartCoroutine(MorphTimer());
+        Debug.Log($"Morph: {morphSize}");
     }
 
     void MorphDown()
@@ -64,7 +74,7 @@ public class IT_Player : MonoBehaviour
 
     IEnumerator MorphTimer()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         isMorphed = false;
     }
 
@@ -73,16 +83,15 @@ public class IT_Player : MonoBehaviour
         if(transform.localScale.x <= 0.01f)
         {
             // ゲームオーバー シーン再ロード
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Die(); // プレイヤーの死亡処理を呼び出す
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Coin"))
+        if (other.TryGetComponent(out StageCoin coin))
         {
-            coinCount++;
-            coinText.text = "Coins: " + coinCount;
+            IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
             Destroy(other.gameObject);
         }
     }
@@ -93,8 +102,33 @@ public class IT_Player : MonoBehaviour
         if(transform.position.y < -10f)
         {
             // ゲームオーバー シーン再ロード
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Die(); // プレイヤーの死亡処理を呼び出す
         }
     }
+
+    public void ReachGoal()
+    {
+        isGoal = true; // ゴールに到達したことを設定
+    }
+
+    public void Die()
+    {
+        isDead = true; // 死亡したことを設定
+    }
+
+
+
+
+#region Debug
+    [ContextMenu("MorphDebug")]
+    void MorphDebug()
+    {
+        Morph(-0.3f);
+
+    }
+
+#endregion
+
 
 }

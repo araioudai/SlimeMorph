@@ -11,6 +11,7 @@ public class IT_Morph : MonoBehaviour
         {
             other.gameObject.GetComponent<IT_Player>().Morph(morphSize);
             isMorphed = true;
+            this.gameObject.SetActive(false); // オブジェクトを非表示にする
         }
     }
 }

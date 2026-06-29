@@ -12,16 +12,16 @@ namespace SlimeMorph.UI
         [SerializeField] protected Image currencyIcon;
 
         [Header("アイコン設定")]
-        [SerializeField] protected Sprite coinIconSprite;
+        [SerializeField] protected Sprite iconSprite;
 
         #endregion
 
         #region Unityイベント関数
         protected virtual void Start()
         {
-            if (currencyIcon != null && coinIconSprite != null)
+            if (currencyIcon != null && iconSprite != null)
             {
-                currencyIcon.sprite = coinIconSprite;
+                currencyIcon.sprite = iconSprite;
             }
             else
             {

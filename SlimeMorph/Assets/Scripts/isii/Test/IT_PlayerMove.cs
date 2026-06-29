@@ -26,18 +26,18 @@ public class IT_PlayerMove : MonoBehaviour
         //     }
         // }
 
-        // PCではマウスのドラッグでプレイヤーを移動させる 上記のフリック操作と同じような挙動にする
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            float dragSpeed = mouseDelta.magnitude / Time.deltaTime;
-            if (dragSpeed > flickSpeedMax)
-            {
-                dragSpeed = flickSpeedMax;
-            }
-            Vector3 moveDirection = new Vector3(mouseDelta.x, 0, 0).normalized;
+        // // PCではマウスのドラッグでプレイヤーを移動させる 上記のフリック操作と同じような挙動にする
+        // if (Input.GetMouseButton(0))
+        // {
+        //     Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //     float dragSpeed = mouseDelta.magnitude / Time.deltaTime;
+        //     if (dragSpeed > flickSpeedMax)
+        //     {
+        //         dragSpeed = flickSpeedMax;
+        //     }
+        //     Vector3 moveDirection = new Vector3(mouseDelta.x, 0, 0).normalized;
 
-            player.transform.Translate(moveDirection * dragSpeed * Time.deltaTime, Space.World);
-        }
+        //     player.transform.Translate(moveDirection * dragSpeed * Time.deltaTime, Space.World);
+        // }
     }
 }

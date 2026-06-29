@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3532999697407317362}
-  m_Layer: 0
+  - component: {fileID: 6964821106254468013}
+  m_Layer: 6
   m_Name: Skin_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,6 +36,28 @@ Transform:
   - {fileID: 2526377653771548544}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6964821106254468013
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578661590703914610}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1317867198563106573
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,7 +67,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6067741246535582882}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4532424567366346281}
   - component: {fileID: 6434505883218027959}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3928493174935994397}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +228,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4297970554502077041}
   - component: {fileID: 7927977417686934479}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,7 +323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2526377653771548544}
   - component: {fileID: 7828227441460334215}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4833626348259744453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6190288092808309553}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 279256264177576464}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -546,6 +569,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DevilWing
       objectReference: {fileID: 0}
+    - target: {fileID: 1838463822622587173, guid: f75a22981a3382547a25480603811545, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -567,6 +594,10 @@ PrefabInstance:
     - target: {fileID: 3558963264283300892, guid: a50121e798561bd4c8527ccee3bfdb7c, type: 3}
       propertyPath: m_Name
       value: Skull
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558963264283300892, guid: a50121e798561bd4c8527ccee3bfdb7c, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4190646281480507046, guid: a50121e798561bd4c8527ccee3bfdb7c, type: 3}
       propertyPath: m_LocalScale.x
@@ -641,6 +672,10 @@ PrefabInstance:
     - target: {fileID: 3697605348728828693, guid: 3beebc6e02aa53947a02572f03d49a74, type: 3}
       propertyPath: m_Name
       value: Antenna
+      objectReference: {fileID: 0}
+    - target: {fileID: 3697605348728828693, guid: 3beebc6e02aa53947a02572f03d49a74, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4042922765704014255, guid: 3beebc6e02aa53947a02572f03d49a74, type: 3}
       propertyPath: m_LocalScale.x

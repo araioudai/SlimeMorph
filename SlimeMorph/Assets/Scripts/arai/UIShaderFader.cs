@@ -50,8 +50,7 @@ public class UIShaderFader : MonoBehaviour
         //DOTweenを使い、マテリアルの半径（radiusID）を 0.0 から 1.5（完全開通）まで滑らかに変化させる
         fadeMaterial.DOFloat(1.5f, radiusID, duration)
             .SetEase(Ease.OutCubic) //じわっと減速しながら、心地よいスピード感で開くイージング
-            .SetUpdate(true)        //Time.timeScale = 0（ポーズ中）であっても強制的に動作させる設定
-            .OnComplete(() => onComplete?.Invoke()); //アニメーション完了後に、登録された処理を実行
+            .SetUpdate(true);       //Time.timeScale = 0（ポーズ中）であっても強制的に動作させる設定
 
         //アニメーションが動いている時間分、コルーチン側も非同期で待機する
         yield return new WaitForSecondsRealtime(duration);
@@ -82,14 +81,14 @@ public class UIShaderFader : MonoBehaviour
         //DOTweenを使い、マテリアルの半径（radiusID）を現在の状態から「0.0（完全に閉じる）」まで縮小させる
         fadeMaterial.DOFloat(0f, radiusID, duration)
             .SetEase(Ease.OutQuad) //閉じ終わりに少し加速・減速をつけるスムーズなイージング
-            .SetUpdate(true)       //ポーズ中も動作
-            .OnComplete(() => {
-                isExiting = false;    //完了時にフラグを安全にリセット
-                onComplete?.Invoke(); //登録されたシーン遷移などの処理をここで実行
-            });
+            .SetUpdate(true);      //ポーズ中も動作
+            
 
         //アニメーションの時間分、コルーチン側も待機
         yield return new WaitForSecondsRealtime(duration);
+
+        //フェードが完全に終わったらフラグを戻す
+        isExiting = false;
 
         //コールバック処理を実行
         onComplete?.Invoke();
