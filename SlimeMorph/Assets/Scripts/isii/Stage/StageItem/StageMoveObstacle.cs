@@ -24,6 +24,8 @@ public class StageMoveObstacle : StageObjectItem
     // Update is called once per frame
     void Update()
     {
+        if (isStop) return; // isStopがtrueの場合は処理をスキップ
+
         if (playerPosCheck != null)
         {
             if (playerPosCheck.nowMas >= mas - firstMoveMas)

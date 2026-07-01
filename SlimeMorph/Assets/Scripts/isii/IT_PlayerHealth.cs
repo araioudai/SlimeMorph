@@ -4,9 +4,14 @@ using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
 using System;
-
-public class IT_Player : MonoBehaviour
+public class IT_PlayerHealth : StageObjectItem
 {
+    [SerializeField] private float maxScale = 3; // 最大スケール値
+    [SerializeField] private float minScale = 0.2f; // 最小スケール値
+
+
+
+
     [Header("移動速度")]
     [SerializeField] float speed = 5f;
     public float Speed { get { return speed; } } // 移動速度を外部から取得できるようにするプロパティ
@@ -18,8 +23,6 @@ public class IT_Player : MonoBehaviour
     [SerializeField] float gravityValue = 3; // 重力の値
     public float GravityValue { get { return gravityValue; } } // 重力の値を外部から取得できるようにするプロパティ
 
-    [Header("カメラとの距離")]
-    [SerializeField] float cameraDistance = 3f; // カメラとの距離
 
     [Header("時間経過でサイズを減らすかどうか")]
     [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
@@ -38,6 +41,9 @@ public class IT_Player : MonoBehaviour
     {
         if (isGoal) return; // ゴールに到達している場合は移動しない
         if (isDead) return; // 死亡している場合は移動しない
+        if (isStop) return; // isStopがtrueの場合は処理をスキップ
+
+
 
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);
@@ -127,8 +133,5 @@ public class IT_Player : MonoBehaviour
         Morph(-0.3f);
 
     }
-
 #endregion
-
-
 }

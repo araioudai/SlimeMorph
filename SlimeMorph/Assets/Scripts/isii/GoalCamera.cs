@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class GoalCamera : MonoBehaviour
 {
-	[Header("通常時の追従設定")]
 	[SerializeField] Transform target;
+
+	[Header("スタート演出設定")]
+	[SerializeField] Vector3 startFrontOffset = new(0f, 10f, -10f);
+	[SerializeField] float startMoveDuration = 1.2f;
+
+	[Header("通常時の追従設定")]
 	[SerializeField] Vector3 followOffset = new(0f, 4.5f, -6f);
 	[SerializeField] float followLerpSpeed = 8f;
 
@@ -11,7 +16,9 @@ public class GoalCamera : MonoBehaviour
 	[SerializeField] Vector3 goalFrontOffset = new(0f, 2.5f, 3f);
 	[SerializeField] float goalMoveDuration = 1.2f;
 
+	bool isStartSequence = true;
 	bool isGoalSequence;
+	float startTimer;
 	float goalTimer;
 	Vector3 goalStartPosition;
 	void Start()
@@ -22,8 +29,13 @@ public class GoalCamera : MonoBehaviour
 			if (playerObj != null)
 			{
 				target = playerObj.transform;
-                Debug.Log("GoalCamera: Player found and set as target.");
+                Debug.Log("Playerを設定");
 			}
+		}
+
+		if (target != null)
+		{
+			transform.position = target.position + startFrontOffset;
 		}
 	}
 
@@ -31,13 +43,30 @@ public class GoalCamera : MonoBehaviour
 	{
 		if (target == null) return;
 
+		if (isStartSequence)
+		{
+			startTimer += Time.deltaTime;
+			float startT = Mathf.Clamp01(startTimer / Mathf.Max(0.01f, startMoveDuration));
+			startT = Mathf.SmoothStep(0f, 1f, startT);
+
+			Vector3 fromPos = target.position + startFrontOffset;
+			Vector3 toPos = target.position + followOffset;
+			transform.position = Vector3.Lerp(fromPos, toPos, startT);
+
+			if (startT >= 1f)
+			{
+				isStartSequence = false;
+				transform.position = toPos;
+				Debug.Log("スタート演出終了");
+			}
+			return;
+		}
+
 		if (!isGoalSequence)
 		{
 			Vector3 desiredPos = target.position + followOffset;        // プレイヤーの位置にオフセットを加えた位置を計算
 			transform.position = Vector3.Lerp(transform.position, desiredPos, followLerpSpeed * Time.deltaTime);
             transform.position = desiredPos; // 追従の補間を無効化して、カメラがプレイヤーの位置に直接追従するように変更
-			// transform.LookAt(target.position);  // カメラがプレイヤーの方向を向くようにする
-
 
 			return;
 		}
@@ -59,7 +88,7 @@ public class GoalCamera : MonoBehaviour
 		isGoalSequence = true;
 		goalTimer = 0f;
 		goalStartPosition = transform.position;
-		Debug.Log("GoalCamera: Goal sequence started.");
+		Debug.Log("ゴール演出開始");
 	}
 
 

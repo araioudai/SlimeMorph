@@ -5,7 +5,7 @@ using Unity.Android.Gradle.Manifest;
 using UnityEditor;
 using UnityEngine;
 
-public class CsvEditorWindow : EditorWindow
+public class CSVEditor : EditorWindow
 {
     #region Variables
 
@@ -33,7 +33,7 @@ public class CsvEditorWindow : EditorWindow
     [MenuItem("Tools/CSV Editor")]
     private static void OpenWindow()
     {
-        GetWindow<CsvEditorWindow>("CSV Editor");
+        GetWindow<CSVEditor>("CSV Editor");
     }
 
     #endregion
