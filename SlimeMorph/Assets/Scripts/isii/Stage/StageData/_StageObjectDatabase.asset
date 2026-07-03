@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: _StageObjectDatabase
   m_EditorClassIdentifier: Assembly-CSharp::StageObjectDatabase
   dataList:
-  - {fileID: 11400000, guid: 4148d4c75915fda4caf9f1ae6b49772b, type: 2}
   - {fileID: 11400000, guid: 83a250ba71c835348aba453612eb3abb, type: 2}
   - {fileID: 11400000, guid: 950b7d0d42f45ae4ebafbb88c930a243, type: 2}
+  - {fileID: 11400000, guid: 4148d4c75915fda4caf9f1ae6b49772b, type: 2}
   - {fileID: 11400000, guid: 7470ff011c791d843a421122fc2d6b80, type: 2}
   - {fileID: 11400000, guid: 26909d9755c698141805877811ea811f, type: 2}
   - {fileID: 11400000, guid: 9fabdcae989bd3245b38005040c983f3, type: 2}
-  - {fileID: 11400000, guid: a0898477922972c4385b09e112269b78, type: 2}
   - {fileID: 11400000, guid: 926350cee54303040901c428e2be96bd, type: 2}
+  - {fileID: 11400000, guid: a0898477922972c4385b09e112269b78, type: 2}
   floorPrefab: {fileID: 7548214226640143015, guid: ae4630dbf54f83e44a8ec57cdff112e9, type: 3}
   wallPrefab: {fileID: 5060847921368856247, guid: fb1e2dcb8eca8b344951ef53977150f0, type: 3}

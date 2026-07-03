@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 
-public class IT_Player : MonoBehaviour
+public class IT_Player : StageObjectItem
 {
     [Header("移動速度")]
     [SerializeField] float speed = 5f;
@@ -31,6 +31,7 @@ public class IT_Player : MonoBehaviour
     void Start()
     {
         collider = GetComponent<BoxCollider>();
+        IT_GameManager.Instance.RegisterStageObject(this); // IT_GameManagerにプレイヤーを登録
     }
 
     // Update is called once per frame
@@ -38,13 +39,14 @@ public class IT_Player : MonoBehaviour
     {
         if (isGoal) return; // ゴールに到達している場合は移動しない
         if (isDead) return; // 死亡している場合は移動しない
+        if (isStop) return; // 停止している場合は移動しない
 
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
-        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
+        // Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
         Dead();
-        DeadFall();
+        // DeadFall();
         MorphDown();
     }
 
@@ -74,7 +76,7 @@ public class IT_Player : MonoBehaviour
 
     IEnumerator MorphTimer()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.01f);
         isMorphed = false;
     }
 
