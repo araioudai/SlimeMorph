@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using common;
-using Unity.Android.Gradle.Manifest;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,23 +8,32 @@ public class CSVEditor_MkII : EditorWindow
 {
     #region Variables
 
-    /// CSVデータ（2次元配列
+    //==========================
+    // CSVデータ
     private List<List<string>> csvData = new();
     private List<int> inData = new();
+    string path;
 
-    private List<string> idName = new();
-
-
+    //==========================
+    // StageObjectDatabase
     StageObjectDatabase stageObjectDatabase;
 
-    string path;
+    //==========================
+    // スクロール位置
     Vector2 scrollPos;
-
     Vector2 scrollPosName;
 
-
-
+    //==========================
+    // 表示設定
     private int stageID;
+    int viewWidth = 30;
+
+    //==========================
+    // 選択中のオブジェクトIDと名前
+    private int selectedObjectId = 0;
+    private int selectNoneId = -99;
+    private string selectedObjectName = "None";
+
     #endregion
 
     #region Menu
@@ -54,59 +62,71 @@ public class CSVEditor_MkII : EditorWindow
             EditorGUILayout.HelpBox("Stage Object Databaseが設定されていません", MessageType.Warning);
             return;
         }
-
-
+        if (csvData.Count == 0)
+        {
+            EditorGUILayout.HelpBox("CSVが読み込まれていません", MessageType.Warning);
+            return;
+        }
 
         CSVView();
-        IdNameView();
+        IdPalletteView();
         PreLoad();
-        DataCheck();
-
-
+        StageDataCheck();
     }
 
+    #region CSV表示
     void CSVView()
     {
         inData.Clear();
 
         stageID = EditorGUILayout.IntField("ステージID", stageID);
+        viewWidth = EditorGUILayout.IntField("表示幅", viewWidth);
 
         // スクロール開始
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
-
-
-        if (csvData.Count > 1)
+        try
         {
-            EditorGUILayout.BeginHorizontal();
-
-            for (int col = 1; col < csvData[0].Count; col++)
+            // 行数
+            if (viewWidth > 1)
             {
-                EditorGUILayout.LabelField((col - 1).ToString(), GUILayout.Width(40));
+                EditorGUILayout.BeginHorizontal();
+                try
+                {
+                    EditorGUILayout.LabelField("", GUILayout.Width(40));
+
+                    for (int col = 1; col <= viewWidth; col++)
+                    {
+                        EditorGUILayout.LabelField(col.ToString(), GUILayout.Width(80));
+                    }
+                }
+                finally
+                {
+                    EditorGUILayout.EndHorizontal();
+                }
             }
 
-            EditorGUILayout.EndHorizontal();
-        }
-
-        // データ表示
-        for (int row = 0; row < csvData.Count; row++)
-        {
-            // 1列目のIDをリストに追加
-            if (int.TryParse(csvData[row][0], out int parsed))
-                DataIn(parsed);
-
-            if (!int.TryParse(csvData[row][0], out int id) || id != stageID)
-                continue;
-
-            EditorGUILayout.BeginHorizontal();
-
-            GUILayout.Label((row + 1).ToString(), GUILayout.Width(20));
-
-            for (int col = 1; col < csvData[row].Count; col++)
+            // CSVデータ
+            int maxRows = Mathf.Min(viewWidth, csvData.Count);
+            for (int row = 0; row < maxRows; row++)
             {
-                if (col == 1)
+                List<string> rowData = csvData[row];
+                if (rowData == null || rowData.Count == 0)
+                    continue;
+
+                if (int.TryParse(rowData[0], out int parsed))
+                    DataIn(parsed);
+
+                if (!int.TryParse(rowData[0], out int id) || id != stageID)
+                    continue;
+
+                EditorGUILayout.BeginHorizontal();
+                try
                 {
+                    GUILayout.Label((row + 1).ToString(), GUILayout.Width(20));
+
                     int lane = 0;
-                    int.TryParse(csvData[row][1], out lane);
+                    if (rowData.Count > 1)
+                        int.TryParse(rowData[1], out lane);
 
                     string laneLabel = lane switch
                     {
@@ -115,70 +135,129 @@ public class CSVEditor_MkII : EditorWindow
                         2 => "右",
                         _ => "?"
                     };
+
                     EditorGUILayout.LabelField(laneLabel, GUILayout.Width(20));
+
+                    int maxCols = Mathf.Min(viewWidth, rowData.Count);
+                    for (int col = 2; col < maxCols; col++)
+                    {
+                        DrawPlacementCell(row, col);
+                    }
                 }
-                else
+                finally
                 {
-                    GUIStyle textFieldStyle = new(EditorStyles.textField);
-
-                    if (!float.TryParse(csvData[row][col], out float objectId))
-                    {
-                        textFieldStyle.normal.textColor = Color.red;
-                    }
-                    else
-                    {
-                        if (stageObjectDatabase.IDCheck(Parse(csvData[row][col])))
-                            textFieldStyle.normal.textColor = Color.white;
-                        else
-                            textFieldStyle.normal.textColor = Color.red;
-                    }
-
-
-                    csvData[row][col] = EditorGUILayout.TextField(csvData[row][col], textFieldStyle, GUILayout.Width(40));
+                    EditorGUILayout.EndHorizontal();
                 }
             }
-
-            EditorGUILayout.EndHorizontal();
         }
-
-        EditorGUILayout.EndScrollView();
+        finally
+        {
+            EditorGUILayout.EndScrollView();
+        }
         // DataCheck();
     }
 
-    void IdNameView()
+    void DataIn(int x)
     {
-        if (stageObjectDatabase == null)
+        if (!inData.Contains(x)) // 重複チェック
         {
-            EditorGUILayout.HelpBox("Stage Object Databaseが設定されていません", MessageType.Warning);
-            return;
-        }
-
-        idName.Clear();
-
-        // スクロール開始
-        scrollPosName = EditorGUILayout.BeginScrollView(scrollPosName, GUILayout.Height(100));
-
-        foreach (var data in stageObjectDatabase.GetAll())
-        {
-            idName.Add($"ID: {data.id}, Name: {data.name}");
-        }
-
-        foreach (var name in idName)
-        {
-            EditorGUILayout.LabelField(name);
-        }
-
-        EditorGUILayout.EndScrollView();
-
-        if (GUILayout.Button("ID順に並べ替え"))
-        {
-            stageObjectDatabase.GetAll().Sort((a, b) => a.id.CompareTo(b.id));
-            EditorUtility.SetDirty(stageObjectDatabase);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            inData.Add(x);
         }
     }
 
+    void DrawPlacementCell(int row, int col)
+    {
+        if (row < 0 || row >= csvData.Count)
+            return;
+
+        List<string> rowData = csvData[row];
+        if (rowData == null || col < 0 || col >= rowData.Count)
+        {
+            GUILayout.Label("", GUILayout.Width(80), GUILayout.Height(20));
+            return;
+        }
+
+        string rawValue = rowData[col];
+        string normalizedValue = rawValue?.Trim();
+        int currentId = selectNoneId;
+
+        bool isEmptyToken = string.IsNullOrEmpty(normalizedValue) || normalizedValue == "\"\"";
+        if (!isEmptyToken && float.TryParse(normalizedValue, out float numericValue))
+        {
+            // 0 は未配置扱いにして Empty 表示にする
+            if (!Mathf.Approximately(numericValue, 0f))
+            {
+                currentId = Parse(normalizedValue);
+            }
+        }
+
+        string label = GetObjectLabel(currentId);
+
+        GUI.backgroundColor = currentId == selectNoneId ? Color.gray : Color.white;
+
+        if (GUILayout.Button(label, GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            string previousId;
+
+            if (selectedObjectId == selectNoneId)
+                previousId = "";
+            else
+                previousId = selectedObjectId.ToString();
+
+            rowData[col] = previousId;
+            GUI.FocusControl(null);
+            Repaint();
+        }
+
+        GUI.backgroundColor = Color.white;
+    }
+
+    string GetObjectLabel(int id)
+    {
+        if (id == selectNoneId) return "Empty";
+
+        var data = stageObjectDatabase.GetAll().Find(x => x.id == id);
+        if (data != null)
+            return data.name;
+
+        return $"Invalid({id})";
+    }
+    #endregion
+
+    #region IDパレット表示
+    void IdPalletteView()
+    {
+        EditorGUILayout.LabelField("配置するオブジェクトを選択", EditorStyles.boldLabel);
+
+        scrollPosName = EditorGUILayout.BeginScrollView(scrollPosName, GUILayout.Height(150));
+
+        // None
+        GUI.backgroundColor = selectedObjectId == selectNoneId ? Color.cyan : Color.white;
+        if (GUILayout.Button($"None"))
+        {
+            selectedObjectId = selectNoneId;
+            selectedObjectName = "None";
+        }
+
+        foreach (var data in stageObjectDatabase.GetAll())
+        {
+            GUI.backgroundColor = selectedObjectId == data.id ? Color.cyan : Color.white;
+
+            if (GUILayout.Button($"{data.name}"))
+            {
+                selectedObjectId = data.id;
+                selectedObjectName = data.name;
+            }
+        }
+
+        GUI.backgroundColor = Color.white;
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.HelpBox($"選択中: {selectedObjectId} / {selectedObjectName}", MessageType.Info);
+    }
+    #endregion
+
+    #region ステージロードボタン
     void PreLoad()
     {
         // ステージをロードするボタン
@@ -203,27 +282,11 @@ public class CSVEditor_MkII : EditorWindow
             }
         }
     }
+    #endregion
 
-
-
-
-
-    void DataIn(int x)
+    #region データ操作
+    void StageDataCheck()
     {
-        if (!inData.Contains(x)) // 重複チェック
-        {
-            inData.Add(x);
-        }
-    }
-
-    void DataCheck()
-    {
-        if (csvData.Count == 0)
-        {
-            EditorGUILayout.HelpBox("CSVが読み込まれていません", MessageType.Warning);
-            return;
-        }
-
         if (!inData.Contains(stageID))
         {
             EditorGUILayout.HelpBox("このステージIDは存在しません", MessageType.Info);
@@ -282,7 +345,7 @@ public class CSVEditor_MkII : EditorWindow
         // csvDataからステージIDに一致する行を削除
         csvData.RemoveAll(row => int.TryParse(row[0], out int id) && id == stageID);
     }
-
+    #endregion
 
     #endregion
 
@@ -329,8 +392,6 @@ public class CSVEditor_MkII : EditorWindow
         }
     }
 
-
-
     static int Parse(string objectId)
     {
         int id;
@@ -342,12 +403,8 @@ public class CSVEditor_MkII : EditorWindow
         {
             id = (int)float.Parse(objectId);
         }
-
-
         return id;
     }
-
-
     #endregion
 
 }
