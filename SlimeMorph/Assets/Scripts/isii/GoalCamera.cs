@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GoalCamera : MonoBehaviour
+public class GoalCamera : StageObjectItem
 {
 	[SerializeField] Transform target;
 
@@ -37,20 +37,24 @@ public class GoalCamera : MonoBehaviour
 		{
 			transform.position = target.position + startFrontOffset;
 		}
+
+		IT_GameManager.Instance.RegisterStageObject(this); // IT_GameManagerにGoalCameraを登録
 	}
 
 	void LateUpdate()
 	{
 		if (target == null) return;
+		if (isStop) return;
 
+		// スタート演出中のカメラの動き
 		if (isStartSequence)
 		{
 			startTimer += Time.deltaTime;
 			float startT = Mathf.Clamp01(startTimer / Mathf.Max(0.01f, startMoveDuration));
 			startT = Mathf.SmoothStep(0f, 1f, startT);
 
-			Vector3 fromPos = target.position + startFrontOffset;
-			Vector3 toPos = target.position + followOffset;
+			Vector3 fromPos = new Vector3(0, 0, target.position.z) + startFrontOffset;
+			Vector3 toPos = new Vector3(0, 0, target.position.z) + followOffset;
 			transform.position = Vector3.Lerp(fromPos, toPos, startT);
 
 			if (startT >= 1f)
@@ -62,15 +66,17 @@ public class GoalCamera : MonoBehaviour
 			return;
 		}
 
+		// 通常時のカメラの追従
 		if (!isGoalSequence)
 		{
-			Vector3 desiredPos = target.position + followOffset;        // プレイヤーの位置にオフセットを加えた位置を計算
+			Vector3 desiredPos = new Vector3(0, 0, target.position.z)  + followOffset;        // プレイヤーの位置にオフセットを加えた位置を計算
 			transform.position = Vector3.Lerp(transform.position, desiredPos, followLerpSpeed * Time.deltaTime);
             transform.position = desiredPos; // 追従の補間を無効化して、カメラがプレイヤーの位置に直接追従するように変更
 
 			return;
 		}
 
+		// ゴール演出中のカメラの動き
 		goalTimer += Time.deltaTime;
 		float t = Mathf.Clamp01(goalTimer / Mathf.Max(0.01f, goalMoveDuration));
 		t = Mathf.SmoothStep(0f, 1f, t);

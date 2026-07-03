@@ -27,6 +27,8 @@ public class CSVEditor_MkII : EditorWindow
     // 表示設定
     private int stageID;
     int viewWidth = 30;
+    int maxWidth = 100;
+    int minWidth = 10;
 
     //==========================
     // 選択中のオブジェクトIDと名前
@@ -81,9 +83,10 @@ public class CSVEditor_MkII : EditorWindow
 
         stageID = EditorGUILayout.IntField("ステージID", stageID);
         viewWidth = EditorGUILayout.IntField("表示幅", viewWidth);
+        viewWidth = Mathf.Clamp(viewWidth, minWidth, maxWidth);
 
         // スクロール開始
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(100));
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(120));
         try
         {
             // 行数
@@ -94,7 +97,7 @@ public class CSVEditor_MkII : EditorWindow
                 {
                     EditorGUILayout.LabelField("", GUILayout.Width(40));
 
-                    for (int col = 1; col <= viewWidth; col++)
+                    for (int col = 11; col < viewWidth; col++)
                     {
                         EditorGUILayout.LabelField(col.ToString(), GUILayout.Width(80));
                     }
@@ -139,7 +142,7 @@ public class CSVEditor_MkII : EditorWindow
                     EditorGUILayout.LabelField(laneLabel, GUILayout.Width(20));
 
                     int maxCols = Mathf.Min(viewWidth, rowData.Count);
-                    for (int col = 2; col < maxCols; col++)
+                    for (int col = 11; col < maxCols; col++)
                     {
                         DrawPlacementCell(row, col);
                     }
@@ -178,17 +181,11 @@ public class CSVEditor_MkII : EditorWindow
         }
 
         string rawValue = rowData[col];
-        string normalizedValue = rawValue?.Trim();
         int currentId = selectNoneId;
 
-        bool isEmptyToken = string.IsNullOrEmpty(normalizedValue) || normalizedValue == "\"\"";
-        if (!isEmptyToken && float.TryParse(normalizedValue, out float numericValue))
+        if (!string.IsNullOrWhiteSpace(rawValue) && float.TryParse(rawValue, out _))
         {
-            // 0 は未配置扱いにして Empty 表示にする
-            if (!Mathf.Approximately(numericValue, 0f))
-            {
-                currentId = Parse(normalizedValue);
-            }
+            currentId = Parse(rawValue);
         }
 
         string label = GetObjectLabel(currentId);
@@ -315,7 +312,7 @@ public class CSVEditor_MkII : EditorWindow
 
             newRow.Add(stageID.ToString()); // StageID
 
-            for (int y = 1; y < csvData[0].Count; y++)
+            for (int y = 1; y < maxWidth; y++)
             {
                 switch (y)
                 {

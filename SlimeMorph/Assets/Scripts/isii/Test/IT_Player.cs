@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 
-public class IT_Player : MonoBehaviour
+public class IT_Player : StageObjectItem
 {
     [Header("移動速度")]
     [SerializeField] float speed = 5f;
@@ -31,6 +31,7 @@ public class IT_Player : MonoBehaviour
     void Start()
     {
         collider = GetComponent<BoxCollider>();
+        IT_GameManager.Instance.RegisterStageObject(this); // IT_GameManagerにプレイヤーを登録
     }
 
     // Update is called once per frame
@@ -38,6 +39,7 @@ public class IT_Player : MonoBehaviour
     {
         if (isGoal) return; // ゴールに到達している場合は移動しない
         if (isDead) return; // 死亡している場合は移動しない
+        if (isStop) return; // 停止している場合は移動しない
 
         // 前方に移動
         transform.Translate(speed * Time.deltaTime * Vector3.forward);

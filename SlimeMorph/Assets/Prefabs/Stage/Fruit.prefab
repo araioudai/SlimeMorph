@@ -108,8 +108,10 @@ MonoBehaviour:
   id: 0
   amount: 0
   mas: 0
+  isStop: 0
   buffSound: {fileID: 8300000, guid: 4ce15eb58c7b4ab41bd9ac136f52f467, type: 3}
   debuffSound: {fileID: 8300000, guid: fc73bb4f7acfe7d4f9d1f5a03466388a, type: 3}
+  rotationSpeed: 360
 --- !u!65 &6971510158900486475
 BoxCollider:
   m_ObjectHideFlags: 0

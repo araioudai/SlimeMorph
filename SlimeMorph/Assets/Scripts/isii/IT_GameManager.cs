@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,18 @@ public class IT_GameManager : MonoBehaviour
     [Header("コインの数を表示するテキスト")]
     [SerializeField] Text coinText; // コインの数を表示するテキスト
     int getCoinCount = 0; // コインの数をカウントする変数
+
+
+
+    List<StageObjectItem> stageObjects = new(); // ステージオブジェクトのリスト
+    [SerializeField] Button stopButton; // 停止ボタンの参照
+    [SerializeField] Button resumeButton; // 再開ボタンの参照
+
+
+    public bool isGoal = false;
+
+
+
 
     #region Unity Methods
     void Start()
@@ -92,11 +105,62 @@ public class IT_GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
+    public void RegisterStageObject(StageObjectItem stageObject)
+    {
+        if (!stageObjects.Contains(stageObject))
+        {
+            stageObjects.Add(stageObject);
+        }
+    }
+
+    public void UnregisterStageObject(StageObjectItem stageObject)
+    {
+        if (stageObjects.Contains(stageObject))
+        {
+            stageObjects.Remove(stageObject);
+        }
+    }
+
+    void StageObjectStop()
+    {
+        foreach (var stageObject in stageObjects)
+        {
+            if (stageObject != null)
+            {
+                stageObject.isStop = true;
+            }
+        }
+    }
+
+    void StageObjectResume()
+    {
+        foreach (var stageObject in stageObjects)
+        {
+            if (stageObject != null)
+            {
+                stageObject.isStop = false;
+            }
+        }
+    }
+
+
+    #region Button Methods
+
+    public void OnStopButtonClicked()
+    {
+        StageObjectStop();
+        stopButton.gameObject.SetActive(false);
+        resumeButton.gameObject.SetActive(true);
+    }
+
+    public void OnResumeButtonClicked()
+    {
+        StageObjectResume();
+        stopButton.gameObject.SetActive(true);
+        resumeButton.gameObject.SetActive(false);
+    }
 
 
 
-
-
-
-
+    #endregion
 }

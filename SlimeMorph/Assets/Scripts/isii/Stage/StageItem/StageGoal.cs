@@ -13,6 +13,7 @@ public class StageGoal : MonoBehaviour
         {
             // ゴールに到達したときの処理
             Debug.Log("Goal Reached!");
+            IT_GameManager.Instance.isGoal = true;
 
             if (other.gameObject.TryGetComponent(out IT_Player player))
             {

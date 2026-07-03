@@ -84,13 +84,17 @@ public class StageManager : MonoBehaviour
                 continue;
             }
 
-
-            var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane) + data.prefab.transform.position, data.prefab.transform.rotation, stageParent);
-
-            if (obj.TryGetComponent(out StageObjectItem item))
+            if (data.prefab != null)
             {
-                item.Init(data, cell.amount, cell.z + 1);
+                var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane) + data.prefab.transform.position, data.prefab.transform.rotation, stageParent);
+                if (obj.TryGetComponent(out StageObjectItem item))
+                {
+                    item.Init(data, cell.amount, cell.z + 1);
+                    IT_GameManager.Instance.RegisterStageObject(item);
+                }
             }
+
+
 
             // 穴でなければ生成
             if (data.type == StageObjectType.Hole)

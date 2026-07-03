@@ -6,7 +6,7 @@ public class StageObjectItem : MonoBehaviour
     [SerializeField] private int id;
     [SerializeField] private float amount;
     [SerializeField] protected int mas;
-    protected bool isStop = false;
+    public bool isStop = false;
 
     public int Id => id;
     public float Amount => amount;
