@@ -17,10 +17,17 @@ public class SlimeTrailController : MonoBehaviour
     [Header("Inspectorでダメージエフェクトを試す")]
     [SerializeField] private bool damageEffectTest = false;
 
+    [Header("死亡時のエフェクト（子オブジェクト）")]
+    [SerializeField] private GameObject deathVFXObject;
+
+    [Header("Inspectorでダメージエフェクトを試す")]
+    [SerializeField] private bool deathEffectTest = false;
+
     private Vector3 lastPosition;
     private float stopTimer;
 
     private bool previousDamageEffectTest;
+    private bool previousDeathEffectTest;
 
     private void Start()
     {
@@ -36,13 +43,20 @@ public class SlimeTrailController : MonoBehaviour
             damageVFXObject.SetActive(false);
         }
 
+        if (deathVFXObject != null)
+        {
+            deathVFXObject.SetActive(false);
+        }
+
         previousDamageEffectTest = damageEffectTest;
+        previousDeathEffectTest = deathEffectTest;
     }
 
     private void Update()
     {
         CheckMoveTrail();
         CheckDamageEffectTest();
+        CheckDeathEffectTest();
     }
 
     private void CheckMoveTrail()
@@ -130,4 +144,49 @@ public class SlimeTrailController : MonoBehaviour
         }
     }
     */
+
+    private void CheckDeathEffectTest()
+    {
+        if (deathEffectTest == previousDeathEffectTest) return;
+
+        previousDeathEffectTest = deathEffectTest;
+
+        if (deathEffectTest)
+        {
+            PlayDeathVFX();
+        }
+        else
+        {
+            StopDeathVFX();
+        }
+    }
+
+    private void PlayDeathVFX()
+    {
+        if (deathVFXObject == null) return;
+
+        deathVFXObject.SetActive(true);
+
+        ParticleSystem[] particles = deathVFXObject.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem ps in particles)
+        {
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            ps.Play();
+        }
+    }
+
+    private void StopDeathVFX()
+    {
+        if (deathVFXObject == null) return;
+
+        ParticleSystem[] particles = deathVFXObject.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem ps in particles)
+        {
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        deathVFXObject.SetActive(false);
+    }
 }
