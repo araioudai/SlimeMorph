@@ -18,7 +18,6 @@ public class StageMoveObstacle : StageObjectItem
 
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + firstMoveMas * 5);
         speed = FindFirstObjectByType<IT_Player>().Speed; // プレイヤーの移動速度を取得して障害物の移動速度に設定
-
     }
 
     // Update is called once per frame
@@ -52,9 +51,18 @@ public class StageMoveObstacle : StageObjectItem
     {
         if (other.gameObject.CompareTag("Player") && !isMorphed)
         {
-            other.gameObject.GetComponent<IT_Player>().Morph(Amount);
+            if (!other.TryGetComponent<IT_Player>(out var player))
+                player = other.GetComponentInParent<IT_Player>();
+
+            if (player == null)
+            {
+                Debug.LogWarning($"StageFruit: IT_Player not found on trigger target {other.name}", other);
+                return;
+            }
+
+            player.Morph(Amount);
             isMorphed = true;
-            // ヒット音を再生
+
             if (hitSound != null)
                 SoundManager.Instance.PlaySE(hitSound);
         }

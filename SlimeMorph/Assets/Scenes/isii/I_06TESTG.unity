@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701774209047335550, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.646
       objectReference: {fileID: 0}
     - target: {fileID: 1701774209047335550, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
       propertyPath: m_LocalPosition.z
@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefaultSkin Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 7117651484928364233, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
       propertyPath: damageEffectTest
       value: 0
@@ -178,8 +182,83 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 48911564}
+    - targetCorrespondingSourceObject: {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 48911563}
+    - targetCorrespondingSourceObject: {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 48911561}
   m_SourcePrefab: {fileID: 100100000, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+--- !u!1 &48911560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
+  m_PrefabInstance: {fileID: 48911559}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &48911561
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48911560}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!114 &48911563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48911560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88b6f55728ecfcb4dbbe52539dcae391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IT_Player
+  id: 0
+  amount: 0
+  mas: 0
+  isStop: 0
+  speed: 20
+  timeMorphDown: 0.05
+  gravityValue: 3
+  cameraDistance: 4
+  isTimeMorphDown: 0
+--- !u!114 &48911564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48911560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1623c711baae6c94aa60b9f641507652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IT_PlayerPosCheck
+  nowMas: 0
 --- !u!1 &137142289
 GameObject:
   m_ObjectHideFlags: 0
@@ -3999,7 +4078,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6627647947091849706, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6627647947091849706, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
       propertyPath: m_TagString
@@ -4581,7 +4660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IT_PlayerMove
   canvas: {fileID: 1951579686}
-  player: {fileID: 1877810469}
+  player: {fileID: 48911560}
   flickSpeedMax: 10
 --- !u!114 &1951579688
 MonoBehaviour:
@@ -5564,7 +5643,6 @@ SceneRoots:
   - {fileID: 284609456}
   - {fileID: 1951579691}
   - {fileID: 621838454}
-  - {fileID: 1511094843}
   - {fileID: 918739376}
   - {fileID: 1166318263}
   - {fileID: 1933766912}
@@ -5572,4 +5650,5 @@ SceneRoots:
   - {fileID: 576556334}
   - {fileID: 812045920}
   - {fileID: 2033414339}
+  - {fileID: 1511094843}
   - {fileID: 48911559}

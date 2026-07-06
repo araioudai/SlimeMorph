@@ -27,11 +27,16 @@ public class IT_Player : StageObjectItem
     bool isGoal = false; // ゴールに到達したかどうかを管理するフラグ
     bool isDead = false; // 死亡しているかどうかを管理するフラグ
 
-    BoxCollider collider;
+    [Header("Slime")]
+    GameObject slime;
+
+
+
+
     void Start()
     {
-        collider = GetComponent<BoxCollider>();
         IT_GameManager.Instance.RegisterStageObject(this); // IT_GameManagerにプレイヤーを登録
+        slime = gameObject.transform.GetChild(0).gameObject; // Slimeオブジェクトを取得
     }
 
     // Update is called once per frame
@@ -55,8 +60,8 @@ public class IT_Player : StageObjectItem
         if(isMorphed) return;
         isMorphed = true;
         // プレイヤーのサイズを+-変更
-        transform.localScale += new Vector3(morphSize, morphSize, morphSize);
-        collider.size += new Vector3(morphSize, morphSize, morphSize); // コライダーのサイズも変更
+        slime.transform.localScale += new Vector3(morphSize, morphSize, morphSize);
+        slime.GetComponent<BoxCollider>().size += new Vector3(morphSize, morphSize, morphSize); // コライダーのサイズも変更
         if (morphSize < 0)
             gravityValue -= 1;
         else
@@ -69,8 +74,8 @@ public class IT_Player : StageObjectItem
     {
         if (!isTimeMorphDown) return;
         // 時間経過でサイズを減らす
-        transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime);
-        collider.size -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime); // コライダーのサイズも変更
+        slime.transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime);
+        slime.GetComponent<BoxCollider>().size -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime); // コライダーのサイズも変更
         gravityValue -= timeMorphDown * Time.deltaTime;
     }
 
@@ -82,7 +87,7 @@ public class IT_Player : StageObjectItem
 
     void Dead()
     {
-        if(transform.localScale.x <= 0.01f)
+        if(slime.transform.localScale.x <= 0.01f)
         {
             // ゲームオーバー シーン再ロード
             Die(); // プレイヤーの死亡処理を呼び出す
@@ -101,7 +106,7 @@ public class IT_Player : StageObjectItem
     // 落下死
     void DeadFall()
     {
-        if(transform.position.y < -10f)
+        if(slime.transform.position.y < -10f)
         {
             // ゲームオーバー シーン再ロード
             // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
