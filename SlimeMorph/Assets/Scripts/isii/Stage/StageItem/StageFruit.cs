@@ -19,12 +19,21 @@ public class StageFruit : StageObjectItem
     {
         if (other.gameObject.CompareTag("Player") && !isMorphed)
         {
-            other.gameObject.GetComponent<IT_Player>().Morph(Amount);
+            if (!other.TryGetComponent<IT_Player>(out var player))
+                player = other.GetComponentInParent<IT_Player>();
+
+            if (player == null)
+            {
+                Debug.LogWarning($"StageFruit: IT_Player not found on trigger target {other.name}", other);
+                return;
+            }
+
+            player.Morph(Amount);
             isMorphed = true;
             // バフ音またはデバフ音を再生
-            if (Amount > 0 && buffSound != null)
+            if (Amount > 0 && buffSound != null && SoundManager.Instance != null)
                 SoundManager.Instance.PlaySE(buffSound);
-            else if (Amount < 0 && debuffSound != null)
+            else if (Amount < 0 && debuffSound != null && SoundManager.Instance != null)
                 SoundManager.Instance.PlaySE(debuffSound);
             this.gameObject.SetActive(false); // オブジェクトを非表示にする
         }
