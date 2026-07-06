@@ -9,6 +9,8 @@ public class StageCoin : StageObjectItem
 
     void Update()
     {
+        if (isStop) return; // isStopがtrueの場合は処理をスキップ
+
         // コインを回転させる
         transform.eulerAngles += new Vector3(0, coinSpeed * Time.deltaTime, 0);
     }
@@ -22,6 +24,7 @@ public class StageCoin : StageObjectItem
             {
                 SoundManager.Instance.PlaySE(coinSound);
             }
+            Destroy(gameObject); // コインを破壊
         }
     }
 

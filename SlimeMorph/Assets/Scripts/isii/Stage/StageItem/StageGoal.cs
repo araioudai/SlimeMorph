@@ -13,10 +13,17 @@ public class StageGoal : MonoBehaviour
         {
             // ゴールに到達したときの処理
             Debug.Log("Goal Reached!");
+            IT_GameManager.Instance.isGoal = true;
 
             if (other.gameObject.TryGetComponent(out IT_Player player))
             {
                 player.ReachGoal(); // プレイヤーにゴール到達を通知
+            }
+
+            GoalCamera goalCamera = FindFirstObjectByType<GoalCamera>();
+            if (goalCamera != null)
+            {
+                goalCamera.StartGoalSequence(other.transform);
             }
 
             // ステージクリアの処理を非同期で実行
@@ -29,8 +36,8 @@ public class StageGoal : MonoBehaviour
         // クリアエフェクトの再生やスコアの計算など、ステージクリアの処理をここに実装
         Debug.Log("Stage Clear!");
 
-        // 例: 2秒待ってから次のステージへ遷移
-        await UniTask.Delay(2000);
+        // 例: 3秒待ってから次のステージへ遷移
+        await UniTask.Delay(3000);
 
         // 次のステージへ遷移する処理をここに実装
         SceneManager.LoadScene("I_05TESTG");

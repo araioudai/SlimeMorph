@@ -22,6 +22,10 @@ public class StageManager : MonoBehaviour
     [Header("オブジェクトの位置調整")]
     [SerializeField] float objectOffset = 1f; // オブジェクトオフセット(めり込まないように)
 
+#if UNITY_EDITOR
+    public bool debugMode = false; // デバッグモードのフラグ
+#endif
+
     private void Awake()
     {
         if (Instance == null)
@@ -39,15 +43,21 @@ public class StageManager : MonoBehaviour
     
     void Start()
     {
+        if (debugMode) return; // デバッグモードの場合はステージ生成をスキップ
         Loading();
     }
 
-    void Loading()
+    void Loading(int sid = -99)
     {
         // プレイヤーの位置に応じてステージを生成する処理
         CSVLoader csvLoader = GetComponent<CSVLoader>();
         List<string[]> csvData = csvLoader.LoadCSV("Stage"); // CSVファイル
         List<StageCellData> stageCells = CSVLoader.Parse(csvData);
+
+        if (sid != -99)
+        {
+            StageID = sid;
+        }
 
         // // Debug stageCellの内容を確認
         // foreach (var cell in stageCells)
@@ -74,13 +84,17 @@ public class StageManager : MonoBehaviour
                 continue;
             }
 
-
-            var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane), data.prefab.transform.rotation, stageParent);
-
-            if (obj.TryGetComponent(out StageObjectItem item))
+            if (data.prefab != null)
             {
-                item.Init(data, cell.amount, cell.z + 1);
+                var obj = Instantiate(data.prefab, position + GetObjectOffset(cell.lane) + data.prefab.transform.position, data.prefab.transform.rotation, stageParent);
+                if (obj.TryGetComponent(out StageObjectItem item))
+                {
+                    item.Init(data, cell.amount, cell.z + 1);
+                    IT_GameManager.Instance.RegisterStageObject(item);
+                }
             }
+
+
 
             // 穴でなければ生成
             if (data.type == StageObjectType.Hole)
@@ -160,6 +174,13 @@ public class StageManager : MonoBehaviour
     {
         Loading();
     }
+
+    public void CreateStage(int id)
+    {
+        RemoveStage();
+        Loading(id);
+    }
+
     #endregion
 
 

@@ -1,7 +1,9 @@
 using UnityEngine;
+using common;
+using System.IO;
 
 public class StageRock : StageObjectItem
-{    
+{
     bool isMorphed = false;
     [SerializeField] AudioClip hitSound; // ヒット音
 
@@ -12,8 +14,9 @@ public class StageRock : StageObjectItem
             other.gameObject.GetComponent<IT_Player>().Morph(Amount);
             isMorphed = true;
             // ヒット音を再生
-            if (hitSound != null)
-                SoundManager.Instance.PlaySE(hitSound);
+            // if (hitSound != null)
+            //     SoundManager.Instance.PlaySE(hitSound);
+            SoundManager.Instance.PlaySE(SE.HitDamage);
         }
     }
 }
