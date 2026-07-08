@@ -40,6 +40,6 @@ public class StageGoal : MonoBehaviour
         await UniTask.Delay(3000);
 
         // 次のステージへ遷移する処理をここに実装
-        SceneManager.LoadScene("I_05TESTG");
+        SceneManager.LoadScene("TitleScene");
     }
 }
