@@ -18,6 +18,13 @@ public class StageGoal : MonoBehaviour
             if (other.gameObject.TryGetComponent(out IT_Player player))
             {
                 player.ReachGoal(); // プレイヤーにゴール到達を通知
+                // プレイヤーの動きを止める
+                if (player.rb != null)
+                {
+                    player.rb.linearVelocity = Vector3.zero;
+                    player.rb.angularVelocity = Vector3.zero;
+                    player.rb.isKinematic = true; // Rigidbodyをキネマティックにして物理演算を無効化
+                }
             }
 
             GoalCamera goalCamera = FindFirstObjectByType<GoalCamera>();
