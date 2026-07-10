@@ -1376,6 +1376,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7565449359373738104, guid: 98b3328c7686bb1449b946101ddfc432, type: 3}
+      propertyPath: slimeTrail
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1985312937246216186, guid: 98b3328c7686bb1449b946101ddfc432, type: 3}
@@ -3398,11 +3402,11 @@ MonoBehaviour:
   amount: 0
   mas: 0
   isStop: 0
-  speed: 20
+  speed: 0
   timeMorphDown: 0.05
   gravityValue: 3
   cameraDistance: 4
-  isTimeMorphDown: 1
+  isTimeMorphDown: 0
   groundProbeOffset: 0.5
   groundProbeDistance: 1.8
   groundSnapOffset: 0.05

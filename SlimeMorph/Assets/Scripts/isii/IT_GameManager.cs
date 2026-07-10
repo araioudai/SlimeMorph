@@ -151,6 +151,10 @@ public class IT_GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        UIMaskFader fader = FindFirstObjectByType<UIMaskFader>();
+
+        fader.BroadcastMessage("PlayFadeOut", 1.0f); // フェードアウトを開始（1秒でフェードアウト）
+
         // ゲームをリセットする処理をここに実装する
         // 例えば、シーンを再ロードするなど
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
