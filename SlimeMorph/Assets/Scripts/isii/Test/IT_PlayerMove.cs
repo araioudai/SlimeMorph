@@ -32,15 +32,44 @@ public class IT_PlayerMove : MonoBehaviour
         // // PCではマウスのドラッグでプレイヤーを移動させる 上記のフリック操作と同じような挙動にする
         if (Input.GetMouseButton(0))
         {
-            Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            float dragSpeed = mouseDelta.magnitude / Time.deltaTime;
+            // float mouseX = Input.GetAxis("Mouse X");
+            // float dragSpeed = Mathf.Abs(mouseX) / Time.deltaTime;
+            // if (dragSpeed > flickSpeedMax)
+            // {
+            //     dragSpeed = flickSpeedMax;
+            // }
+            // Vector3 moveDirection = new(Mathf.Sign(mouseX), 0, 0);
+            // Vector3 move = moveDirection * dragSpeed * Time.deltaTime;
+
+            // if (player.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
+            // {
+            //     rb.MovePosition(rb.position + move);
+            // }
+            // else
+            // {
+            //     player.transform.Translate(move, Space.World);
+            // }
+            
+            // 横移動のみ取得
+            float mouseX = Input.GetAxis("Mouse X");
+            Vector3 moveDirection = new Vector3(mouseX, 0, 0).normalized;
+            float dragSpeed = Mathf.Abs(mouseX) / Time.deltaTime;
             if (dragSpeed > flickSpeedMax)
             {
                 dragSpeed = flickSpeedMax;
             }
-            Vector3 moveDirection = new Vector3(mouseDelta.x, 0, 0).normalized;
 
-            player.transform.Translate(moveDirection * dragSpeed * Time.deltaTime, Space.World);
+            Vector3 move = moveDirection * dragSpeed * Time.deltaTime;
+            if (player.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
+            {
+                rb.MovePosition(rb.position + move);
+            }
+            else
+            {
+                player.transform.Translate(move, Space.World);
+            }
+        
+        
         }
     }
 }

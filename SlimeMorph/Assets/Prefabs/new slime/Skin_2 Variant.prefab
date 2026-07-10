@@ -93,6 +93,8 @@ MonoBehaviour:
   stopDelay: 0.15
   damageVFXObject: {fileID: 0}
   damageEffectTest: 0
+  deathVFXObject: {fileID: 0}
+  deathEffectTest: 0
 --- !u!65 &-5435671159546304848
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -128,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 568979127611565044, guid: fc7af05a0450bd940acfe1fa1b4c60d5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 568979127611565044, guid: fc7af05a0450bd940acfe1fa1b4c60d5, type: 3}
       propertyPath: m_LocalPosition.z
