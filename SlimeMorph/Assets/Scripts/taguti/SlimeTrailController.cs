@@ -2,28 +2,28 @@ using UnityEngine;
 
 public class SlimeTrailController : MonoBehaviour
 {
-    [Header("????????G?t?F?N?g")]
+    [Header("移動時の跡エフェクト")]
     [SerializeField] private ParticleSystem slimeTrail;
 
-    [Header("????????????????????????")]
-    [SerializeField] private float moveThreshold = 0.001f;
+    [Header("どれくらい動いたら移動中と判定するか")]
+    [SerializeField] private float moveSpeedThreshold = 0.001f;
 
-    [Header("?~???????????????")]
+    [Header("止まった判定までの時間")]
     [SerializeField] private float stopDelay = 0.15f;
 
-    [Header("?_???[?W????G?t?F?N?g?i?q?I?u?W?F?N?g?j")]
+    [Header("ダメージ時のエフェクト（子オブジェクト）")]
     [SerializeField] private GameObject damageVFXObject;
 
-    [Header("Inspector??_???[?W?G?t?F?N?g??????")]
+    [Header("Inspectorでダメージエフェクトを試す")]
     [SerializeField] private bool damageEffectTest = false;
 
-    [Header("???S????G?t?F?N?g?i?q?I?u?W?F?N?g?j")]
+    [Header("死亡時のエフェクト（子オブジェクト）")]
     [SerializeField] private GameObject deathVFXObject;
 
-    [Header("Inspector??_???[?W?G?t?F?N?g??????")]
+    [Header("Inspectorでダメージエフェクトを試す")]
     [SerializeField] private bool deathEffectTest = false;
 
-    private Vector3 lastPosition;
+    private Rigidbody rb;
     private float stopTimer;
 
     private bool previousDamageEffectTest;
@@ -31,7 +31,12 @@ public class SlimeTrailController : MonoBehaviour
 
     private void Start()
     {
-        lastPosition = transform.position;
+        rb = GetComponent<Rigidbody>();
+
+        if (rb == null)
+        {
+            Debug.LogWarning("SlimeTrailController: Rigidbodyが見つかりません。PlayerにRigidbodyを付けてください。");
+        }
 
         if (slimeTrail != null)
         {
@@ -62,10 +67,14 @@ public class SlimeTrailController : MonoBehaviour
     private void CheckMoveTrail()
     {
         if (slimeTrail == null) return;
+        if (rb == null) return;
 
-        float distance = Vector3.Distance(transform.position, lastPosition);
+        Vector3 horizontalVelocity = rb.linearVelocity;
+        horizontalVelocity.y = 0f;
 
-        if (distance > moveThreshold)
+        bool isMoving = horizontalVelocity.magnitude > moveSpeedThreshold;
+
+        if (isMoving)
         {
             stopTimer = 0f;
 
@@ -86,8 +95,6 @@ public class SlimeTrailController : MonoBehaviour
                 }
             }
         }
-
-        lastPosition = transform.position;
     }
 
     private void CheckDamageEffectTest()
