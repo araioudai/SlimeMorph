@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1271623416449221530}
   m_Layer: 0
   m_Name: PoisonFruit
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,8 +127,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageFruit
   id: 0
   amount: 0
+  mas: 0
+  isStop: 0
   buffSound: {fileID: 8300000, guid: 003ee1c7284c5054cb22a7ab7c7c3944, type: 3}
   debuffSound: {fileID: 8300000, guid: fc73bb4f7acfe7d4f9d1f5a03466388a, type: 3}
+  rotationSpeed: 50
 --- !u!1 &3593925990174905905
 GameObject:
   m_ObjectHideFlags: 0

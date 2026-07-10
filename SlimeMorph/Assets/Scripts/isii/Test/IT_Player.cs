@@ -18,11 +18,23 @@ public class IT_Player : StageObjectItem
     [SerializeField] float gravityValue = 3; // 重力の値
     public float GravityValue { get { return gravityValue; } } // 重力の値を外部から取得できるようにするプロパティ
 
+    [Header("プレイヤーのサイズ")]
+    public Vector3 PlayerSize { get { return slime.transform.localScale; } } // プレイヤーのサイズを外部から取得できるようにするプロパティ
+
+
     [Header("カメラとの距離")]
     [SerializeField] float cameraDistance = 3f; // カメラとの距離
 
     [Header("時間経過でサイズを減らすかどうか")]
     [SerializeField] bool isTimeMorphDown = true; // 時間経過でサイズを減らすかどうか
+
+    [Header("地面追従")]
+    [SerializeField] float groundProbeOffset = 0.5f;
+    [SerializeField] float groundProbeDistance = 1.8f;
+    [SerializeField] float groundSnapOffset = 0.05f;
+    [SerializeField] float maxGroundAngle = 80f;
+    [SerializeField] LayerMask groundLayerMask = ~0;
+    [SerializeField] string groundTag = "Ground";
 
     bool isGoal = false; // ゴールに到達したかどうかを管理するフラグ
     bool isDead = false; // 死亡しているかどうかを管理するフラグ
@@ -31,28 +43,87 @@ public class IT_Player : StageObjectItem
     GameObject slime;
 
 
+    public Rigidbody rb;
 
 
-    void Start()
+    bool isStart = false; // ゲーム開始時のフラグ
+
+    public void Init()
     {
         IT_GameManager.Instance.RegisterStageObject(this); // IT_GameManagerにプレイヤーを登録
         slime = gameObject.transform.GetChild(0).gameObject; // Slimeオブジェクトを取得
+        rb = GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (!isStart) return; // ゲーム開始前は処理しない
         if (isGoal) return; // ゴールに到達している場合は移動しない
         if (isDead) return; // 死亡している場合は移動しない
         if (isStop) return; // 停止している場合は移動しない
 
-        // 前方に移動
-        transform.Translate(speed * Time.deltaTime * Vector3.forward);
         // カメラもプレイヤーと同じ速度で移動 ただしカメラは回転している為、プレイヤーの位置に合わせてカメラの位置を更新する
         // Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z - cameraDistance);
+        
+        // transform.Translate(speed * Time.deltaTime * Vector3.forward);
+        
         Dead();
         // DeadFall();
         MorphDown();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isGoal) return;
+        if (isDead) return;
+        if (isStop) return;
+        if (rb == null) return;
+
+        if (TryGetGroundHit(out RaycastHit hit))
+        {
+            float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+
+            if (slopeAngle <= maxGroundAngle)
+            {
+                Vector3 forwardOnGround = Vector3.ProjectOnPlane(Vector3.forward, hit.normal);
+                if (forwardOnGround.sqrMagnitude <= 0.0001f)
+                {
+                    forwardOnGround = Vector3.forward;
+                }
+                forwardOnGround.Normalize();
+
+                Vector3 nextPos = rb.position + forwardOnGround * speed * Time.fixedDeltaTime;
+                nextPos.y = hit.point.y + groundSnapOffset;
+
+                rb.MovePosition(nextPos);
+                rb.linearVelocity = Vector3.zero;
+                return;
+            }
+        }
+
+        // 接地していないときは落下しつつ前進
+        Vector3 velocity = rb.linearVelocity;
+        velocity.x = 0f;
+        velocity.z = speed;
+        rb.linearVelocity = velocity;
+
+    }
+
+    private bool TryGetGroundHit(out RaycastHit hit)
+    {
+        Vector3 origin = rb.position + Vector3.up * groundProbeOffset;
+        if (!Physics.Raycast(origin, Vector3.down, out hit, groundProbeDistance, groundLayerMask, QueryTriggerInteraction.Ignore))
+        {
+            return false;
+        }
+
+        return hit.collider != null && hit.collider.CompareTag(groundTag);
     }
 
     public void Morph(float morphSize)
@@ -116,12 +187,23 @@ public class IT_Player : StageObjectItem
 
     public void ReachGoal()
     {
+        StopMovement();
         isGoal = true; // ゴールに到達したことを設定
     }
 
     public void Die()
     {
+        StopMovement();
+
         isDead = true; // 死亡したことを設定
+    }
+
+    private void StopMovement()
+    {
+        if (rb == null) return;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
 

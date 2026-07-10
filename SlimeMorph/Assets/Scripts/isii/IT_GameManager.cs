@@ -18,13 +18,15 @@ public class IT_GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+
+        Init();
     }
     #endregion
 
     #region Player Reference
     IT_Player player;
     bool isGameOver = false; // ゲームオーバー状態を管理するフラグ
-
 
 
     #endregion
@@ -44,13 +46,32 @@ public class IT_GameManager : MonoBehaviour
 
     public bool isGoal = false;
 
+    [Header("ステージプレイヤープレファブの参照")]
+    [SerializeField] StagePlayerPrefabs stagePlayerPrefabs; // ステージプレイヤープレファブの参照
+    private const string SelectedSkinKey = "SavedSelectedSkinIndex";
+    [SerializeField] GameObject playerObject; // プレイヤーのGameObjectを保持する変数
+
+
+
+
+
+
 
 
 
     #region Unity Methods
-    void Start()
+    void Init()
     {
+        SkinPlayerSpawn();
         player = FindFirstObjectByType<IT_Player>();
+        if (player != null)
+        {
+            player.Init();
+        }
+        else
+        {
+            Debug.LogWarning("IT_Playerが見つかりません。");
+        }
         coinText.text = "Coins: " + getCoinCount;
         gameOver.SetActive(false); // ゲーム開始時はゲームオーバーキャンバスを非表示にする
     }
@@ -66,13 +87,43 @@ public class IT_GameManager : MonoBehaviour
     }
     #endregion
 
+    void SkinPlayerSpawn()
+    {
+        int savedIndex = PlayerPrefs.GetInt(SelectedSkinKey, 0);
+        if (stagePlayerPrefabs != null && stagePlayerPrefabs.prefabs.Count > savedIndex)
+        {
+            GameObject selectedPrefab = stagePlayerPrefabs.prefabs[savedIndex];
+            if (selectedPrefab != null)
+            {
+                Instantiate(selectedPrefab, playerObject.transform.position, Quaternion.identity, playerObject.transform);
+                
+                
+                
+                Debug.Log($"選択されたプレイヤープレファブを生成しました: {selectedPrefab.name}");
+            }
+            else
+            {
+                Debug.LogWarning("選択されたプレイヤープレファブがnullです。");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("保存されたインデックスが範囲外です。");
+        }
+    }
+
+
+
+
+
+
 
 
 
 
     void Dead()
     {
-        if (player.GravityValue < 0.5f && !isGameOver)
+        if (player.PlayerSize.x < 0.2f && !isGameOver)
         {
             Debug.Log("プレイヤーが死亡しました。");
             // ここでゲームオーバー処理を実装する

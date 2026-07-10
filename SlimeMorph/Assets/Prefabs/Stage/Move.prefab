@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6907731227304138290}
   m_Layer: 0
   m_Name: Move
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,5 +129,6 @@ MonoBehaviour:
   id: 0
   amount: 0
   mas: 0
+  isStop: 0
   firstMoveMas: 3
   hitSound: {fileID: 8300000, guid: 003ee1c7284c5054cb22a7ab7c7c3944, type: 3}
