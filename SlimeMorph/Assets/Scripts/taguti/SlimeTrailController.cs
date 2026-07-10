@@ -6,7 +6,7 @@ public class SlimeTrailController : MonoBehaviour
     [SerializeField] private ParticleSystem slimeTrail;
 
     [Header("どれくらい動いたら移動中と判定するか")]
-    [SerializeField] private float moveThreshold = 0.001f;
+    [SerializeField] private float moveSpeedThreshold = 0.001f;
 
     [Header("止まった判定までの時間")]
     [SerializeField] private float stopDelay = 0.15f;
@@ -23,7 +23,7 @@ public class SlimeTrailController : MonoBehaviour
     [Header("Inspectorでダメージエフェクトを試す")]
     [SerializeField] private bool deathEffectTest = false;
 
-    private Vector3 lastPosition;
+    private Rigidbody rb;
     private float stopTimer;
 
     private bool previousDamageEffectTest;
@@ -31,7 +31,12 @@ public class SlimeTrailController : MonoBehaviour
 
     private void Start()
     {
-        lastPosition = transform.position;
+        rb = GetComponent<Rigidbody>();
+
+        if (rb == null)
+        {
+            Debug.LogWarning("SlimeTrailController: Rigidbodyが見つかりません。PlayerにRigidbodyを付けてください。");
+        }
 
         if (slimeTrail != null)
         {
@@ -62,10 +67,14 @@ public class SlimeTrailController : MonoBehaviour
     private void CheckMoveTrail()
     {
         if (slimeTrail == null) return;
+        if (rb == null) return;
 
-        float distance = Vector3.Distance(transform.position, lastPosition);
+        Vector3 horizontalVelocity = rb.linearVelocity;
+        horizontalVelocity.y = 0f;
 
-        if (distance > moveThreshold)
+        bool isMoving = horizontalVelocity.magnitude > moveSpeedThreshold;
+
+        if (isMoving)
         {
             stopTimer = 0f;
 
@@ -86,8 +95,6 @@ public class SlimeTrailController : MonoBehaviour
                 }
             }
         }
-
-        lastPosition = transform.position;
     }
 
     private void CheckDamageEffectTest()
