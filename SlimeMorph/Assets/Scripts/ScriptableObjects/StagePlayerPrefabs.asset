@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: StagePlayerPrefabs
   m_EditorClassIdentifier: Assembly-CSharp::StagePlayerPrefabs
   prefabs:
-  - {fileID: 4756931493143065506, guid: f0a5d23daccc475468a817f3ff0d6c48, type: 3}
-  - {fileID: 8725435804285713567, guid: 54ad591f71d466f4a89c555826e79007, type: 3}
-  - {fileID: 2854073188430255832, guid: 98b3328c7686bb1449b946101ddfc432, type: 3}
+  - {fileID: 202951927973897731, guid: b635bf63044772242a5b8eaf9930d256, type: 3}
+  - {fileID: 7724426651422190806, guid: ab5957d2b001e8d439be07c069593753, type: 3}
+  - {fileID: 534818923413254700, guid: d5c1e9c89145c3e4a9bf1e15b2fc898a, type: 3}

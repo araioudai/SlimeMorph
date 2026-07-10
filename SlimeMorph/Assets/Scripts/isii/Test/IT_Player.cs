@@ -41,9 +41,16 @@ public class IT_Player : StageObjectItem
 
     [Header("Slime")]
     GameObject slime;
-
-
     public Rigidbody rb;
+
+
+
+
+
+
+
+
+
 
 
     bool isStart = false; // ゲーム開始時のフラグ

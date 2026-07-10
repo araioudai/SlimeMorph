@@ -96,9 +96,6 @@ public class IT_GameManager : MonoBehaviour
             if (selectedPrefab != null)
             {
                 Instantiate(selectedPrefab, playerObject.transform.position, Quaternion.identity, playerObject.transform);
-                
-                
-                
                 Debug.Log($"選択されたプレイヤープレファブを生成しました: {selectedPrefab.name}");
             }
             else
@@ -151,13 +148,16 @@ public class IT_GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        UIMaskFader fader = FindFirstObjectByType<UIMaskFader>();
-
-        fader.BroadcastMessage("PlayFadeOut", 1.0f); // フェードアウトを開始（1秒でフェードアウト）
-
-        // ゲームをリセットする処理をここに実装する
-        // 例えば、シーンを再ロードするなど
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.PushTitle();
+        }
+        else
+        {
+            Debug.LogWarning("GameManagerが見つかりません。");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        }
     }
 
     public void RegisterStageObject(StageObjectItem stageObject)
