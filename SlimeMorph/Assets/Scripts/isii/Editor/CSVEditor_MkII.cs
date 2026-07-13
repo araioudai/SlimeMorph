@@ -323,7 +323,7 @@ public class CSVEditor_MkII : EditorWindow
                         newRow.Add("0");
                         break;
 
-                    case > 10:
+                    case > 15:
                         newRow.Add("");
                         break;
 
