@@ -45,6 +45,11 @@ public class IT_Player : StageObjectItem
 
 
 
+    [Header("強化")]
+    float speedUpValue = 1.5f; // スピードアップの倍率
+    float defenceValue = 0.5f; // 防御力の倍率
+    float decreaseValue = 0.5f; // 減少量の倍率
+
 
 
 
@@ -138,6 +143,14 @@ public class IT_Player : StageObjectItem
         if(isMorphed) return;
         isMorphed = true;
         // プレイヤーのサイズを+-変更
+
+        // 減少だった場合
+        if(morphSize < 0)
+        {
+            // decreaseValueを掛けて減少量を調整
+            morphSize *= decreaseValue;
+        }
+
         slime.transform.localScale += new Vector3(morphSize, morphSize, morphSize);
         slime.GetComponent<BoxCollider>().size += new Vector3(morphSize, morphSize, morphSize); // コライダーのサイズも変更
         if (morphSize < 0)
@@ -152,9 +165,12 @@ public class IT_Player : StageObjectItem
     {
         if (!isTimeMorphDown) return;
         // 時間経過でサイズを減らす
-        slime.transform.localScale -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime);
-        slime.GetComponent<BoxCollider>().size -= new Vector3(timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime, timeMorphDown * Time.deltaTime); // コライダーのサイズも変更
-        gravityValue -= timeMorphDown * Time.deltaTime;
+
+        float morphAmount = timeMorphDown * decreaseValue * Time.deltaTime;
+
+        slime.transform.localScale -= new Vector3(morphAmount, morphAmount, morphAmount);
+        slime.GetComponent<BoxCollider>().size -= new Vector3(morphAmount, morphAmount, morphAmount); // コライダーのサイズも変更
+        gravityValue -= morphAmount;
     }
 
     IEnumerator MorphTimer()

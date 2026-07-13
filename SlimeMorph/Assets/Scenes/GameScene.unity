@@ -250,7 +250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2514726851379540493, guid: 61702fbd696201f45a9fa9cf069960b8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3518156197750932778, guid: 61702fbd696201f45a9fa9cf069960b8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -258,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3518156197750932778, guid: 61702fbd696201f45a9fa9cf069960b8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2225851
+      value: 1.92
       objectReference: {fileID: 0}
     - target: {fileID: 3518156197750932778, guid: 61702fbd696201f45a9fa9cf069960b8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1179,7 +1179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4958731002524023808, guid: e81f622d4669f564787412f09c3e64e2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2291,6 +2291,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skin_2
       objectReference: {fileID: 0}
+    - target: {fileID: 534818923413254700, guid: d5c1e9c89145c3e4a9bf1e15b2fc898a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4498079929239542060, guid: d5c1e9c89145c3e4a9bf1e15b2fc898a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.26
@@ -2438,7 +2442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7677114738459511969, guid: 9b66d67136ea1b74b9a3977ae6626ae2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2758,7 +2762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8781371928383571401, guid: ac4a382c290361a4db09a53e32b1c935, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3026,7 +3030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailController
   slimeTrail: {fileID: 0}
-  moveThreshold: 0.01
+  moveSpeedThreshold: 0.001
   stopDelay: 0.15
   damageVFXObject: {fileID: 0}
   damageEffectTest: 0
@@ -3380,7 +3384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2530768632055235262, guid: 2a48b43d9d864f946bac75d9e3092233, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4115961
+      value: 1.61
       objectReference: {fileID: 0}
     - target: {fileID: 2530768632055235262, guid: 2a48b43d9d864f946bac75d9e3092233, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3420,7 +3424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9140513171258871734, guid: 2a48b43d9d864f946bac75d9e3092233, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3881,7 +3885,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 245010132099939612, guid: e1d628ffe30305a449d6a1a04fef5aeb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4082242002798826520, guid: e1d628ffe30305a449d6a1a04fef5aeb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3982,7 +3986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2114309731230674274, guid: f08e31c4933b2d24592f696b2f9b5f2a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4003,7 +4007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1321957576344718574, guid: 254a99dd8c953c44d9ed0fc6d43f7251, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.1740075
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 1321957576344718574, guid: 254a99dd8c953c44d9ed0fc6d43f7251, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4043,7 +4047,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1858756409814492976, guid: 254a99dd8c953c44d9ed0fc6d43f7251, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4514,7 +4518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4903052825323371263, guid: 2bd1f07ae7743bb4a960286ff70a0be8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5934,6 +5938,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skin_1
       objectReference: {fileID: 0}
+    - target: {fileID: 7724426651422190806, guid: ab5957d2b001e8d439be07c069593753, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7965361388478516921, guid: ab5957d2b001e8d439be07c069593753, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.25
@@ -6069,6 +6077,10 @@ PrefabInstance:
     - target: {fileID: 202951927973897731, guid: b635bf63044772242a5b8eaf9930d256, type: 3}
       propertyPath: m_Name
       value: DefaultSkin
+      objectReference: {fileID: 0}
+    - target: {fileID: 202951927973897731, guid: b635bf63044772242a5b8eaf9930d256, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6289539564835194847, guid: b635bf63044772242a5b8eaf9930d256, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6406,8 +6418,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   seClips:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 9fda8325dbb5ebc4b888fb926be8a5b3, type: 3}
+  - {fileID: 8300000, guid: 36104e23453c7cd46910c42d3cd20044, type: 3}
   - {fileID: 8300000, guid: 003ee1c7284c5054cb22a7ab7c7c3944, type: 3}
   - {fileID: 0}
 --- !u!4 &2112544210
@@ -6444,8 +6456,8 @@ SceneRoots:
   - {fileID: 834651082}
   - {fileID: 906161721}
   - {fileID: 2001557812}
-  - {fileID: 779622088}
   - {fileID: 1917368939}
+  - {fileID: 779622088}
   - {fileID: 810726638}
   - {fileID: 838779737}
   - {fileID: 1087560037}

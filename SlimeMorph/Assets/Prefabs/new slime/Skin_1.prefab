@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailController
   slimeTrail: {fileID: 5148237474669276536}
-  moveThreshold: 0.001
+  moveSpeedThreshold: 0.001
   stopDelay: 0.15
   damageVFXObject: {fileID: 5817489144860235747}
   damageEffectTest: 0
@@ -190,7 +190,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailController
   slimeTrail: {fileID: 2919893019324795194}
-  moveThreshold: 0.001
+  moveSpeedThreshold: 0.001
   stopDelay: 0.15
   damageVFXObject: {fileID: 1594386057203537955}
   damageEffectTest: 0
@@ -301,12 +301,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.2, y: 1.2, z: 1.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!4 &6289539564835194847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1036896554794389558, guid: d6fc32011b0186b49bd956d60e3dcee2, type: 3}
