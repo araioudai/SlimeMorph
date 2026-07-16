@@ -55,6 +55,7 @@ public class TitleManager : MonoBehaviour
 
     [Header("強化画面関連")]
     [SerializeField] private GameObject growPanel;
+    [SerializeField] private GrowListController growController;
 
     [Header("スキン画面関連")]
     [SerializeField] private GameObject skinPanel;
@@ -62,6 +63,10 @@ public class TitleManager : MonoBehaviour
 
     [Header("設定画面関連")]
     [SerializeField] private GameObject settingPanel;
+
+    [Header("スタミナプラス画面関連")]
+    [SerializeField] private GameObject staminaPanel;
+    [SerializeField] private GameObject staminaEnoughPanel;
 
     [Header("フェード処理関連")]
     [Header("マスクデータ")]
@@ -204,6 +209,8 @@ public class TitleManager : MonoBehaviour
         skinPanel.SetActive(false);
         standPanel.SetActive(false);
         settingPanel.SetActive(false);
+        staminaPanel.SetActive(false);
+        staminaEnoughPanel.SetActive(false);
     }
     #endregion
 
@@ -484,6 +491,26 @@ public class TitleManager : MonoBehaviour
 
     #endregion
 
+    #region タイトル内完結処理
+
+    #region スタミナ関連
+    /// <summary>
+    /// スタミナプラスボタン押下処理
+    /// </summary>
+    public void PushStamina()
+    {
+        staminaPanel.SetActive(true);
+    }
+
+    /// <summary>
+    /// スタミナ戻るボタン押下処理
+    /// </summary>
+    public void PushStaminaBack()
+    {
+        staminaPanel.SetActive(false);
+    }
+    #endregion
+
     #region メニュー関連
     /// <summary>
     /// メニューボタン押下処理
@@ -509,7 +536,6 @@ public class TitleManager : MonoBehaviour
 
     #endregion
 
-    #region タイトル内完結処理
     /// <summary>
     /// スキンボタン押下処理
     /// </summary>
@@ -533,7 +559,13 @@ public class TitleManager : MonoBehaviour
     {
         SoundManager.Instance.PlaySE(common.SE.Decision);
 
-        FadeCommon(standPanel, growPanel);
+        FadeCommon(standPanel, growPanel, () =>
+        {
+            if (growController != null)
+            {
+                growController.InitializeGrowList();
+            }
+        });
     }
 
     /// <summary>
@@ -597,15 +629,22 @@ public class TitleManager : MonoBehaviour
     {
         SoundManager.Instance.PlaySE(common.SE.Decision);
 
-        //フェードアウト処理
-        StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+        if (StaminaManager.Instance.stamina <= 0)
         {
-            //スタミナを消費
-            StaminaManager.Instance.StaminaConsume();
+            staminaEnoughPanel.SetActive(true);
+        }
+        else
+        {
+            //フェードアウト処理
+            StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+            {
+                //スタミナを消費
+                StaminaManager.Instance.StaminaConsume();
 
-            //ゲームシーン読み込み
-            StartCoroutine(GameLoad());
-        }));
+                //ゲームシーン読み込み
+                StartCoroutine(GameLoad());
+            }));
+        }
     }
 
     /// <summary>
