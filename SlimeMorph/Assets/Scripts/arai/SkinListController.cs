@@ -16,8 +16,8 @@ public class SkinListController : MonoBehaviour
     [Header("3Dモデルを管理しているSkinManager")]
     [SerializeField] private SkinManager skinManager;
 
-    [Header("生成するスキンボタン数")]
-    [SerializeField] private int debugSkinCount = 20;
+    [Header("スキンデータリスト")]
+    [SerializeField] private List<SkinData> skinDataList = new List<SkinData>();
 
     //生成したスロットを管理するためのリスト
     private List<SkinItemSlot> spawnedSlots = new List<SkinItemSlot>();
@@ -54,17 +54,20 @@ public class SkinListController : MonoBehaviour
         {
             Debug.Log("[SkinList]スロットを新規生成");
 
-            for (int i = 0; i < debugSkinCount; i++)
+            for (int i = 0; i < skinDataList.Count; i++)
             {
+                SkinData data = skinDataList[i];
+                if (data == null) continue;
+
                 GameObject newItem = Instantiate(skinItemPrefab, contentTransform);
                 SkinItemSlot slot = newItem.GetComponent<SkinItemSlot>();
 
-                slot.Setup(i);
+                slot.Setup(data.SkinIndex, data.SkinIcon);
                 slot.OnClicked += OnSkinSelected; //イベント登録
                 spawnedSlots.Add(slot);
 
                 //ロードされた値と一致するかで選択状態を初期化
-                slot.SetSelectState(i == savedIndex);
+                slot.SetSelectState(data.SkinIndex == savedIndex);
             }
         }
         else

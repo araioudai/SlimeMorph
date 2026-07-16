@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
+using System.Data;
 
 //送信用データの共通クラス
 [System.Serializable]
@@ -33,6 +34,8 @@ public class PlayerDataResponse
     public int power_lv;
     public int shrink_lv;
     public int clear_stage;
+    public int stamina;
+    public string recovery_time;
 }
 
 public class OnLineManager : MonoBehaviour
@@ -182,9 +185,11 @@ public class OnLineManager : MonoBehaviour
 
                 if (responseData.success)
                 {
-                    //コイン数、クリアステージをローカル（PlayerPrefs）にも保存（キャッシュ）しておく
-                    PlayerPrefs.SetInt("UserCoin", responseData.coin);
-                    PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);
+                    //コイン数、クリアステージなど必要なものをローカル（PlayerPrefs）にも保存（キャッシュ）しておく
+                    PlayerPrefs.SetInt("UserCoin", responseData.coin);                    //コイン
+                    PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);           //クリアステージ数
+                    PlayerPrefs.SetInt("Stamina", responseData.stamina);                  //スタミナ数
+                    PlayerPrefs.SetString("StaminaRecovery", responseData.recovery_time); //次のスタミナ回復時間
                     PlayerPrefs.Save();
 
                     onResponse?.Invoke(true, responseData);
