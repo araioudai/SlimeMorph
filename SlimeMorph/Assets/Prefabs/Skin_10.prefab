@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1321957576344718574}
-  m_Layer: 0
+  - component: {fileID: 5222754795382281893}
+  m_Layer: 6
   m_Name: Skin_10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,6 +36,28 @@ Transform:
   - {fileID: 7788414656421482951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5222754795382281893
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858756409814492976}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1981690711597501577
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,7 +67,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2083943602463586041}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8298128184726660009}
   - component: {fileID: 749817159106626493}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6635195133731301972}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5031235037415488050}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,7 +257,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7220372871441845037}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7788414656421482951}
   - component: {fileID: 2464534759289938290}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5293019726698340637}
   - component: {fileID: 8337603988047782641}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1879865454296077938}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,6 +568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CatEars
       objectReference: {fileID: 0}
+    - target: {fileID: 3419692702677825547, guid: 4e303d5b5b80b4b49a3a54a5a8640f78, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -566,6 +593,10 @@ PrefabInstance:
     - target: {fileID: 1672740928269625998, guid: cd5949b15e515384eab7f1597809b34a, type: 3}
       propertyPath: m_Name
       value: FishFlipper
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672740928269625998, guid: cd5949b15e515384eab7f1597809b34a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2052820843904692276, guid: cd5949b15e515384eab7f1597809b34a, type: 3}
       propertyPath: m_LocalScale.x
