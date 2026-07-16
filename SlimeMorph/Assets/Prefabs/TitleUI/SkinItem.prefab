@@ -367,6 +367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkinItemSlot
   button: {fileID: 9214341123604823243}
   selectionFrame: {fileID: 2744502485089895580}
+  iconImage: {fileID: 2829014118915979744}
 --- !u!1 &5650605454244701567
 GameObject:
   m_ObjectHideFlags: 0

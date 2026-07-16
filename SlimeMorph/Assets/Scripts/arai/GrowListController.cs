@@ -12,11 +12,11 @@ public class GrowListController : MonoBehaviour
     [Header("スクロールビューの本体")]
     [SerializeField] private ScrollRect scrollRect;
 
-    [Header("生成する強化ボタン数")]
-    [SerializeField] private int debugSkinCount = 5;
+    [Header("スキンデータリスト")]
+    [SerializeField] private List<GrowData> growDataList = new List<GrowData>();
 
     //生成したスロットを管理するためのリスト
-    private List<SkinItemSlot> spawnedSlots = new List<SkinItemSlot>();
+    private List<GrowItemSlot> spawnedSlots = new List<GrowItemSlot>();
 
     //PlayerPrefsで使用する保存用のキー名
     private const string SelectedGrowKey = "SavedSelectedGrowIndex";
@@ -35,12 +35,12 @@ public class GrowListController : MonoBehaviour
 
     #endregion
 
-    #region スキンリストの生成と選択制御
+    #region 強化リストの生成と選択制御
 
     /// <summary>
-    /// スキン一覧の初期化（初回のみ生成、2回目以降は表示更新）
+    /// 強化一覧の初期化（初回のみ生成、2回目以降は表示更新）
     /// </summary>
-    public void InitializeSkinList()
+    public void InitializeGrowList()
     {
         //保存されているスキンのインデックスをロード
         int savedIndex = PlayerPrefs.GetInt(SelectedGrowKey, 0);
@@ -50,29 +50,27 @@ public class GrowListController : MonoBehaviour
         {
             Debug.Log("[GrowList]スロットを新規生成");
 
-            for (int i = 0; i < debugSkinCount; i++)
+            for (int i = 0; i < growDataList.Count; i++)
             {
-                GameObject newItem = Instantiate(growItemPrefab, contentTransform);
-                SkinItemSlot slot = newItem.GetComponent<SkinItemSlot>();
+                GrowData data = growDataList[i];
+                if (data == null) continue;
 
-                slot.Setup(i);
+                GameObject newItem = Instantiate(growItemPrefab, contentTransform);
+                GrowItemSlot slot = newItem.GetComponent<GrowItemSlot>();
+
+                slot.Setup(data.GrowIndex, data.GrowIcon, data.GrowTitleEn, data.GrowTitleJa, data.GrowExplanationEn, data.GrowExplanationJa);
                 slot.OnClicked += OnSkinSelected; //イベント登録
                 spawnedSlots.Add(slot);
-
-                //ロードされた値と一致するかで選択状態を初期化
-                slot.SetSelectState(i == savedIndex);
             }
         }
         else
         {
             //2回目以降は、すでにあるスロットの表示を最新データに更新
             Debug.Log("[GrowList]既存のスロットを再利用、表示を更新");
-
-            foreach (SkinItemSlot slot in spawnedSlots)
-            {
-                slot.SetSelectState(slot.Index == savedIndex);
-            }
         }
+
+        //二重動作防止のために念のため一度止めてから、選択中のスロットへスクロールを開始
+        StopAllCoroutines();
     }
 
     /// <summary>
@@ -88,14 +86,11 @@ public class GrowListController : MonoBehaviour
         PlayerPrefs.Save();
 
         //リストにいるすべてのスロットに選択されたか
-        foreach (SkinItemSlot slot in spawnedSlots)
+        /*foreach (GrowItemSlot slot in spawnedSlots)
         {
             //自分のインデックスが、今選ばれたインデックスと同じなら true、違えば false
             bool isCurrentSelected = (slot.Index == selectedIndex);
-
-            //スロットに通知して、見た目を変えさせる
-            slot.SetSelectState(isCurrentSelected);
-        }
+        }*/
     }
 
     #endregion
