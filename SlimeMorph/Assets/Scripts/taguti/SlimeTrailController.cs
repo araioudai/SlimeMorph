@@ -6,7 +6,7 @@ public class SlimeTrailController : MonoBehaviour
     [SerializeField] private GameObject slimeTrailPrefab;
 
     [Header("Trail‚ÌˆÊ’u’²®")]
-    [SerializeField] private Vector3 trailOffset = new Vector3(0f, 0.02f, -0.3f);
+    [SerializeField] private Vector3 trailOffset = new Vector3(0f, 0, -0.3f);
 
     [Header("‚Ç‚ê‚­‚ç‚¢‚Ì‘¬“x‚ÅˆÚ“®’†‚Æ”»’è‚·‚é‚©")]
     [SerializeField] private float moveSpeedThreshold = 0.001f;
