@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7190743495759672851}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 621057386679777830}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5713237403772668675}
   - component: {fileID: 4360742355475974784}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8254048562797240579}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +200,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2026016086743482113}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4914168778470953355}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2853388557277297407}
   - component: {fileID: 295820816753756741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2622925102047453659}
   - component: {fileID: 4060891064615510585}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -455,7 +455,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2530768632055235262}
-  m_Layer: 0
+  - component: {fileID: 4670956756031636062}
+  m_Layer: 6
   m_Name: Skin_9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,6 +482,28 @@ Transform:
   - {fileID: 2622925102047453659}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4670956756031636062
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9140513171258871734}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2346127845969954330
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -544,6 +567,10 @@ PrefabInstance:
     - target: {fileID: 5395082189607745956, guid: 6b00c63c7fb39a34d95687fe2b85cc49, type: 3}
       propertyPath: m_Name
       value: AngelWing
+      objectReference: {fileID: 0}
+    - target: {fileID: 5395082189607745956, guid: 6b00c63c7fb39a34d95687fe2b85cc49, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -618,6 +645,10 @@ PrefabInstance:
     - target: {fileID: 734857106146437271, guid: 98ad8c9a0a44bc54eae7191347fa66ba, type: 3}
       propertyPath: m_Name
       value: Crown
+      objectReference: {fileID: 0}
+    - target: {fileID: 734857106146437271, guid: 98ad8c9a0a44bc54eae7191347fa66ba, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
