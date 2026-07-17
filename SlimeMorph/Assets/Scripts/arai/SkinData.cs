@@ -1,19 +1,17 @@
 using UnityEngine;
 
-public class SkinData : MonoBehaviour
+[CreateAssetMenu(fileName = "NewSkinData", menuName = "ScriptableObjects/SkinData")]
+public class SkinData : ScriptableObject
 {
-    //メモ PlayerPrefsで現在の選択スキンデータをもっておく（ゲーム画面で参照できる）
-    //　　 別でスキン各ステージごとにPrefabを生成する用スクリプトを作成。待機画面のSlimeSkinPositionの子オブジェクトとして生成する。
+    [Header("スキン番号")]
+    [SerializeField] private int skinIndex;
+    [Header("スキンの名前")]
+    [SerializeField] private string skinName;
+    [Header("スキンアイコン")]
+    [SerializeField] private Sprite skinIcon;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //外部から取得するためのプロパティ
+    public int SkinIndex => skinIndex;
+    public string SkinName => skinName;
+    public Sprite SkinIcon => skinIcon;
 }

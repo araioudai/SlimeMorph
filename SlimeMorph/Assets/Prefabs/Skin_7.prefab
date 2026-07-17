@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 783929606870411194}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeArmature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3363223309237712378}
-  m_Layer: 0
+  - component: {fileID: 3198279565919425615}
+  m_Layer: 6
   m_Name: Skin_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,6 +68,28 @@ Transform:
   - {fileID: 5551359915849039520}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &3198279565919425615
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4903052825323371263}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c3ad8e03ca058a24fa4504c000abd49e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5205541033129251200
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2429713738388655075}
   - component: {fileID: 4381608180630876388}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8693030287185899521}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_TOP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +228,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5724343759195249376}
   - component: {fileID: 5045445653395105236}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slime_Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -299,7 +322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2845511584722473080}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DEF_BOTTOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8373247590228125850}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ROOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1356491065828103729}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FACE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5551359915849039520}
   - component: {fileID: 2839764580732949124}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlimeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -545,6 +568,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DevilHorn
       objectReference: {fileID: 0}
+    - target: {fileID: 6735262133590324567, guid: 1fdd24aed76c0ed4b98303ada52d8c50, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -618,6 +645,10 @@ PrefabInstance:
     - target: {fileID: 1838463822622587173, guid: f75a22981a3382547a25480603811545, type: 3}
       propertyPath: m_Name
       value: DevilWing
+      objectReference: {fileID: 0}
+    - target: {fileID: 1838463822622587173, guid: f75a22981a3382547a25480603811545, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
