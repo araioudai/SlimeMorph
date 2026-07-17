@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
+using Cysharp.Threading.Tasks;
 public class IT_GameManager : MonoBehaviour
 {
     #region Singleton
@@ -27,14 +28,13 @@ public class IT_GameManager : MonoBehaviour
     #region Player Reference
     IT_Player player;
     bool isGameOver = false; // ゲームオーバー状態を管理するフラグ
-
-
     #endregion
 
     [SerializeField] GameObject gameOver;
 
     [Header("コインの数を表示するテキスト")]
     [SerializeField] Text coinText; // コインの数を表示するテキスト
+    [SerializeField] TextMeshProUGUI coinTextTMP; // コインの数を表示するTextMeshProUGUI
     int getCoinCount = 0; // コインの数をカウントする変数
 
 
@@ -45,6 +45,7 @@ public class IT_GameManager : MonoBehaviour
 
 
     public bool isGoal = false;
+    bool isGoalExecuted = false; // ゴール処理が一度だけ実行されるようにするフラグ
 
     [Header("ステージプレイヤープレファブの参照")]
     [SerializeField] StagePlayerPrefabs stagePlayerPrefabs; // ステージプレイヤープレファブの参照
@@ -52,12 +53,11 @@ public class IT_GameManager : MonoBehaviour
     [SerializeField] GameObject playerObject; // プレイヤーのGameObjectを保持する変数
 
 
-
-
-
-
-
-
+    [Header("フェード処理関連")]
+    [Header("マスクデータ")]
+    [SerializeField] private MaskData data;
+    [Header("フェード用スクリプト")]
+    [SerializeField] private UIShaderFader fader;
 
     #region Unity Methods
     void Init()
@@ -84,6 +84,9 @@ public class IT_GameManager : MonoBehaviour
             return;
         }
         Dead();
+
+        Goal();
+
     }
     #endregion
 
@@ -110,9 +113,34 @@ public class IT_GameManager : MonoBehaviour
     }
 
 
+    void Goal()
+    {
+        if (isGoal && !isGoalExecuted)
+        {
+            isGoalExecuted = true;
+            Debug.Log("ゴールに到達しました。");
+            ClearStageAsync().Forget();
+        }
+    }
 
+    private async UniTask ClearStageAsync()
+    {
 
+        // 例: 3秒待ってから次のステージへ遷移
+        await UniTask.Delay(3000);
 
+        // ゴールに到達したときの処理をここに実装
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.PushTitle();
+        }
+        else
+        {
+            Debug.LogWarning("GameManagerが見つかりません。");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        }
+    }
 
 
 
@@ -144,6 +172,7 @@ public class IT_GameManager : MonoBehaviour
         getCoinCount += amount;
         Debug.Log($"コインを取得しました。現在のコイン数: {getCoinCount}");
         coinText.text = "Coins: " + getCoinCount;
+        coinTextTMP.text = "Coins: " + getCoinCount;
     }
 
     public void ResetGame()

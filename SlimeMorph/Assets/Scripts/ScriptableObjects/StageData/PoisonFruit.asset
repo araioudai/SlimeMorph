@@ -15,5 +15,6 @@ MonoBehaviour:
   id: 3
   type: 2
   param: 0.3
-  prefab: {fileID: 2562994308932591335, guid: b38edfc894f9f494a917544559a89918, type: 3}
+  prefab: {fileID: 1880974645389022003, guid: 235e47fa57496f441a2314910a299194, type: 3}
   mas: 0
+  csvColor: {r: 0.8400459, g: 0, b: 1, a: 0}
