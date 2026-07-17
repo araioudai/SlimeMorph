@@ -22,19 +22,28 @@ public class CSVEditor_MkII : EditorWindow
     // スクロール位置
     Vector2 scrollPos;
     Vector2 scrollPosName;
+    Vector3 scrollPosButtonX;
 
     //==========================
     // 表示設定
     private int stageID;
     int viewWidth = 30;
     int maxWidth = 100;
-    int minWidth = 10;
+    int minWidth = 15;
 
     //==========================
     // 選択中のオブジェクトIDと名前
     private int selectedObjectId = 0;
     private int selectNoneId = -99;
     private string selectedObjectName = "None";
+    List<Color> colorList = new();
+
+
+    //==========================
+    // 選択中のオブジェクトIDと名前
+    private int coinValue = 0;
+
+
 
     #endregion
 
@@ -50,6 +59,8 @@ public class CSVEditor_MkII : EditorWindow
     #region GUI
     private void OnGUI()
     {
+        InitializeVariables();
+
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Load CSV")) { LoadCSV(); }
         if (GUILayout.Button("Save CSV")) { SaveCSV(); }
@@ -74,7 +85,24 @@ public class CSVEditor_MkII : EditorWindow
         IdPalletteView();
         PreLoad();
         StageDataCheck();
+
+
+        // Coin数表示
+        EditorGUILayout.LabelField($"Coin数: {coinValue}", EditorStyles.boldLabel);
+
+
+
     }
+
+    #region 変数初期化
+    void InitializeVariables()
+    {
+        coinValue = 0;
+    }
+    #endregion
+
+
+
 
     #region CSV表示
     void CSVView()
@@ -97,7 +125,7 @@ public class CSVEditor_MkII : EditorWindow
                 {
                     EditorGUILayout.LabelField("", GUILayout.Width(40));
 
-                    for (int col = 11; col < viewWidth; col++)
+                    for (int col = minWidth + 1; col < viewWidth; col++)
                     {
                         EditorGUILayout.LabelField(col.ToString(), GUILayout.Width(80));
                     }
@@ -142,7 +170,7 @@ public class CSVEditor_MkII : EditorWindow
                     EditorGUILayout.LabelField(laneLabel, GUILayout.Width(20));
 
                     int maxCols = Mathf.Min(viewWidth, rowData.Count);
-                    for (int col = 11; col < maxCols; col++)
+                    for (int col = minWidth + 1; col < maxCols; col++)
                     {
                         DrawPlacementCell(row, col);
                     }
@@ -206,7 +234,13 @@ public class CSVEditor_MkII : EditorWindow
             Repaint();
         }
 
-        GUI.backgroundColor = Color.white;
+        // Coin数の計算
+        if (currentId == 1) // CoinのIDが1の場合
+        {
+            coinValue++;
+        }
+
+        // GUI.backgroundColor = Color.white;
     }
 
     string GetObjectLabel(int id)
@@ -319,7 +353,7 @@ public class CSVEditor_MkII : EditorWindow
                     case 1:
                         newRow.Add(i.ToString()); // Lane
                         break;
-                    case >= 2 and <= 10:
+                    case >= 2 and <= 15:
                         newRow.Add("0");
                         break;
 

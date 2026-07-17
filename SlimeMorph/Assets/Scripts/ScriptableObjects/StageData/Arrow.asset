@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c248f2a3fc3ed8145916a7bab831c1a4, type: 3}
-  m_Name: Fruit
+  m_Name: Arrow
   m_EditorClassIdentifier: Assembly-CSharp::StageObjectData
-  id: 2
-  type: 1
+  id: 6
+  type: 2
   param: 0.3
-  prefab: {fileID: 2562994308932591335, guid: 298d54199098fc440a425a9a411d8e6d, type: 3}
+  prefab: {fileID: 2343917740052295777, guid: c87f10890d7e7974dab137d85bbe625a, type: 3}
   mas: 0
-  csvColor: {r: 0.14686084, g: 1, b: 0, a: 0}
+  csvColor: {r: 0, g: 0, b: 0, a: 0}

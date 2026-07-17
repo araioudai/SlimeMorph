@@ -9,4 +9,5 @@ public class StageObjectData : ScriptableObject
     public float param;
     public GameObject prefab;
     public int mas;
+    public Color csvColor;
 }
