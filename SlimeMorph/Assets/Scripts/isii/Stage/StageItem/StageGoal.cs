@@ -33,8 +33,8 @@ public class StageGoal : MonoBehaviour
                 goalCamera.StartGoalSequence(other.transform);
             }
 
-            // ステージクリアの処理を非同期で実行
-            ClearStageAsync().Forget();
+            // // ステージクリアの処理を非同期で実行
+            // ClearStageAsync().Forget();
         }
     }
 
