@@ -5,6 +5,7 @@ public class StageCoin : StageObjectItem
     [SerializeField] int coinValue = 1; // コインの価値
     [SerializeField] float coinSpeed = 100f; // コインの回転速度\
     [SerializeField] AudioClip coinSound; // コイン取得音
+    bool isGetCoin = false; // コインを取得したかどうかのフラグ
 
 
     void Update()
@@ -17,8 +18,13 @@ public class StageCoin : StageObjectItem
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isGetCoin)
         {
+            isGetCoin = true; // コインを取得したことを記録
+
+            IT_GameManager.Instance.GetCoin(coinValue); // コインを加算
+
+
             // コイン取得音を再生
             if (coinSound != null)
             {

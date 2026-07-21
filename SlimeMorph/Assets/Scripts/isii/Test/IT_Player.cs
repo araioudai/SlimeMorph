@@ -54,6 +54,12 @@ public class IT_Player : StageObjectItem
 
 
 
+    public void SpeedReset()
+    {
+        speed = 0f;
+    }
+
+
 
 
 
@@ -188,14 +194,15 @@ public class IT_Player : StageObjectItem
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out StageCoin coin))
-        {
-            IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
-            Destroy(other.gameObject);
-        }
-    }
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.TryGetComponent(out StageCoin coin))
+    //     {
+    //         IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
+
+    //         Destroy(other.gameObject);
+    //     }
+    // }
 
     // 落下死
     void DeadFall()

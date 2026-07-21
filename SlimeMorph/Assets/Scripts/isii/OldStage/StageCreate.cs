@@ -29,7 +29,7 @@ public class StageCreate : MonoBehaviour
         // 開始オブジェクトの生成
         if (stageObjectList.startObject != null)
         {
-            if (stageObjectList.startObject.TryGetComponent<StageBlock>(out StageBlock startBlock))
+            if (stageObjectList.startObject.TryGetComponent(out StageBlock startBlock))
             {
                 Instantiate(stageObjectList.startObject, Vector3.zero, Quaternion.identity, stageParent);
                 blockLength += startBlock.blockLength;      // ブロックの長さを更新
@@ -50,7 +50,7 @@ public class StageCreate : MonoBehaviour
                 if (!int.TryParse(line[i], out objectIndex)) continue;                                  // オブジェクトインデックスのパースに失敗した場合はスキップ
                 if (objectIndex < 0 || objectIndex >= stageObjectList.stageObjects.Length) continue;    // インデックスが範囲外の場合はスキップ
 
-                if (stageObjectList.stageObjects[objectIndex].TryGetComponent<StageBlock>(out StageBlock stageBlock))
+                if (stageObjectList.stageObjects[objectIndex].TryGetComponent(out StageBlock stageBlock))
                 {
                     Instantiate(stageObjectList.stageObjects[objectIndex], new Vector3(0, 0, blockLength), Quaternion.identity, stageParent);
                     blockLength += stageBlock.blockLength;  // ブロックの長さを更新
@@ -61,7 +61,7 @@ public class StageCreate : MonoBehaviour
         // 終了オブジェクトの生成
         if (stageObjectList.endObject != null)
         {
-            if (stageObjectList.endObject.TryGetComponent<StageBlock>(out StageBlock endBlock))
+            if (stageObjectList.endObject.TryGetComponent(out StageBlock endBlock))
             {
                 Vector3 position = new Vector3(0, 0, blockLength);                      // 縦に並べる
                 Instantiate(stageObjectList.endObject, position, Quaternion.identity, stageParent);

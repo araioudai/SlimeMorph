@@ -9,6 +9,11 @@ public class StageManager : MonoBehaviour
 
     [Header("ステージオブジェクトのデータベース")]
     [SerializeField] private StageObjectDatabase stageObjectDatabase;
+    public float GetStageObjectParam(int objectId)
+    {
+        var data = stageObjectDatabase.Get(objectId);
+        return data != null ? data.param : 0f;
+    }
 
     [Header("使用するステージID")]
     [SerializeField] int StageID = 1; // 現在のステージID
@@ -21,6 +26,15 @@ public class StageManager : MonoBehaviour
 
     [Header("オブジェクトの位置調整")]
     [SerializeField] float objectOffset = 1f; // オブジェクトオフセット(めり込まないように)
+
+    [Header("季節ごとのマテリアル")]
+    [SerializeField] private Material springMaterial;
+    [SerializeField] private Material summerMaterial;
+    [SerializeField] private Material autumnMaterial;
+    [SerializeField] private Material winterMaterialAdd;
+
+
+
 
 #if UNITY_EDITOR
     public bool debugMode = false; // デバッグモードのフラグ
@@ -99,22 +113,84 @@ public class StageManager : MonoBehaviour
             // 穴でなければ生成
             if (data.type == StageObjectType.Hole)
             {
+                Instantiate(stageObjectDatabase.holePrefab, position, Quaternion.Euler(GetLaneRotation(cell.lane)), stageParent);
                 continue;
             }
 
             // cellに合わせて床と壁も生成
-            if (cell.lane == 0) // 床
+            // if (cell.lane == 0) // 床
+            // {
+            //     var floor = Instantiate(stageObjectDatabase.floorPrefab, position, Quaternion.identity, groundParent);
+            //     // 季節に応じてマテリアルを変更
+            //     var renderer = floor.GetComponent<Renderer>();
+            //     if (renderer != null)
+            //     {
+            //         switch (cell.season)
+            //         {
+            //             case StageSeason.Spring:
+            //                 renderer.material = springMaterial;
+            //                 break;
+            //             case StageSeason.Summer:
+            //                 renderer.material = summerMaterial;
+            //                 break;
+            //             case StageSeason.Autumn:
+            //                 renderer.material = autumnMaterial;
+            //                 break;
+            //             case StageSeason.Winter:
+            //                 renderer.materials[1] = winterMaterialAdd; // 2つ目のマテリアルを変更
+            //                 break;
+            //         }
+            //     }
+            // }
+            // else // 壁
+            // {
+            //     Instantiate(stageObjectDatabase.floorPrefab, position, Quaternion.Euler(GetLaneRotation(cell.lane)), groundParent);
+            // }
+
             {
-                Instantiate(stageObjectDatabase.floorPrefab, position, Quaternion.identity, groundParent);
+                var floor = Instantiate(stageObjectDatabase.floorPrefab, position, Quaternion.Euler(GetLaneRotation(cell.lane)), groundParent);
+                // 季節に応じてマテリアルを変更
+                if (floor.TryGetComponent<MeshRenderer>(out var renderer))
+                {
+                    switch (cell.season)
+                    {
+                        case StageSeason.Spring:
+                            renderer.material = springMaterial;
+                            break;
+                        case StageSeason.Summer:
+                            renderer.material = summerMaterial;
+                            break;
+                        case StageSeason.Autumn:
+                            renderer.material = autumnMaterial;
+                            break;
+                        case StageSeason.Winter:
+                            // マテリアル 追加
+                            var materials = renderer.materials;
+                            if (materials.Length > 1)
+                            {
+                                materials[1] = winterMaterialAdd; // 2つ目のマテリアルを変更
+                                renderer.materials = materials;
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"マテリアルが2つ以上ない: {floor.name}", floor);
+                            }
+                            break;
+                    }
+                    Debug.Log($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}");
+                }
+                else
+                {
+                    Debug.LogWarning($"Rendererが見つかりません: {floor.name}", floor);
+                    Debug.LogWarning($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}");
+                }
             }
-            else // 壁
-            {
-                Instantiate(stageObjectDatabase.wallPrefab, position, Quaternion.Euler(GetLaneRotation(cell.lane)), groundParent);
-            }
+
+
         }
     }
 
-
+    #region Offsets
     Vector3 GetLaneOffset(int lane)
     {
         return lane switch
@@ -131,12 +207,11 @@ public class StageManager : MonoBehaviour
         return lane switch
         {
             0 => new Vector3(0, 0, 0),     // 床
-            1 => new Vector3(0, 0,60),    // 左壁
-            2 => new Vector3(0, 0, -60),     // 右壁
+            1 => new Vector3(0, 0, -30),    // 左壁
+            2 => new Vector3(0, 0, 30),     // 右壁
             _ => Vector3.zero
         };
     }
-    
 
     Vector3 GetObjectOffset(int lane)
     {
@@ -148,7 +223,7 @@ public class StageManager : MonoBehaviour
             _ => Vector3.zero
         };
     }
-
+    #endregion
     #region Debug用
     [ContextMenu("RemoveAndCreateStage")]
     public void RemoveAndCreateStage()
