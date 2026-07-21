@@ -77,6 +77,7 @@ public class IT_Player : StageObjectItem
             rb.interpolation = RigidbodyInterpolation.Interpolate;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
+        isStart = true; // ゲーム開始時のフラグをtrueに設定
     }
 
     void Update()
@@ -131,6 +132,11 @@ public class IT_Player : StageObjectItem
         velocity.z = speed;
         rb.linearVelocity = velocity;
 
+        // Dead();
+        // DeadFall();
+        MorphDown();
+
+
     }
 
     private bool TryGetGroundHit(out RaycastHit hit)
@@ -169,7 +175,11 @@ public class IT_Player : StageObjectItem
 
     void MorphDown()
     {
-        if (!isTimeMorphDown) return;
+        if (!isTimeMorphDown)
+        {
+            Debug.Log("MorphDown: isTimeMorphDown is false, skipping MorphDown.");
+            return;
+        }
         // 時間経過でサイズを減らす
 
         float morphAmount = timeMorphDown * decreaseValue * Time.deltaTime;
@@ -177,6 +187,8 @@ public class IT_Player : StageObjectItem
         slime.transform.localScale -= new Vector3(morphAmount, morphAmount, morphAmount);
         slime.GetComponent<BoxCollider>().size -= new Vector3(morphAmount, morphAmount, morphAmount); // コライダーのサイズも変更
         gravityValue -= morphAmount;
+
+        Debug.Log($"MorphDown: {morphAmount}, New Scale: {slime.transform.localScale}");
     }
 
     IEnumerator MorphTimer()

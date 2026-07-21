@@ -145,7 +145,7 @@ public class IT_GameManager : MonoBehaviour
 
     void Dead()
     {
-        if (player.PlayerSize.x < 0.2f && !isGameOver && !isDead)
+        if (player.PlayerSize.x < 0.1f && !isGameOver && !isDead)
         {
             Debug.Log("プレイヤーが死亡しました。");
             // ここでゲームオーバー処理を実装する

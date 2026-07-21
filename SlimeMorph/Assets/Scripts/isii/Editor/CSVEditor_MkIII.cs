@@ -89,6 +89,7 @@ public class CSVEditor_MkIII : EditorWindow
         CSVView();
         IdPalletteView();
         PreLoad();
+        if (GUILayout.Button("Add Object to All Rows")) { AddObjectToAllRows(); }
         StageDataCheck();
 
 
@@ -359,6 +360,39 @@ public class CSVEditor_MkIII : EditorWindow
             }
         }
     }
+    #endregion
+
+    #region 一括追加
+    void AddObjectToAllRows()
+    {
+        if (selectedObjectId == selectNoneId)
+        {
+            EditorUtility.DisplayDialog("Error", "配置するオブジェクトを選択してください。", "OK");
+            return;
+        }
+
+        for (int row = 0; row < csvData.Count; row++)
+        {
+            List<string> rowData = csvData[row];
+            if (rowData == null || rowData.Count <= LaneColumn)
+                continue;
+
+            if (!int.TryParse(rowData[StageIdColumn], out int id) || id != stageID)
+                continue;
+
+            // 空のセルにのみ追加
+            for (int col = FirstBlockColumn; col < rowData.Count; col++)
+            {
+                if (string.IsNullOrWhiteSpace(rowData[col]))
+                {
+                    rowData[col] = selectedObjectId.ToString();
+                    break; // 1行につき1つだけ追加
+                }
+            }
+        }
+    }
+
+
     #endregion
 
     #region データ操作
