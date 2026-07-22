@@ -46,14 +46,32 @@ public class IT_Player : StageObjectItem
 
 
     [Header("強化")]
-    float speedUpValue = 1.5f; // スピードアップの倍率
     float defenceValue = 0.5f; // 防御力の倍率
     float decreaseValue = 0.5f; // 減少量の倍率
 
+    float percentDefenceValue = 0.5f; // 防御力の倍率
+    float percentDecreaseValue = 0.5f; // 減少量の倍率
 
 
 
+    [Header("Lv")]
+    private const string SelectedGrowKey = "SavedSelectedGrowIndex";
 
+    // 0 = スピードアップ, 1 = 防御力アップ, 2 = 減少量ダウン
+
+
+    public void SpeedReset()
+    {
+        speed = 0f;
+    }
+
+    void Test()
+    {
+        defenceValue = PlayerPrefs.GetFloat(SelectedGrowKey, 0.5f); // デフォルト値は0.5
+
+
+
+    }
 
 
 
@@ -71,6 +89,8 @@ public class IT_Player : StageObjectItem
             rb.interpolation = RigidbodyInterpolation.Interpolate;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
+        isStart = true; // ゲーム開始時のフラグをtrueに設定
+Test();
     }
 
     void Update()
@@ -125,6 +145,11 @@ public class IT_Player : StageObjectItem
         velocity.z = speed;
         rb.linearVelocity = velocity;
 
+        // Dead();
+        // DeadFall();
+        MorphDown();
+
+
     }
 
     private bool TryGetGroundHit(out RaycastHit hit)
@@ -163,7 +188,11 @@ public class IT_Player : StageObjectItem
 
     void MorphDown()
     {
-        if (!isTimeMorphDown) return;
+        if (!isTimeMorphDown)
+        {
+            Debug.Log("MorphDown: isTimeMorphDown is false, skipping MorphDown.");
+            return;
+        }
         // 時間経過でサイズを減らす
 
         float morphAmount = timeMorphDown * decreaseValue * Time.deltaTime;
@@ -171,6 +200,8 @@ public class IT_Player : StageObjectItem
         slime.transform.localScale -= new Vector3(morphAmount, morphAmount, morphAmount);
         slime.GetComponent<BoxCollider>().size -= new Vector3(morphAmount, morphAmount, morphAmount); // コライダーのサイズも変更
         gravityValue -= morphAmount;
+
+        Debug.Log($"MorphDown: {morphAmount}, New Scale: {slime.transform.localScale}");
     }
 
     IEnumerator MorphTimer()
@@ -188,14 +219,15 @@ public class IT_Player : StageObjectItem
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out StageCoin coin))
-        {
-            IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
-            Destroy(other.gameObject);
-        }
-    }
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.TryGetComponent(out StageCoin coin))
+    //     {
+    //         IT_GameManager.Instance.GetCoin((int)coin.Amount); // コインを加算
+
+    //         Destroy(other.gameObject);
+    //     }
+    // }
 
     // 落下死
     void DeadFall()

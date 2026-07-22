@@ -37,8 +37,9 @@ public class CSVLoader : MonoBehaviour
 
             if (!int.TryParse(line[0], out int stageId)) continue;
             if (!int.TryParse(line[1], out int lane)) continue;
+            if (!int.TryParse(line[2], out int season)) continue;
 
-            for (int col = 2; col < line.Length; col++)
+            for (int col = 3; col < line.Length; col++)
             {
                 string raw = line[col].Trim();
 
@@ -48,20 +49,25 @@ public class CSVLoader : MonoBehaviour
                 // 数値化
                 if (!float.TryParse(raw, out float objectId)) continue;
 
-                int z = col - 2;
+                int z = col - 3; // z座標は列番号から計算
 
                 float amount = 0;
 
-                if (objectId >= 100)
-                {
-                    amount = objectId % 100;
-                    objectId = (int)(objectId / 100);
-                }
+                // if (objectId >= 100)
+                // {
+                //     amount = objectId % 100;
+                //     objectId = (int)(objectId / 100);
+                // }
+
+                // ScriptableObjectのparamを参照
+                amount = StageManager.Instance.GetStageObjectParam((int)objectId);
+                // Debug.Log($"objectId: {objectId}, amount: {amount}");
 
                 StageCellData cell = new()
                 {
                     stageId = stageId,
                     lane = lane,
+                    season = (StageSeason)season,
                     z = z,
                     objectId = (int)objectId,
                     amount = amount,

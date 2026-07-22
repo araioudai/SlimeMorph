@@ -16,7 +16,7 @@ public class StageArrow : StageObjectItem
     {
         playerPosCheck = FindFirstObjectByType<IT_PlayerPosCheck>();
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + firstMoveMas * 5);
+        transform.position = new Vector3(transform.position.x + firstMoveMas * 5, transform.position.y, transform.position.z);
         speed = FindFirstObjectByType<IT_Player>().Speed; // プレイヤーの移動速度を取得して障害物の移動速度に設定
     }
 
@@ -31,7 +31,7 @@ public class StageArrow : StageObjectItem
             {
                 // ここで障害物を動かす処理を実装する
                 // Debug.Log($"障害物が動きます。現在のマス: {playerPosCheck.nowMas}, 障害物のマス: {mas}");
-                transform.Translate(Vector3.right * speed * Time.deltaTime);
+                transform.Translate(speed * Time.deltaTime * Vector3.left);
             }
         }
         else
@@ -39,7 +39,7 @@ public class StageArrow : StageObjectItem
             Debug.LogWarning("IT_PlayerPosCheckが見つかりません。");
         }
 
-        if (transform.position.x > 10f || transform.position.x < -10f) // 画面外に出たら削除
+        if (transform.position.x > 20f || transform.position.x < -20f) // 画面外に出たら削除
         {
             Destroy(gameObject);
         }

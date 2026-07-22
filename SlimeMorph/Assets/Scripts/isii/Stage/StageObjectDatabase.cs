@@ -11,6 +11,9 @@ public class StageObjectDatabase : ScriptableObject
     [SerializeField] public GameObject floorPrefab;
     [SerializeField] public GameObject wallPrefab;
 
+    [Header("Holeのデータリスト")]
+    [SerializeField] public GameObject holePrefab;
+
     private Dictionary<int, StageObjectData> dataDict;
 
     /// <summary>

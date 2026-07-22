@@ -28,6 +28,7 @@ namespace common
     {
         public int stageId;   // ステージID
         public int lane;      // 0=床,1=左,2=右
+        public StageSeason season; // 季節
         public int z;         // 奥行き
         public int objectId;  // オブジェクトID
         public float amount;    // 値
@@ -39,6 +40,16 @@ namespace common
         public float masterVolume = 1.0f;
         public float bgmVolume = 0.3f;
         public float seVolume = 0.5f;
+    }
+
+
+    [Serializable]
+    public enum StageSeason
+    {
+        Spring = 1,
+        Summer,
+        Autumn,
+        Winter
     }
 
 

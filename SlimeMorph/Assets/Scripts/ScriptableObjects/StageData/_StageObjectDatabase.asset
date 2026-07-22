@@ -24,3 +24,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d64fda8b6f2791949a2c4e6c10bec06a, type: 2}
   floorPrefab: {fileID: 7548214226640143015, guid: ae4630dbf54f83e44a8ec57cdff112e9, type: 3}
   wallPrefab: {fileID: 5060847921368856247, guid: fb1e2dcb8eca8b344951ef53977150f0, type: 3}
+  holePrefab: {fileID: 7548214226640143015, guid: d034bf3502ed5274faab61bf0c9ff755, type: 3}

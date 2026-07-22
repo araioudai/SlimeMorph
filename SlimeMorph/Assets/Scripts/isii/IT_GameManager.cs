@@ -46,6 +46,7 @@ public class IT_GameManager : MonoBehaviour
 
     public bool isGoal = false;
     bool isGoalExecuted = false; // ゴール処理が一度だけ実行されるようにするフラグ
+    bool isDead = false; // プレイヤーが死亡したかどうかを管理するフラグ
 
     [Header("ステージプレイヤープレファブの参照")]
     [SerializeField] StagePlayerPrefabs stagePlayerPrefabs; // ステージプレイヤープレファブの参照
@@ -53,11 +54,7 @@ public class IT_GameManager : MonoBehaviour
     [SerializeField] GameObject playerObject; // プレイヤーのGameObjectを保持する変数
 
 
-    [Header("フェード処理関連")]
-    [Header("マスクデータ")]
-    [SerializeField] private MaskData data;
-    [Header("フェード用スクリプト")]
-    [SerializeField] private UIShaderFader fader;
+    GameManager gameManager;
 
     #region Unity Methods
     void Init()
@@ -74,6 +71,7 @@ public class IT_GameManager : MonoBehaviour
         }
         coinText.text = "Coins: " + getCoinCount;
         gameOver.SetActive(false); // ゲーム開始時はゲームオーバーキャンバスを非表示にする
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     void Update()
@@ -130,7 +128,6 @@ public class IT_GameManager : MonoBehaviour
         await UniTask.Delay(3000);
 
         // ゴールに到達したときの処理をここに実装
-        GameManager gameManager = FindFirstObjectByType<GameManager>();
         if (gameManager != null)
         {
             gameManager.PushTitle();
@@ -148,22 +145,26 @@ public class IT_GameManager : MonoBehaviour
 
     void Dead()
     {
-        if (player.PlayerSize.x < 0.2f && !isGameOver)
+        if (player.PlayerSize.x < 0.1f && !isGameOver && !isDead)
         {
             Debug.Log("プレイヤーが死亡しました。");
             // ここでゲームオーバー処理を実装する
             player.Die(); // プレイヤーの死亡処理を呼び出す
             gameOver.SetActive(true);
             isGameOver = true;
+            isDead = true;
+            ClearStageAsync().Forget();
         }
 
-        if (player.transform.position.y < -10f && !isGameOver)
+        if (player.transform.position.y < -10f && !isGameOver && !isDead)
         {
             Debug.Log("プレイヤーが落下して死亡しました。");
             // ここでゲームオーバー処理を実装する
             player.Die(); // プレイヤーの死亡処理を呼び出す
             gameOver.SetActive(true);
             isGameOver = true;
+            isDead = true;
+            ClearStageAsync().Forget();
         }
     }
 
@@ -171,7 +172,7 @@ public class IT_GameManager : MonoBehaviour
     {
         getCoinCount += amount;
         Debug.Log($"コインを取得しました。現在のコイン数: {getCoinCount}");
-        coinText.text = "Coins: " + getCoinCount;
+        // coinText.text = "Coins: " + getCoinCount;
         coinTextTMP.text = "Coins: " + getCoinCount;
     }
 
