@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class StageCoin : StageObjectItem
 {
-    [SerializeField] int coinValue = 1; // コインの価値
     [SerializeField] float coinSpeed = 100f; // コインの回転速度\
     [SerializeField] AudioClip coinSound; // コイン取得音
     bool isGetCoin = false; // コインを取得したかどうかのフラグ
@@ -22,7 +21,7 @@ public class StageCoin : StageObjectItem
         {
             isGetCoin = true; // コインを取得したことを記録
 
-            IT_GameManager.Instance.GetCoin(coinValue); // コインを加算
+            IT_GameManager.Instance.GetCoin((int)Amount); // コインを加算
 
 
             // コイン取得音を再生

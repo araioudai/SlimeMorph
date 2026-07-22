@@ -92,6 +92,19 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// リザルトボタン押下処理
+    /// </summary>
+    public void PushResult()
+    {
+        //フェードアウト処理
+        StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+        {
+            //ゲームシーン読み込み
+            StartCoroutine(ResultLoad());
+        }));
+    }
+
+    /// <summary>
     ///タイトルシーン読み込み処理
     /// </summary>
     /// <returns></returns>
@@ -99,6 +112,12 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("TitleScene");
+    }
+
+    IEnumerator ResultLoad()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("ResultScene");
     }
 
     #endregion
