@@ -5,7 +5,11 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Data;
 
-//送信用データの共通クラス
+#region データ構造定義（JSON変換用データモデル）
+
+/// <summary>
+/// 新規登録・ログインの送信用クラス
+/// </summary>
 [System.Serializable]
 public class AuthRequestData
 {
@@ -14,7 +18,9 @@ public class AuthRequestData
     public string password;
 }
 
-//受信用データの共通クラス
+/// <summary>
+/// 新規登録・ログインの受信用クラス
+/// </summary>
 [System.Serializable]
 public class AuthResponseData
 {
@@ -23,7 +29,9 @@ public class AuthResponseData
     public string user_id;
 }
 
-//プレイヤーデータ受信用クラス
+/// <summary>
+/// プレイヤーデータ受信用クラス (loadPlayer)
+/// </summary>
 [System.Serializable]
 public class PlayerDataResponse
 {
@@ -31,12 +39,32 @@ public class PlayerDataResponse
     public string user_id;
     public string name;
     public int coin;
-    public int power_lv;
+    public int sidespeed_lv;
+    public int defence_lv;
     public int shrink_lv;
     public int clear_stage;
     public int stamina;
     public string recovery_time;
 }
+
+/// <summary>
+/// プレイヤーデータ送信用クラス (savePlayer)
+/// </summary>
+[System.Serializable]
+public class SavePlayerRequestData
+{
+    public string action = "savePlayer";
+    public string user_id;
+    public int coin;
+    public int sidespeed_lv;
+    public int defence_lv;
+    public int shrink_lv;
+    public int clear_stage;
+    public int stamina;
+    public string recovery_time;
+}
+
+#endregion
 
 public class OnLineManager : MonoBehaviour
 {
@@ -190,7 +218,19 @@ public class OnLineManager : MonoBehaviour
                     PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);           //クリアステージ数
                     PlayerPrefs.SetInt("Stamina", responseData.stamina);                  //スタミナ数
                     PlayerPrefs.SetString("StaminaRecovery", responseData.recovery_time); //次のスタミナ回復時間
+
+                    //サーバーから取得した強化レベルを、名前に対応したキーでPlayerPrefsに保存
+                    PlayerPrefs.SetInt("GrowLevel_sidespeed_lv", responseData.sidespeed_lv);
+                    PlayerPrefs.SetInt("GrowLevel_defence_lv", responseData.defence_lv);
+                    PlayerPrefs.SetInt("GrowLevel_shrink_lv", responseData.shrink_lv);
+
                     PlayerPrefs.Save();
+
+                    //StaminaManager にもサーバーのスタミナ情報を反映
+                    if (StaminaManager.Instance != null)
+                    {
+                        StaminaManager.Instance.SetStaminaData(responseData.stamina, responseData.recovery_time);
+                    }
 
                     onResponse?.Invoke(true, responseData);
                 }
@@ -203,6 +243,89 @@ public class OnLineManager : MonoBehaviour
             {
                 Debug.LogError($"通信エラー: {request.error}");
                 onResponse?.Invoke(false, null);
+            }
+        }
+    }
+
+    #endregion
+
+    #region データ保存処理 (savePlayer)
+
+    /// <summary>
+    /// プレイヤーの最新データ（所持金、ステータス、ステージ進捗、スタミナ情報など）をサーバーに保存する
+    /// </summary>
+    /// <param name="coin">現在の所持コイン数</param>
+    /// <param name="sideSpeedLv">横移動速度の強化レベル</param>
+    /// <param name="defenceLv">防御力の強化レベル</param>
+    /// <param name="shrinkLv">縮小の強化レベル</param>
+    /// <param name="clearStage">クリア済み最高ステージ番号</param>
+    /// <param name="stamina">現在のスタミナ残量</param>
+    /// <param name="recoveryTime">次回スタミナ回復予定時刻</param>
+    /// <param name="onResponse">通信完了時のコールバック（成功: true, 失敗: false）</param>
+    public void SavePlayer(int coin, int sideSpeedLv, int defenceLv, int shrinkLv, int clearStage, int stamina, string recoveryTime, Action<bool> onResponse = null)
+    {
+        //未ログイン状態の場合はサーバー保存を行わずに終了する
+        if (!IsLoggedIn)
+        {
+            Debug.LogWarning("未ログインのためサーバー保存をスキップします");
+            onResponse?.Invoke(false); //失敗扱いとしてコールバックを返す
+            return;
+        }
+
+        //送信用のデータオブジェクトを作成
+        SavePlayerRequestData requestData = new SavePlayerRequestData
+        {
+            action = "savePlayer",       //GAS側で分岐判定に使用するアクション名
+            user_id = userId,            //ログイン中のユーザーID
+            coin = coin,
+            sidespeed_lv = sideSpeedLv,
+            defence_lv = defenceLv,
+            shrink_lv = shrinkLv,
+            clear_stage = clearStage,
+            stamina = stamina,
+            recovery_time = recoveryTime
+        };
+
+        //非同期通信を開始
+        StartCoroutine(SavePlayerCoroutine(requestData, onResponse));
+    }
+
+    /// <summary>
+    /// プレイヤーデータ保存のHTTP POST通信を実行するコルーチン
+    /// </summary>
+    /// <param name="requestData">送信するプレイヤーデータ構造体</param>
+    /// <param name="onResponse">通信結果を呼び出し元に通知するコールバック</param>
+    private IEnumerator SavePlayerCoroutine(SavePlayerRequestData requestData, Action<bool> onResponse)
+    {
+        //送信オブジェクトをJSON文字列に変換
+        string json = JsonUtility.ToJson(requestData);
+
+        //指定したGASのURLへPOSTリクエストを作成
+        using (UnityWebRequest request = new UnityWebRequest(gasUrl, "POST"))
+        {
+            //JSON文字列をバイト配列に変換してアップロードハンドラーにセット
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            //ヘッダーにContent-Typeを設定
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            //サーバーからのレスポンスを待機
+            yield return request.SendWebRequest();
+
+            //通信結果の判定
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                //通信成功時：レスポンスログを出力し、成功（true）を通知
+                Debug.Log($"[SavePlayer レスポンス]: {request.downloadHandler.text}");
+                onResponse?.Invoke(true);
+            }
+            else
+            {
+                //通信失敗時：エラーログを出力し、失敗（false）を通知
+                Debug.LogError($"SavePlayer 通信エラー: {request.error}");
+                onResponse?.Invoke(false);
             }
         }
     }

@@ -22,6 +22,9 @@ public class StaminaManager : MonoBehaviour
     //次に1回復する時間
     public DateTime nextRecoveryTime { get; private set; }
 
+    //サーバー送信用
+    public string NextRecoveryTimeISO => nextRecoveryTime.ToString("o");
+
     //PlayerPrefsのセーブ用キー名
     private const string KEY_STAMINA = "LocalStamina";
     private const string KEY_RECOVERY_TIME = "LocalStaminaRecoveryTime";
@@ -79,6 +82,29 @@ public class StaminaManager : MonoBehaviour
         stamina -= 1;
 
         //変動があったらセーブ
+        SaveStaminaData();
+    }
+
+    /// <summary>
+    /// OnLineManagerからロードしたスタミナ情報を反映させる
+    /// </summary>
+    /// <param name="serverStamina">サーバー上のスタミナ数</param>
+    /// <param name="serverRecoveryTimeStr">サーバー上の次回回復時刻（ISO 8601形式）</param>
+    public void SetStaminaData(int serverStamina, string serverRecoveryTimeStr)
+    {
+        stamina = serverStamina;
+
+        //文字列の回復時刻をDateTime型にして適用
+        if (!string.IsNullOrEmpty(serverRecoveryTimeStr) && DateTime.TryParse(serverRecoveryTimeStr, out DateTime parsedTime))
+        {
+            nextRecoveryTime = parsedTime.ToUniversalTime();
+        }
+        else
+        {
+            nextRecoveryTime = DateTime.UtcNow;
+        }
+
+        //サーバーの値でローカルキャッシュも同期更新
         SaveStaminaData();
     }
 
