@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
 using System.Data;
+using System.Globalization;
 
 #region データ構造定義（JSON変換用データモデル）
 
@@ -45,6 +46,7 @@ public class PlayerDataResponse
     public int clear_stage;
     public int stamina;
     public string recovery_time;
+    public string updated_at;
 }
 
 /// <summary>
@@ -62,6 +64,17 @@ public class SavePlayerRequestData
     public int clear_stage;
     public int stamina;
     public string recovery_time;
+}
+
+/// <summary>
+/// プレイヤーデータ保存レスポンス用クラス
+/// </summary>
+[System.Serializable]
+public class SavePlayerResponseData
+{
+    public bool success;
+    public string message;
+    public string updated_at;
 }
 
 #endregion
@@ -151,7 +164,7 @@ public class OnLineManager : MonoBehaviour
                 //JSONをクラスにデコード
                 AuthResponseData responseData = JsonUtility.FromJson<AuthResponseData>(responseText);
 
-                if (responseData.success)
+                if (responseData != null && responseData.success)
                 {
                     //ユーザーIDが返ってきた場合は保存
                     if (!string.IsNullOrEmpty(responseData.user_id))
@@ -162,13 +175,14 @@ public class OnLineManager : MonoBehaviour
                         PlayerPrefs.Save();
                     }
 
-                    //TitleManagerに成功（true）とメッセージを伝える
+                    //TitleManagerに成功を伝える
                     onResponse?.Invoke(true, responseData.message);
                 }
                 else
                 {
-                    //サーバー側でエラー（重複エラーやパスワード違いなど）があった場合
-                    onResponse?.Invoke(false, responseData.message);
+                    //サーバー側でエラー、またはJSONパース失敗時
+                    string errorMsg = responseData != null ? responseData.message : "サーバーからの応答解析に失敗しました";
+                    onResponse?.Invoke(false, errorMsg);
                 }
             }
             //通信自体が失敗した時（オフラインなど）
@@ -211,26 +225,64 @@ public class OnLineManager : MonoBehaviour
                 //JSONをPlayerDataResponseクラスにデコード
                 PlayerDataResponse responseData = JsonUtility.FromJson<PlayerDataResponse>(responseText);
 
-                if (responseData.success)
+                if (responseData != null && responseData.success)
                 {
-                    //コイン数、クリアステージなど必要なものをローカル（PlayerPrefs）にも保存（キャッシュ）しておく
-                    PlayerPrefs.SetInt("UserCoin", responseData.coin);                    //コイン
-                    PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);           //クリアステージ数
-                    PlayerPrefs.SetInt("Stamina", responseData.stamina);                  //スタミナ数
-                    PlayerPrefs.SetString("StaminaRecovery", responseData.recovery_time); //次のスタミナ回復時間
+                    //日時比較
+                    string localTimeStr = LocalCommon.GetLocalTimeStamp();
 
-                    //サーバーから取得した強化レベルを、名前に対応したキーでPlayerPrefsに保存
-                    PlayerPrefs.SetInt("GrowLevel_sidespeed_lv", responseData.sidespeed_lv);
-                    PlayerPrefs.SetInt("GrowLevel_defence_lv", responseData.defence_lv);
-                    PlayerPrefs.SetInt("GrowLevel_shrink_lv", responseData.shrink_lv);
+                    DateTime localTime = DateTime.MinValue;
+                    DateTime serverTime = DateTime.MinValue;
+
+                    bool hasLocalTime = DateTime.TryParse(localTimeStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out localTime);
+                    bool hasServerTime = DateTime.TryParse(responseData.updated_at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out serverTime);
+
+                    //サーバーデータの方が新しい場合（機種変更や別端末プレイ後など）
+                    if (hasServerTime && (!hasLocalTime || serverTime > localTime))
+                    {
+                        Debug.Log("[LoadPlayer] サーバーデータが新しいため、クラウドデータで上書き適用します");
+
+                        PlayerPrefs.SetInt("UserCoin", responseData.coin);
+                        PlayerPrefs.SetInt("ClearStage", responseData.clear_stage);
+                        PlayerPrefs.SetInt("GrowLevel_sidespeed_lv", responseData.sidespeed_lv);
+                        PlayerPrefs.SetInt("GrowLevel_defence_lv", responseData.defence_lv);
+                        PlayerPrefs.SetInt("GrowLevel_shrink_lv", responseData.shrink_lv);
+
+                        //スタミナ＆回復時間もサーバー値で更新
+                        PlayerPrefs.SetInt("Stamina", responseData.stamina);
+                        PlayerPrefs.SetString("StaminaRecovery", responseData.recovery_time);
+
+                        //ローカルの最終セーブ時刻もサーバー時刻に同期
+                        PlayerPrefs.SetString("LastSaveTime", responseData.updated_at);
+                    }
+                    //ローカルの方が新しい、またはオフライン進行がある場合
+                    else
+                    {
+                        Debug.Log("[LoadPlayer] ローカルデータが最新のため、Mathf.Maxで安全結合します");
+
+                        int localCoin = PlayerPrefs.GetInt("UserCoin", 0);
+                        PlayerPrefs.SetInt("UserCoin", Mathf.Max(localCoin, responseData.coin));
+
+                        int localStage = PlayerPrefs.GetInt("ClearStage", 0);
+                        PlayerPrefs.SetInt("ClearStage", Mathf.Max(localStage, responseData.clear_stage));
+
+                        int localSideSpeed = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
+                        PlayerPrefs.SetInt("GrowLevel_sidespeed_lv", Mathf.Max(localSideSpeed, responseData.sidespeed_lv));
+
+                        int localDefence = PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
+                        PlayerPrefs.SetInt("GrowLevel_defence_lv", Mathf.Max(localDefence, responseData.defence_lv));
+
+                        int localShrink = PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
+                        PlayerPrefs.SetInt("GrowLevel_shrink_lv", Mathf.Max(localShrink, responseData.shrink_lv));
+
+                        //スタミナの記録が無い場合（初インストール等）のみサーバー値を引き継ぐ
+                        if (!PlayerPrefs.HasKey("Stamina"))
+                        {
+                            PlayerPrefs.SetInt("Stamina", responseData.stamina);
+                            PlayerPrefs.SetString("StaminaRecovery", responseData.recovery_time);
+                        }
+                    }
 
                     PlayerPrefs.Save();
-
-                    //StaminaManager にもサーバーのスタミナ情報を反映
-                    if (StaminaManager.Instance != null)
-                    {
-                        StaminaManager.Instance.SetStaminaData(responseData.stamina, responseData.recovery_time);
-                    }
 
                     onResponse?.Invoke(true, responseData);
                 }
@@ -318,7 +370,21 @@ public class OnLineManager : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 //通信成功時：レスポンスログを出力し、成功（true）を通知
-                Debug.Log($"[SavePlayer レスポンス]: {request.downloadHandler.text}");
+                string responseText = request.downloadHandler.text;
+                Debug.Log($"[SavePlayer レスポンス]: {responseText}");
+
+                SavePlayerResponseData responseData = JsonUtility.FromJson<SavePlayerResponseData>(responseText);
+
+                if (responseData != null && responseData.success)
+                {
+                    //サーバー保存完了時の現在時刻をローカルにも記録
+                    string saveTime = !string.IsNullOrEmpty(responseData.updated_at)
+                        ? responseData.updated_at
+                        : DateTime.UtcNow.ToString("o");
+
+                    PlayerPrefs.SetString("LastSaveTime", saveTime);
+                    PlayerPrefs.Save();
+                }
                 onResponse?.Invoke(true);
             }
             else
