@@ -105,6 +105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 227708776042007750}
   - component: {fileID: 6539053658101907970}
+  - component: {fileID: -8168042775236170884}
+  - component: {fileID: 8416517365448646011}
   m_Layer: 6
   m_Name: Skin_8
   m_TagString: Untagged
@@ -153,6 +155,60 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &-8168042775236170884
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114309731230674274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2, y: 1.2, z: 1.2}
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &8416517365448646011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114309731230674274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26bf49a39c77ab343ae70b9d6f98be27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailController
+  slimeTrailPrefab: {fileID: 5017070435941571000, guid: fc7af05a0450bd940acfe1fa1b4c60d5, type: 3}
+  trailColor: {r: 0.31764707, g: 0.56078434, b: 0.6392157, a: 1}
+  trailOffset: {x: 0, y: 0, z: -0.3}
+  moveSpeedThreshold: 0.001
+  moveDistanceThreshold: 0.00001
+  stopDelay: 0.15
+  trailEffectTest: 0
+  alignToGround: 1
+  groundRayHeight: 2
+  groundRayDistance: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  rotationSmooth: 15
+  trailRotationOffset: {x: 0, y: 0, z: 0}
+  damageVFXObject: {fileID: 0}
+  damageEffectTest: 0
+  damageVFXOffset: {x: 0, y: 0.5, z: 0}
+  deathVFXObject: {fileID: 0}
+  deathEffectTest: 0
+  deathVFXOffset: {x: 0, y: 0.5, z: 0}
 --- !u!1 &2615506160756425480
 GameObject:
   m_ObjectHideFlags: 0

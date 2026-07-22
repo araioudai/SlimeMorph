@@ -5,6 +5,9 @@ public class SlimeTrailController : MonoBehaviour
     [Header("移動時の跡エフェクト")]
     [SerializeField] private GameObject slimeTrailPrefab;
 
+    [Header("Trailの色")]
+    [SerializeField] private Color trailColor = Color.cyan;
+
     [Header("Trailの位置調整")]
     [SerializeField] private Vector3 trailOffset = new Vector3(0f, 0, -0.3f);
 
@@ -130,8 +133,23 @@ public class SlimeTrailController : MonoBehaviour
 
         slimeTrailParticles = slimeTrailObject.GetComponentsInChildren<ParticleSystem>(true);
 
+        ApplyTrailColor();
+
         Debug.Log("SlimeTrail生成完了: " + slimeTrailObject.name);
         Debug.Log("取得したParticleSystem数: " + slimeTrailParticles.Length);
+    }
+
+    private void ApplyTrailColor()
+    {
+        if (slimeTrailParticles == null) return;
+
+        foreach (ParticleSystem ps in slimeTrailParticles)
+        {
+            if (ps == null) continue;
+
+            ParticleSystem.MainModule main = ps.main;
+            main.startColor = trailColor;
+        }
     }
 
     private void FollowTrailPosition()
