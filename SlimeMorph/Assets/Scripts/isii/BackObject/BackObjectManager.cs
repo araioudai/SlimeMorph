@@ -10,6 +10,14 @@ public class BackObjectManager : MonoBehaviour
 
     void Start()
     {
+        int clearStage = PlayerPrefs.GetInt("ClearStage", 1);
+        stageId = clearStage + 1; // クリアしたステージに応じてステージIDを設定
+
+        if (stageId > backObjectList.backObjects.Count)
+        {
+            stageId = Random.Range(0, backObjectList.backObjects.Count + 1); // バックオブジェクトの数を超えた場合はランダムに選択
+        }
+
         LoadBackObjects();
     }
 

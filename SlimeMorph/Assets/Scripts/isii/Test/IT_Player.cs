@@ -54,8 +54,11 @@ public class IT_Player : StageObjectItem
 
 
 
-    [Header("Lv")]
-    private const string SelectedGrowKey = "SavedSelectedGrowIndex";
+    // [Header("Lv")]
+    // private const string SelectedGrowKey = "SavedSelectedGrowIndex";
+
+
+
 
     // 0 = スピードアップ, 1 = 防御力アップ, 2 = 減少量ダウン
 
@@ -69,18 +72,29 @@ public class IT_Player : StageObjectItem
     {
         if (rb == null) return;
 
+        rb.AddForce(Vector3.down * 1000, ForceMode.Acceleration);
+        Debug.Log("DawnFall: Added downward force to the player.");
     }
 
 
 
     void Test()
     {
+        //他のステータス情報もPlayerPrefsから取得
+        // int sideSpeedLv = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
+        int defenseLv = PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
+        int shrinkLv = PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
+        // int clearStage = PlayerPrefs.GetInt("ClearStage", 1);
+
+
+
+
+
         // defenseValue = PlayerPrefs.GetInt(SelectedGrowKey, 1);
         // decreaseValue = PlayerPrefs.GetFloat(SelectedGrowKey, 2);
 
-
-
-
+        percentDefenseValue = 1f - (defenseLv * 0.01f); // 防御力の倍率をパーセントで表す値を計算
+        percentDecreaseValue = 1f - (shrinkLv * 0.01f); // 減少量の倍率をパーセントで表す値を計算
     }
 
 
@@ -183,7 +197,7 @@ Test();
         if(morphSize < 0)
         {
             // decreaseValueを掛けて減少量を調整
-            morphSize *= decreaseValue;
+            morphSize *= percentDefenseValue;
         }
 
         slime.transform.localScale += new Vector3(morphSize, morphSize, morphSize);
@@ -205,7 +219,7 @@ Test();
         }
         // 時間経過でサイズを減らす
 
-        float morphAmount = timeMorphDown * decreaseValue * Time.deltaTime;
+        float morphAmount = timeMorphDown * percentDecreaseValue * Time.deltaTime;
 
         slime.transform.localScale -= new Vector3(morphAmount, morphAmount, morphAmount);
         slime.GetComponent<BoxCollider>().size -= new Vector3(morphAmount, morphAmount, morphAmount); // コライダーのサイズも変更

@@ -16,9 +16,10 @@ public class StageManager : MonoBehaviour
     }
 
     [Header("使用するステージID")]
-    [SerializeField] int StageID = 1; // 現在のステージID
+    [SerializeField] int stageID = 1; // 現在のステージID
     float blockLength = 5f; // ブロックの長さ
     int currentMas = 0; // 現在のマス
+    [SerializeField] int maxStageID = 10; // 最大ステージID
     
     [Header("ステージオブジェクトの親")]
     [SerializeField] Transform stageParent; // ステージオブジェクトの親
@@ -57,7 +58,22 @@ public class StageManager : MonoBehaviour
     
     void Start()
     {
-        if (debugMode) return; // デバッグモードの場合はステージ生成をスキップ
+        // if (debugMode) return; // デバッグモードの場合はステージ生成をスキップ
+
+        if (debugMode)
+        {
+            Loading();
+            return;
+        }
+        int clearStage = PlayerPrefs.GetInt("ClearStage", 1);
+        stageID = clearStage + 1; // クリアしたステージに応じてステージIDを設定
+
+        if (stageID > maxStageID)
+        {
+            // 1-10の範囲でランダムにステージIDを設定
+            stageID = Random.Range(1, maxStageID + 1);
+        }
+
         Loading();
     }
 
@@ -70,7 +86,7 @@ public class StageManager : MonoBehaviour
 
         if (sid != -99)
         {
-            StageID = sid;
+            stageID = sid;
         }
 
         // // Debug stageCellの内容を確認
@@ -82,7 +98,7 @@ public class StageManager : MonoBehaviour
         // CSVデータに基づいてステージオブジェクトを生成
         foreach (StageCellData cell in stageCells)
         {
-            if (cell.stageId != StageID) continue;
+            if (cell.stageId != stageID) continue;
 
             Vector3 offset = GetLaneOffset(cell.lane);
             Vector3 position = offset + new Vector3(0, 0, cell.z * blockLength);

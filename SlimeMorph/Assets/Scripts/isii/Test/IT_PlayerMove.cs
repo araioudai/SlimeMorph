@@ -16,9 +16,12 @@ public class IT_PlayerMove : MonoBehaviour
     void Start()
     {
         // ゲーム開始時にPlayerPrefsから選択された成長タイプのインデックスを取得
-        speedUpValue = PlayerPrefs.GetInt(SelectedGrowKey, 0);
+        // speedUpValue = PlayerPrefs.GetInt(SelectedGrowKey, 0);
 
-        percentSpeedUpValue = 1f + (speedUpValue * 0.01f); // スピードアップの倍率をパーセントで表す値を計算
+        int sideSpeedLv = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
+
+
+        percentSpeedUpValue = 1f + (sideSpeedLv * 0.02f); // スピードアップの倍率をパーセントで表す値を計算
     }
 
 

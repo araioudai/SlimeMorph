@@ -13,6 +13,7 @@ public class NoneGravity : MonoBehaviour
             if (other.TryGetComponent(out IT_Player itp))
             {
                 itp.SpeedReset();
+                itp.DawnFall();
                 Debug.Log("SpeedReset");
             }
             else
