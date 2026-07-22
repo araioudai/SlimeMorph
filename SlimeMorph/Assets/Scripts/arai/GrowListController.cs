@@ -139,7 +139,8 @@ public class GrowListController : MonoBehaviour
             //ローカルに最新状態を保存する
             PlayerPrefs.SetInt("UserCoin", newCoin);
             PlayerPrefs.SetInt(levelKey, newLevel);
-            PlayerPrefs.Save();
+
+            LocalCommon.SaveLocalTimeStamp();
 
             //UIを即座にピンポイント再描画
             GrowItemSlot slot = spawnedSlots.Find(s => s.GrowKey == selectedKey);
@@ -152,7 +153,7 @@ public class GrowListController : MonoBehaviour
             int sideSpeedLv = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
             int defenceLv = PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
             int shrinkLv = PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
-            int clearStage = PlayerPrefs.GetInt("ClearStage", 1);
+            int clearStage = PlayerPrefs.GetInt("ClearStage", 0);
             int stamina = PlayerPrefs.GetInt("Stamina", 5);
             string recoveryTime = PlayerPrefs.GetString("StaminaRecovery", "");
 

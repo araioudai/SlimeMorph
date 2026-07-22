@@ -1,6 +1,8 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
+using TMPro;
 
 public class ResultManager : MonoBehaviour
 {
@@ -13,6 +15,11 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private GameObject clearButton;
     [Tooltip("ゲームオーバー表示ボタン")]
     [SerializeField] private GameObject overButton;
+    [Header("UIテキスト")]
+    [SerializeField] private TMP_Text baseCoinText;
+    [SerializeField] private TMP_Text multiplierText;
+    [SerializeField] private TMP_Text totalCoinText;
+
     [Header("フェード処理関連")]
     [Header("マスクデータ")]
     [SerializeField] private MaskData data;
@@ -38,21 +45,102 @@ public class ResultManager : MonoBehaviour
         //リザルト画面が開いた瞬間に、裏で自動的にサーバーへデータ保存を開始
         SaveGameResult();
 
-        //フェード処理
-        LiftFade();
+        //リザルトフローを開始
+        StartCoroutine(StartResultSequence());
+    }
+
+    private void OnDestroy()
+    {
+        //シーン遷移時にDOTweenアニメーションを安全に破棄
+        DOTween.Kill(this);
     }
 
     #endregion
 
     #region Start呼び出し関数
+
+    #region リザルトフロー管理
+
     /// <summary>
-    /// フェードイン処理
+    /// フェードイン完了を待ってからリザルト演出を実行する一連の流れ
     /// </summary>
-    /// <returns></returns>
-    private void LiftFade()
+    private IEnumerator StartResultSequence()
     {
-        //広がるアニメーション
-        StartCoroutine(fader.PlayFadeIn(data.MaskSpeed(MaskData.MaskType.IN)));
+        //クリア/オーバーボタンの切り替え
+        ScoreResult();
+
+        //フェードインの完了を待つ
+        yield return StartCoroutine(fader.PlayFadeIn(data.MaskSpeed(MaskData.MaskType.IN)));
+
+        //画面が完全に表示されたら、DOTweenのカウントアップ演出を開始
+        int rawCoins = HandOver.Instance.getCoinCount;
+        bool isClear = HandOver.Instance.isGameCleared;
+
+        PlayResultAnimation(rawCoins, isClear);
+    }
+
+    #endregion
+
+    private void ScoreResult()
+    {
+        //ゲームクリア
+        if (HandOver.Instance.isGameCleared)
+        {
+            clearButton.SetActive(true);
+            overButton.SetActive(false);
+        }
+        //ゲームオーバー
+        else
+        {
+            clearButton.SetActive(false);
+            overButton.SetActive(true);
+        }
+
+        baseCoinText.text = "";
+        multiplierText.text = "";
+        totalCoinText.text = "";
+    }
+
+    /// <summary>
+    /// リザルト演出を再生する
+    /// </summary>
+    /// <param name="rawCoinCount">ゲーム内で拾ったコインの個数 * 10</param>
+    /// <param name="isClear">クリアしたかどうか</param>
+    private void PlayResultAnimation(int rawCoinCount, bool isClear)
+    {
+        int multiplier = isClear ? 2 : 1;
+        int totalCoins = rawCoinCount * multiplier;
+
+        //初期状態のリセット
+        baseCoinText.text = "0";
+        multiplierText.text = $"{multiplier}";
+        multiplierText.transform.localScale = Vector3.zero; //最初は小さく消しておく
+        totalCoinText.text = "0";
+
+        //演出用Sequenceの構築
+        Sequence seq = DOTween.Sequence();
+
+        //獲得コインのカウントアップ
+        seq.Append(DOVirtual.Float(0, rawCoinCount, 1.0f, value => {
+            baseCoinText.text = Mathf.FloorToInt(value).ToString("N0");
+        }).SetEase(Ease.OutQuad));
+
+        //ちょっと置く
+        seq.AppendInterval(0.2f);
+
+        //倍率が飛び出す演出
+        seq.Append(multiplierText.transform.DOScale(1.3f, 0.25f).SetEase(Ease.OutBack));
+        seq.Append(multiplierText.transform.DOScale(1.0f, 0.1f));
+
+        seq.AppendInterval(0.2f);
+
+        //合計コインのカウントアップ
+        seq.Append(DOVirtual.Float(0, totalCoins, 0.8f, value => {
+            totalCoinText.text = Mathf.FloorToInt(value).ToString("N0");
+        }).SetEase(Ease.OutQuad));
+
+        //合計表示の最後をポンッと強調
+        seq.Append(totalCoinText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f, 10, 1));
     }
 
     #endregion
@@ -67,8 +155,20 @@ public class ResultManager : MonoBehaviour
         isSaving = true;
         isSaveComplete = false;
 
-        //各マネージャーおよびPlayerPrefsから最新のゲームデータを取得
-        int currentCoin = PlayerPrefs.GetInt("UserCoin", 0);
+        //今回のプレイ結果から獲得コイン数を計算
+        int rawCoins = HandOver.Instance.getCoinCount;
+        bool isClear = HandOver.Instance.isGameCleared;
+        int multiplier = isClear ? 2 : 1;
+        int earnedCoins = rawCoins * multiplier;
+
+        //現在保有コインに今回獲得分を加算
+        int currentCoin = PlayerPrefs.GetInt("UserCoin", 0) + earnedCoins;
+        PlayerPrefs.SetInt("UserCoin", currentCoin);
+
+        //ローカルのタイムスタンプを保存
+        LocalCommon.SaveLocalTimeStamp();
+
+        //PlayerPrefs からその他のステータスを取得
         int sideSpeedLv = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
         int defenceLv = PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
         int shrinkLv = PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
@@ -140,8 +240,12 @@ public class ResultManager : MonoBehaviour
             }
         }
 
-        //保存が終わっていれば（あるいは元から終わっていれば）即座にシーン遷移
-        SceneManager.LoadScene(nextSceneName);
+        //フェードアウト処理
+        StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
+        {
+            //保存が終わっていれば（あるいは元から終わっていれば）即座にシーン遷移
+            SceneManager.LoadScene(nextSceneName);
+        }));
     }
 
     #endregion
