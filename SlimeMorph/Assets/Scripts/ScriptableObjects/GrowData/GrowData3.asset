@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: GrowData3
   m_EditorClassIdentifier: Assembly-CSharp::GrowData
   growIndex: 2
+  growKey: shrink_lv
   growTitleEn: DecayReduction
   growTitleJa: "\u6E1B\u5C11\u7387\u8EFD\u6E1B"
   growExplanationEn: Shrink slower over time.
   growExplanationJa: "\u6642\u9593\u7D4C\u904E\u3067\u5C0F\u3055\u304F\u306A\u308B\u30B9\u30D4\u30FC\u30C9\u304C\u9045\u304F\u306A\u308A\u307E\u3059"
   growIcon: {fileID: 21300000, guid: 76e6c8c01254a114cbb892574e2c92ae, type: 3}
+  growMax: 11
+  growCoins: 6400000096000000e10000004a010000f4010000ee020000e8030000600400007206000060090000100e0000

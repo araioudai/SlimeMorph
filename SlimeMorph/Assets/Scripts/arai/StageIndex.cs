@@ -86,7 +86,7 @@ public class StageIndex : MonoBehaviour
         //LoadTutorialProgress();
 
         //初期（ローカルに保存されている前回のステージクリア数を代入、無ければ1）
-        stageIndex = PlayerPrefs.GetInt("ClearStage", 1);
+        stageIndex = PlayerPrefs.GetInt("ClearStage", 0);
 
         //サーバーから最新のステージクリア数を非同期で取得
         if (OnLineManager.Instance != null)
@@ -121,5 +121,29 @@ public class StageIndex : MonoBehaviour
             firstTime = true;
         }
     }*/
+    #endregion
+
+    #region クリアステージ更新・保存処理
+
+    /// <summary>
+    /// ステージクリア時に呼び出し、最高クリアステージを更新・保存する
+    /// </summary>
+    /// <param name="clearedStageIndex">今回クリアしたステージ番号</param>
+    public void UpdateClearStage(int clearedStageIndex)
+    {
+        //現在保存されている最高クリアステージを取得
+        int currentMaxClear = PlayerPrefs.GetInt("ClearStage", 0);
+
+        //今回クリアしたステージが、これまでの最高記録を超えている場合
+        int nextStage = clearedStageIndex + 1;
+
+        if (nextStage > currentMaxClear)
+        {
+            PlayerPrefs.SetInt("ClearStage", nextStage);
+            PlayerPrefs.Save(); //確実にディスクに書き込む
+            Debug.Log($"最高クリアステージを更新しました: {nextStage}");
+        }
+    }
+
     #endregion
 }

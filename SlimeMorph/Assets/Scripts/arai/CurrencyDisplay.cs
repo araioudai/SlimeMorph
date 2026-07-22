@@ -34,7 +34,7 @@ namespace SlimeMorph.UI
 
         #endregion
 
-        #region コイン表示処理
+        #region 表示更新処理
 
         /// <summary>
         /// 表示を更新するメソッド
