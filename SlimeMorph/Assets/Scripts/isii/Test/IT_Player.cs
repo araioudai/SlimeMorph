@@ -46,10 +46,10 @@ public class IT_Player : StageObjectItem
 
 
     [Header("強化")]
-    float defenceValue = 0.5f; // 防御力の倍率
+    float defenseValue = 0.5f; // 防御力の倍率
     float decreaseValue = 0.5f; // 減少量の倍率
 
-    float percentDefenceValue = 0.5f; // 防御力の倍率
+    float percentDefenseValue = 0.5f; // 防御力の倍率
     float percentDecreaseValue = 0.5f; // 減少量の倍率
 
 
@@ -67,7 +67,9 @@ public class IT_Player : StageObjectItem
 
     void Test()
     {
-        defenceValue = PlayerPrefs.GetFloat(SelectedGrowKey, 0.5f); // デフォルト値は0.5
+        // defenseValue = PlayerPrefs.GetInt(SelectedGrowKey, 1);
+        // decreaseValue = PlayerPrefs.GetFloat(SelectedGrowKey, 2);
+
 
 
 
