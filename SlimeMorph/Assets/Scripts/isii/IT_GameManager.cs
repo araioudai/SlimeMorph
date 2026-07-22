@@ -118,6 +118,7 @@ public class IT_GameManager : MonoBehaviour
             isGoalExecuted = true;
 
             HandOverSet(true); // ゲームクリア時のデータをHandOverに渡す
+            //StageIndex.Instance.UpdateClearStage();
 
             Debug.Log("ゴールに到達しました。");
             ClearStageAsync().Forget();
