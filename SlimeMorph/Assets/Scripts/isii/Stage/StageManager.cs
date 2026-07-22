@@ -37,9 +37,8 @@ public class StageManager : MonoBehaviour
 
 
 
-#if UNITY_EDITOR
     public bool debugMode = false; // デバッグモードのフラグ
-#endif
+
 
     private void Awake()
     {
