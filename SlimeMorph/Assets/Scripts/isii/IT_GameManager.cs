@@ -116,10 +116,22 @@ public class IT_GameManager : MonoBehaviour
         if (isGoal && !isGoalExecuted)
         {
             isGoalExecuted = true;
+
+            HandOverSet(true); // ゲームクリア時のデータをHandOverに渡す
+
             Debug.Log("ゴールに到達しました。");
             ClearStageAsync().Forget();
         }
     }
+
+    void HandOverSet(bool isGameCleared)
+    {
+        HandOver.Instance.isGameCleared = isGameCleared;
+        HandOver.Instance.getCoinCount = getCoinCount;
+    }
+
+
+
 
     private async UniTask ClearStageAsync()
     {
@@ -130,7 +142,7 @@ public class IT_GameManager : MonoBehaviour
         // ゴールに到達したときの処理をここに実装
         if (gameManager != null)
         {
-            gameManager.PushTitle();
+            gameManager.PushResult();
         }
         else
         {
@@ -150,9 +162,12 @@ public class IT_GameManager : MonoBehaviour
             Debug.Log("プレイヤーが死亡しました。");
             // ここでゲームオーバー処理を実装する
             player.Die(); // プレイヤーの死亡処理を呼び出す
-            gameOver.SetActive(true);
+            // gameOver.SetActive(true);
             isGameOver = true;
             isDead = true;
+
+            HandOverSet(false); // ゲームオーバー時のデータをHandOverに渡す
+
             ClearStageAsync().Forget();
         }
 
@@ -161,9 +176,12 @@ public class IT_GameManager : MonoBehaviour
             Debug.Log("プレイヤーが落下して死亡しました。");
             // ここでゲームオーバー処理を実装する
             player.Die(); // プレイヤーの死亡処理を呼び出す
-            gameOver.SetActive(true);
+            // gameOver.SetActive(true);
             isGameOver = true;
             isDead = true;
+
+            HandOverSet(false); // ゲームオーバー時のデータをHandOverに渡す
+
             ClearStageAsync().Forget();
         }
     }

@@ -65,6 +65,14 @@ public class IT_Player : StageObjectItem
         speed = 0f;
     }
 
+    public void DawnFall()
+    {
+        if (rb == null) return;
+
+    }
+
+
+
     void Test()
     {
         // defenseValue = PlayerPrefs.GetInt(SelectedGrowKey, 1);
