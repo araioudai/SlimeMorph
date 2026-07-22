@@ -46,12 +46,18 @@ public class IT_Player : StageObjectItem
 
 
     [Header("強化")]
-    float speedUpValue = 1.5f; // スピードアップの倍率
     float defenceValue = 0.5f; // 防御力の倍率
     float decreaseValue = 0.5f; // 減少量の倍率
 
+    float percentDefenceValue = 0.5f; // 防御力の倍率
+    float percentDecreaseValue = 0.5f; // 減少量の倍率
 
 
+
+    [Header("Lv")]
+    private const string SelectedGrowKey = "SavedSelectedGrowIndex";
+
+    // 0 = スピードアップ, 1 = 防御力アップ, 2 = 減少量ダウン
 
 
     public void SpeedReset()
@@ -59,7 +65,13 @@ public class IT_Player : StageObjectItem
         speed = 0f;
     }
 
+    void Test()
+    {
+        defenceValue = PlayerPrefs.GetFloat(SelectedGrowKey, 0.5f); // デフォルト値は0.5
 
+
+
+    }
 
 
 
@@ -78,6 +90,7 @@ public class IT_Player : StageObjectItem
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
         isStart = true; // ゲーム開始時のフラグをtrueに設定
+Test();
     }
 
     void Update()

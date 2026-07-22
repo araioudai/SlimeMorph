@@ -177,12 +177,12 @@ public class StageManager : MonoBehaviour
                             }
                             break;
                     }
-                    Debug.Log($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}");
+                    // Debug.Log($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}", this);
                 }
                 else
                 {
                     Debug.LogWarning($"Rendererが見つかりません: {floor.name}", floor);
-                    Debug.LogWarning($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}");
+                    Debug.LogWarning($"cell.season: {cell.season}, cell.lane: {cell.lane}, cell.z: {cell.z}, position: {position}", this);
                 }
             }
 

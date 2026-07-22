@@ -4072,7 +4072,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
   stageObjectDatabase: {fileID: 11400000, guid: f6ccff86e501c24468f72ffc96c8885a, type: 2}
-  StageID: 6
+  StageID: 9
   stageParent: {fileID: 1827938056}
   groundParent: {fileID: 1060471890}
   objectOffset: 1
@@ -4122,7 +4122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BackObjectManager
   backObjectList: {fileID: 11400000, guid: 1af713cd5c616bd4cb54c91744c200ba, type: 2}
   backObjectParent: {fileID: 387800888}
-  stageId: 6
+  stageId: 5
 --- !u!1 &533080138
 GameObject:
   m_ObjectHideFlags: 0
@@ -7377,7 +7377,7 @@ MonoBehaviour:
   timeMorphDown: 0.05
   gravityValue: 3
   cameraDistance: 4
-  isTimeMorphDown: 0
+  isTimeMorphDown: 1
   groundProbeOffset: 0.5
   groundProbeDistance: 1.8
   groundSnapOffset: 0.05
