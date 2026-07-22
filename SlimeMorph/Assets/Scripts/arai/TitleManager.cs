@@ -648,6 +648,8 @@ public class TitleManager : MonoBehaviour
                 //スタミナを消費
                 StaminaManager.Instance.StaminaConsume();
 
+                LocalCommon.SaveLocalTimeStamp();
+
                 //ゲームシーン読み込み
                 StartCoroutine(GameLoad());
             }));

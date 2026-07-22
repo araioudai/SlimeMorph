@@ -95,7 +95,7 @@ public class StageIndex : MonoBehaviour
             {
                 if (success && playerData != null)
                 {
-                    //サーバーから無事に取得できたら、ステージクリアを代入
+                    //サーバーから無事に取得できたら、クリアステージを代入
                     stageIndex = playerData.clear_stage;
                 }
                 else
