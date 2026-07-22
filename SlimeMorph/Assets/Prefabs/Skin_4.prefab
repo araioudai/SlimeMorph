@@ -541,7 +541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailController
   slimeTrailPrefab: {fileID: 5017070435941571000, guid: fc7af05a0450bd940acfe1fa1b4c60d5, type: 3}
   trailColor: {r: 0.59607846, g: 0.6, b: 0.24313727, a: 1}
-  trailOffset: {x: 0, y: 0, z: -0.3}
+  trailOffset: {x: 0, y: -1, z: -0.3}
   moveSpeedThreshold: 0.001
   moveDistanceThreshold: 0.00001
   stopDelay: 0.15
