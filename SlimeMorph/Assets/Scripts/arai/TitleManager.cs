@@ -64,6 +64,9 @@ public class TitleManager : MonoBehaviour
     [Header("設定画面関連")]
     [SerializeField] private GameObject settingPanel;
 
+    [Header("資源パネル")]
+    [SerializeField] private GameObject resourcePanel;
+
     [Header("スタミナプラス画面関連")]
     [SerializeField] private GameObject staminaPanel;
     [SerializeField] private GameObject staminaEnoughPanel;
@@ -225,12 +228,14 @@ public class TitleManager : MonoBehaviour
             //すでにログインIDがあれば、タイトルを表示
             loginPanel.SetActive(false);
             standPanel.SetActive(true);
+            resourcePanel.SetActive(true);
         }
         else
         {
             //未ログインならログインパネルを表示
             loginPanel.SetActive(true);
             standPanel.SetActive(false);
+            resourcePanel.SetActive(false);
         }
     }
 
@@ -611,6 +616,8 @@ public class TitleManager : MonoBehaviour
             {
                 d.SetActive(true);
             }
+
+            resourcePanel.SetActive(true);
 
             //画面が完全に表示された直後にメソッドを実行
             onPanelOpened?.Invoke();

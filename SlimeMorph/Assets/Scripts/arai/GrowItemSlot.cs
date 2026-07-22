@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,41 +13,56 @@ public class GrowItemSlot : MonoBehaviour
         Max
     }
 
-    #region private•Ï”
-    [Header("ƒ{ƒ^ƒ“")]
+    #region privateå¤‰æ•°
+    [Header("ãƒœã‚¿ãƒ³")]
     [SerializeField] private Button button;
-    [Header("ƒAƒCƒRƒ“‰æ‘œ")]
+    [Header("ã‚¢ã‚¤ã‚³ãƒ³ç”»åƒ")]
     [SerializeField] private Image iconImage;
-    [Header("à–¾iƒ^ƒCƒgƒ‹j")]
+    [Header("èª¬æ˜ï¼ˆã‚¿ã‚¤ãƒˆãƒ«ï¼‰")]
     [SerializeField] private TMP_Text titleText;
-    [Header("à–¾iÚ×j")]
+    [Header("èª¬æ˜ï¼ˆè©³ç´°ï¼‰")]
     [SerializeField] private TMP_Text explanationText;
 
+    [Header("ã‚³ã‚¤ãƒ³ãƒ»ãƒ¬ãƒ™ãƒ«è¡¨ç¤ºç”¨")]
+    [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private GameObject lockIcon;
+
+    //èª¬æ˜ãƒ†ã‚­ã‚¹ãƒˆï¼ˆå„è¨€èªï¼‰
     string[] textEn = new string[(int)GrowState.Max];
     string[] textJa = new string[(int)GrowState.Max];
 
-    //ƒNƒŠƒbƒN‚³‚ê‚½‚±‚Æ‚ğŠO•”‚É’m‚ç‚¹‚éƒCƒxƒ“ƒgiActionj
-    public event Action<int> OnClicked;
+    //ã‚³ã‚¤ãƒ³ã‚„ãƒ¬ãƒ™ãƒ«ã®ç¾åœ¨ã®çŠ¶æ…‹ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥
+    private int currentLevel;
+    private int[] coinTable;
 
-    //ƒCƒ“ƒfƒbƒNƒX‚ğŠO•”‚©‚ç“Ç‚ß‚é‚æ‚¤‚É
+    //ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å¤–éƒ¨ã‹ã‚‰èª­ã‚ã‚‹ã‚ˆã†ã«
     public int Index { get; private set; }
+
+    //è‡ªèº«ã®ã‚­ãƒ¼ã‚’ä¿æŒã™ã‚‹ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
+    public string GrowKey { get; private set; }
+
+    //ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸã“ã¨ã‚’å¤–éƒ¨ã«çŸ¥ã‚‰ã›ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
+    public event Action<string> OnClicked;
+
+
 
     #endregion
 
-    #region UnityƒCƒxƒ“ƒgŠÖ”
-    //ƒAƒNƒeƒBƒu‚É‚È‚Á‚½‚ÉŒ¾Œê•ÏXƒCƒxƒ“ƒg‚ğ“o˜^
+    #region Unityã‚¤ãƒ™ãƒ³ãƒˆé–¢æ•°
+    //ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã£ãŸæ™‚ã«è¨€èªå¤‰æ›´ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²
     void OnEnable()
     {
         LanguageManager.OnLanguageChanged += OnLanguageChanged;
 
-        //‰æ–Ê‚É•\¦‚³‚ê‚½i—LŒø‰»‚µ‚½juŠÔ‚ÉAÅV‚ÌŒ¾Œê‚ÅÄ•`‰æ‚ğ‚©‚¯‚é
+        //ç”»é¢ã«è¡¨ç¤ºã•ã‚ŒãŸï¼ˆæœ‰åŠ¹åŒ–ã—ãŸï¼‰ç¬é–“ã«ã€æœ€æ–°ã®è¨€èªã§å†æç”»ã‚’ã‹ã‘ã‚‹
         if (LanguageManager.Instance != null)
         {
             ApplyStatusText();
         }
     }
 
-    //”ñƒAƒNƒeƒBƒu‚É‚È‚Á‚½‚ÉƒCƒxƒ“ƒg‚ğ‰ğœ
+    //éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ãªã£ãŸæ™‚ã«ã‚¤ãƒ™ãƒ³ãƒˆã‚’è§£é™¤
     void OnDisable()
     {
         LanguageManager.OnLanguageChanged -= OnLanguageChanged;
@@ -55,67 +70,153 @@ public class GrowItemSlot : MonoBehaviour
 
     #endregion
 
-    #region Œ¾ŒêØ‚è‘Ö‚¦ƒŠƒAƒ‹ƒ^ƒCƒ€‘Î‰
+    #region è¨€èªåˆ‡ã‚Šæ›¿ãˆãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ å¯¾å¿œ
     /// <summary>
-    /// İ’è‰æ–Ê‚È‚Ç‚ÅŒ¾Œê‚ªØ‚è‘Ö‚í‚Á‚½uŠÔ‚ÉAŒ»İ‚ÌƒGƒ‰[•\¦‚È‚Ç‚à‘¦À‚ÉÄ–|–ó‚·‚é
+    /// è¨­å®šç”»é¢ãªã©ã§è¨€èªãŒåˆ‡ã‚Šæ›¿ã‚ã£ãŸç¬é–“ã«ã€ç¾åœ¨ã®ã‚¨ãƒ©ãƒ¼è¡¨ç¤ºãªã©ã‚‚å³åº§ã«å†ç¿»è¨³ã™ã‚‹
     /// </summary>
     private void OnLanguageChanged(LanguageManager.Language newLang)
     {
-        //ƒeƒLƒXƒg‚ğÄ•`‰æ
+        //ãƒ†ã‚­ã‚¹ãƒˆã‚’å†æç”»
         ApplyStatusText();
     }
 
     /// <summary>
-    /// w’è‚³‚ê‚½ó‘ÔiStatej‚É‰‚¶‚½ƒeƒLƒXƒg‚ÆƒtƒHƒ“ƒgƒTƒCƒY‚ğ“K—pi–|–ó‚ÌW–ñêŠj
+    /// æŒ‡å®šã•ã‚ŒãŸçŠ¶æ…‹ï¼ˆStateï¼‰ã«å¿œã˜ãŸãƒ†ã‚­ã‚¹ãƒˆã¨ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚ºã‚’é©ç”¨ï¼ˆç¿»è¨³ã®é›†ç´„å ´æ‰€ï¼‰
     /// </summary>
     private void ApplyStatusText()
     {
-        if(titleText == null || explanationText == null) { return; }
-        
-        //‚Ü‚¾ƒf[ƒ^‚ª“n‚³‚ê‚é‘O‚Å‚ ‚ê‚Îˆ—‚µ‚È‚¢
+        if (titleText == null || explanationText == null) { return; }
+
+        //ã¾ã ãƒ‡ãƒ¼ã‚¿ãŒæ¸¡ã•ã‚Œã‚‹å‰ã§ã‚ã‚Œã°å‡¦ç†ã—ãªã„
         if (string.IsNullOrEmpty(textEn[(int)GrowState.Title]) && string.IsNullOrEmpty(textJa[(int)GrowState.Title])) { return; }
 
         bool isEnglish = (LanguageManager.Instance.CurrentLanguage == LanguageManager.Language.ENGLISH);
 
+        //è¨€èªå¯¾å¿œã—ãŸæ–‡å­—è¡¨ç¤º
         titleText.text = isEnglish ? textEn[(int)GrowState.Title] : textJa[(int)GrowState.Title];
         explanationText.text = isEnglish ? textEn[(int)GrowState.Explanation] : textJa[(int)GrowState.Explanation];
+
+        //ãƒ¬ãƒ™ãƒ«è¡¨è¨˜ï¼ˆæœªè§£æ”¾ãªã‚‰ã€Œæœªè§£æ”¾ã€ã€æœ€å¤§ãªã‚‰ã€ŒMAXã€ã‚’ä»˜ä¸ï¼‰
+        if (levelText != null)
+        {
+            if (currentLevel == 0)
+            {
+                lockIcon.SetActive(true);
+                levelText.text = isEnglish ? "Locked" : "æœªè§£æ”¾";
+                
+            }
+            else if (currentLevel >= coinTable.Length)
+            {
+                lockIcon.SetActive(false);
+                levelText.text = isEnglish ? "Lv. 11 (MAX)" : "Lv. 11 (æœ€å¤§)";
+            }
+            else
+            {
+                lockIcon.SetActive(false);
+                levelText.text = $"Lv. {currentLevel}";
+            }
+        }
+
+        //å¿…è¦ã‚³ã‚¤ãƒ³æ•°ã®è¡¨è¨˜
+        if (coinText != null && coinTable != null)
+        {
+            //ã™ã§ã«æœ€å¤§ãƒ¬ãƒ™ãƒ«ï¼ˆLv11ï¼‰ã«é”ã—ã¦ã„ã‚‹å ´åˆ
+            if (currentLevel >= coinTable.Length)
+            {
+                coinText.text = isEnglish ? "MAX" : "æœ€å¤§";
+            }
+            else
+            {
+                int neededCoin = coinTable[currentLevel];
+
+                if (currentLevel == 0) //æœªè§£æ”¾ï¼ˆãƒ¬ãƒ™ãƒ«0ï¼‰ã®ã¨ã
+                {
+                    if (neededCoin == 0)
+                    {
+                        coinText.text = isEnglish ? "Unlock Free" : "ç„¡æ–™ã§è§£æ”¾";
+                    }
+                    else
+                    {
+                        coinText.text = isEnglish ? $"{neededCoin:N0}" : $"{neededCoin:N0}";
+                    }
+                }
+                else //é€šå¸¸ã®å¼·åŒ–ï¼ˆãƒ¬ãƒ™ãƒ«1ã€œ10ï¼‰ã®ã¨ã
+                {
+                    if (neededCoin == 0)
+                    {
+                        coinText.text = isEnglish ? "Free" : "ç„¡æ–™";
+                    }
+                    else
+                    {
+                        coinText.text = isEnglish ? $"{neededCoin:N0}" : $"{neededCoin:N0}";
+                    }
+                }
+            }
+        }
     }
     #endregion
 
-    #region ŠÖ”
+    #region é–¢æ•°
     /// <summary>
-    /// ƒXƒƒbƒg‚Ì‰Šúİ’èAƒNƒŠƒbƒNƒCƒxƒ“ƒg‚ğ•R•t‚¯
+    /// ã‚¹ãƒ­ãƒƒãƒˆã®åˆæœŸè¨­å®šã€ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç´ä»˜ã‘
     /// </summary>
-    /// <param name="index">ƒXƒƒbƒg‚ÉŠ„‚è“–‚Ä‚éƒCƒ“ƒfƒbƒNƒX”Ô†</param>
-    /// <param name="iconSprite">ƒXƒƒbƒg‚É•\¦‚·‚é‰æ‘œƒf[ƒ^</param>
-    /// <param name="title">ˆç¬à–¾ƒ^ƒCƒgƒ‹</param>
-    /// <param name="explanation">ˆç¬à–¾Ú×</param>
-    public void Setup(int index, Sprite iconSprite, string titleEn, string titleJa, string explanationEn, string explanationJa)
+    /// <param name="index">ã‚¹ãƒ­ãƒƒãƒˆã«å‰²ã‚Šå½“ã¦ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç•ªå·</param>
+    /// <param name="growKey">è‚²æˆç”¨ã‚­ãƒ¼</param>
+    /// <param name="iconSprite">ã‚¹ãƒ­ãƒƒãƒˆã«è¡¨ç¤ºã™ã‚‹ç”»åƒãƒ‡ãƒ¼ã‚¿</param>
+    /// <param name="title">è‚²æˆèª¬æ˜ã‚¿ã‚¤ãƒˆãƒ«</param>
+    /// <param name="explanation">è‚²æˆèª¬æ˜è©³ç´°</param>
+    /// <param name="level">ç¾åœ¨ã®å¼·åŒ–ãƒ¬ãƒ™ãƒ«</param>
+    /// <param name="coins">å¿…è¦ã‚³ã‚¤ãƒ³é…åˆ—</param>
+    public void Setup(
+        int index,
+        string growKey,
+        Sprite iconSprite,
+        string titleEn,
+        string titleJa,
+        string explanationEn,
+        string explanationJa,
+        int level,          
+        int[] coins
+    )
     {
-        //ƒCƒ“ƒfƒbƒNƒX‚ğ•Û
+        //ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ä¿æŒ
         Index = index;
+        GrowKey = growKey;
 
-        //ƒeƒLƒXƒgƒf[ƒ^•Û‘¶
+        //ã‚³ã‚¤ãƒ³æƒ…å ±ã¨ãƒ¬ãƒ™ãƒ«ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥
+        currentLevel = level;
+        coinTable = coins;
+
+        //ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ä¿å­˜
         textEn[(int)GrowState.Title] = titleEn;
         textEn[(int)GrowState.Explanation] = explanationEn;
 
         textJa[(int)GrowState.Title] = titleJa;
         textJa[(int)GrowState.Explanation] = explanationJa;
 
-        //ƒeƒLƒXƒg‚ğ”½‰f
+        //ãƒ†ã‚­ã‚¹ãƒˆã‚’åæ˜ 
         ApplyStatusText();
 
-        //‰æ‘œ‚ª“n‚³‚ê‚Ä‚¢‚ÄAImageƒRƒ“ƒ|[ƒlƒ“ƒg‚ªİ’è‚³‚ê‚Ä‚¢‚ê‚Î‰æ‘œ‚ğ”½‰f
+        //ç”»åƒãŒæ¸¡ã•ã‚Œã¦ã„ã¦ã€Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆãŒè¨­å®šã•ã‚Œã¦ã„ã‚Œã°ç”»åƒã‚’åæ˜ 
         if (iconImage != null && iconSprite != null)
         {
             iconImage.sprite = iconSprite;
         }
 
-        //ƒ{ƒ^ƒ“‚ÌƒCƒxƒ“ƒg‚ªd•¡‚µ‚Ä“o˜^‚³‚ê‚é‚Ì‚ğ–h‚®‚½‚ßAˆê“xƒNƒŠƒA‚·‚é
+        //ãƒœã‚¿ãƒ³ã®ã‚¤ãƒ™ãƒ³ãƒˆãŒé‡è¤‡ã—ã¦ç™»éŒ²ã•ã‚Œã‚‹ã®ã‚’é˜²ããŸã‚ã€ä¸€åº¦ã‚¯ãƒªã‚¢ã™ã‚‹
         button.onClick.RemoveAllListeners();
 
-        //ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çAƒCƒxƒ“ƒg‚ğ”­‰Î‚µ‚ÄƒRƒ“ƒgƒ[ƒ‰[‚É’Ê’m
-        button.onClick.AddListener(() => OnClicked?.Invoke(Index));
+        //ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰ã€ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç«ã—ã¦ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã«é€šçŸ¥
+        button.onClick.AddListener(() => OnClicked?.Invoke(GrowKey));
+    }
+
+    /// <summary>
+    /// ãƒ¬ãƒ™ãƒ«ãŒä¸ŠãŒã£ãŸã¨é€šçŸ¥ã•ã‚ŒãŸã‚‰ã€å†æç”»ã™ã‚‹
+    /// </summary>
+    public void UpdateLevel(int newLevel)
+    {
+        currentLevel = newLevel;
+        ApplyStatusText();
     }
 
     #endregion

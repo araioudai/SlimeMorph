@@ -6,7 +6,23 @@ namespace SlimeMorph.UI
 {
     public class CoinDisplay : CurrencyDisplay
     {
+        #region シングルトン
+        public static CoinDisplay Instance { get; private set; }
+
+        #endregion
+
         #region Unityイベント関数
+        private void Awake()
+        {
+            //シングルトン管理
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject); //既にInstanceがあれば自分を破棄
+                return;
+            }
+            Instance = this;
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -30,6 +46,18 @@ namespace SlimeMorph.UI
                     }
                 });
             }
+        }
+
+        #endregion
+
+        #region 外部呼出し関数
+        /// <summary>
+        /// PlayerPrefsに保存されている最新のコイン数を取得してUIを更新する
+        /// </summary>
+        public void RefreshDisplay()
+        {
+            int currentCoins = PlayerPrefs.GetInt("UserCoin", 0);
+            UpdateDisplay(currentCoins.ToString());
         }
 
         #endregion

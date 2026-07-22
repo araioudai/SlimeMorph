@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51db85e57ca564f43b262613bacfe4b6, type: 3}
   m_Name: SkinData10
   m_EditorClassIdentifier: Assembly-CSharp::SkinData
-  skinIndex: 8
+  skinIndex: 10
   skinName: 
-  skinIcon: {fileID: 21300000, guid: fa70cb26298b8c04abe0d2bbb6716fd3, type: 3}
+  skinIcon: {fileID: 21300000, guid: f8adc9af264c69442acfce82d4751ada, type: 3}
