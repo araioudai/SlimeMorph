@@ -470,6 +470,13 @@ public class TitleManager : MonoBehaviour
             PlayerPrefs.DeleteKey("SavedSelectedSkinIndex"); //スキン情報削除
             PlayerPrefs.DeleteKey("UserCoin");               //コイン情報削除
             PlayerPrefs.DeleteKey("Tutorial_Cleared");       //チュートリアルのクリアフラグを削除する
+            PlayerPrefs.DeleteKey("ClearStage");
+            PlayerPrefs.DeleteKey("GrowLevel_sidespeed_lv");
+            PlayerPrefs.DeleteKey("GrowLevel_defence_lv");
+            PlayerPrefs.DeleteKey("GrowLevel_shrink_lv");
+            PlayerPrefs.DeleteKey("ClearStage");
+            PlayerPrefs.DeleteKey("Stamina");
+            PlayerPrefs.DeleteKey("StaminaRecovery");
 
             PlayerPrefs.Save();                              //セーブする
             Debug.Log("ログアウトしました（PlayerPrefsを削除）");
