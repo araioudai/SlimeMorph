@@ -93,8 +93,8 @@ public class IT_Player : StageObjectItem
         // defenseValue = PlayerPrefs.GetInt(SelectedGrowKey, 1);
         // decreaseValue = PlayerPrefs.GetFloat(SelectedGrowKey, 2);
 
-        percentDefenseValue = 1f - (defenseLv * 0.01f); // 防御力の倍率をパーセントで表す値を計算
-        percentDecreaseValue = 1f - (shrinkLv * 0.01f); // 減少量の倍率をパーセントで表す値を計算
+        percentDefenseValue = 1f - (defenseLv * 0.05f); // 防御力の倍率をパーセントで表す値を計算
+        percentDecreaseValue = 1f - (shrinkLv * 0.05f); // 減少量の倍率をパーセントで表す値を計算
     }
 
 
