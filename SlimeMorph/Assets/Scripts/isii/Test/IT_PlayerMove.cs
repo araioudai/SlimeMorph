@@ -30,7 +30,7 @@ public class IT_PlayerMove : MonoBehaviour
     // フリック操作でプレイヤーを移動させる
     void Update()
     {
-        if (IT_GameManager.Instance.isGoal) return;
+        if (IT_GameManager.Instance.isGoal || GameManager.Instance.GetPause()) return;
 
 
         // if (Input.touchCount > 0)

@@ -34,12 +34,18 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Material autumnMaterial;
     [SerializeField] private Material winterMaterialAdd;
 
+    private int stageNumber;
 
 
 
-#if UNITY_EDITOR
+    public int GetStageID()
+    {
+        return stageNumber;
+    }
+
+
+
     public bool debugMode = false; // デバッグモードのフラグ
-#endif
 
     private void Awake()
     {
@@ -65,14 +71,28 @@ public class StageManager : MonoBehaviour
             Loading();
             return;
         }
-        int clearStage = PlayerPrefs.GetInt("ClearStage", 1);
-        stageID = clearStage + 1; // クリアしたステージに応じてステージIDを設定
+        int clearStage = PlayerPrefs.GetInt("ClearStage", 0);
+
+        Debug.Log(clearStage);
+
+        stageID = clearStage; // クリアしたステージに応じてステージIDを設定
+
+        if (stageID == 0)
+        {
+            stageID += 1;
+        }
+
+        stageNumber = stageID + 1;
+
+        Debug.Log(stageID);
 
         if (stageID > maxStageID)
         {
             // 1-10の範囲でランダムにステージIDを設定
             stageID = Random.Range(1, maxStageID + 1);
         }
+
+        Debug.Log(stageID);
 
         Loading();
     }
