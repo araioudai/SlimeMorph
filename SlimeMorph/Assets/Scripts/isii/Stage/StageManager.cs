@@ -232,8 +232,8 @@ public class StageManager : MonoBehaviour
         return lane switch
         {
             0 => new Vector3(0, 0, 0),     // 床
-            1 => new Vector3(-4, 1, 0),    // 左壁
-            2 => new Vector3(4, 1, 0),     // 右壁
+            1 => new Vector3(-4.3f, 1.1f, 0),    // 左壁
+            2 => new Vector3(4.3f, 1.1f, 0),     // 右壁
             _ => Vector3.zero
         };
     }

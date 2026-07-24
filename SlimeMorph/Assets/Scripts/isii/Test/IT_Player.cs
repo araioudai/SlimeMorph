@@ -73,6 +73,7 @@ public class IT_Player : StageObjectItem
         if (rb == null) return;
 
         rb.AddForce(Vector3.down * 1000, ForceMode.Acceleration);
+        transform.Translate(Vector3.down * 10f * Time.deltaTime, Space.World);
         Debug.Log("DawnFall: Added downward force to the player.");
     }
 

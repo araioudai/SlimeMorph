@@ -155,7 +155,23 @@ public class IT_GameManager : MonoBehaviour
         }
     }
 
+    private async UniTask GameOverStageAsync()
+    {
 
+        // 例: 3秒待ってから次のステージへ遷移
+        await UniTask.Delay(1200);
+
+        // ゴールに到達したときの処理をここに実装
+        if (gameManager != null)
+        {
+            gameManager.PushResult();
+        }
+        else
+        {
+            Debug.LogWarning("GameManagerが見つかりません。");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        }
+    }
 
 
 
@@ -172,7 +188,7 @@ public class IT_GameManager : MonoBehaviour
 
             HandOverSet(false); // ゲームオーバー時のデータをHandOverに渡す
 
-            ClearStageAsync().Forget();
+            GameOverStageAsync().Forget();
         }
 
         if (player.transform.position.y < -10f && !isGameOver && !isDead)
@@ -186,7 +202,7 @@ public class IT_GameManager : MonoBehaviour
 
             HandOverSet(false); // ゲームオーバー時のデータをHandOverに渡す
 
-            ClearStageAsync().Forget();
+            GameOverStageAsync().Forget();
         }
     }
 
