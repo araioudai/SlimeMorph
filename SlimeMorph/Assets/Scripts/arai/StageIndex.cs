@@ -135,13 +135,12 @@ public class StageIndex : MonoBehaviour
         int currentMaxClear = PlayerPrefs.GetInt("ClearStage", 0);
 
         //今回クリアしたステージが、これまでの最高記録を超えている場合
-        int nextStage = clearedStageIndex + 1;
-
-        if (nextStage > currentMaxClear)
+        if (clearedStageIndex > currentMaxClear)
         {
-            PlayerPrefs.SetInt("ClearStage", nextStage);
-            PlayerPrefs.Save(); //確実にディスクに書き込む
-            Debug.Log($"最高クリアステージを更新しました: {nextStage}");
+            //clearedStageIndex をそのまま保存
+            PlayerPrefs.SetInt("ClearStage", clearedStageIndex);
+            LocalCommon.SaveLocalTimeStamp(); //ローカルのタイムスタンプを保存
+            Debug.Log($"最高クリアステージを更新しました: {clearedStageIndex}");
         }
     }
 

@@ -29,6 +29,7 @@ public class ResultManager : MonoBehaviour
     //通信状態を管理するフラグ
     private bool isSaving = false;       //保存処理中かどうか
     private bool isSaveComplete = false; //保存処理が完了したかどうか
+    private bool isDirection = false;    //演出完了したかどうか
 
     #endregion
 
@@ -99,6 +100,7 @@ public class ResultManager : MonoBehaviour
         baseCoinText.text = "";
         multiplierText.text = "";
         totalCoinText.text = "";
+        isDirection = false;
     }
 
     /// <summary>
@@ -141,6 +143,9 @@ public class ResultManager : MonoBehaviour
 
         //合計表示の最後をポンッと強調
         seq.Append(totalCoinText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f, 10, 1));
+
+        //演出完了
+        isDirection = true;
     }
 
     #endregion
@@ -215,6 +220,8 @@ public class ResultManager : MonoBehaviour
     /// <param name="nextSceneName">遷移先のシーン名</param>
     public void OnClickChangeScene(string nextSceneName)
     {
+        if (!isDirection) { return; }
+
         // 遷移待ちのコルーチンを開始
         StartCoroutine(WaitAndChangeSceneCoroutine(nextSceneName));
     }
@@ -238,6 +245,12 @@ public class ResultManager : MonoBehaviour
             {
                 yield return null;
             }
+        }
+
+        if (nextSceneName == "GameScene")
+        {
+            //スタミナを消費
+            StaminaManager.Instance.StaminaConsume();
         }
 
         //フェードアウト処理
