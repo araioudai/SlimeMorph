@@ -225,7 +225,7 @@ Test();
         slime.GetComponent<BoxCollider>().size -= new Vector3(morphAmount, morphAmount, morphAmount); // コライダーのサイズも変更
         gravityValue -= morphAmount;
 
-        Debug.Log($"MorphDown: {morphAmount}, New Scale: {slime.transform.localScale}");
+        //Debug.Log($"MorphDown: {morphAmount}, New Scale: {slime.transform.localScale}");
     }
 
     IEnumerator MorphTimer()

@@ -207,6 +207,7 @@ public class TitleManager : MonoBehaviour
         }
 
         loginPanel.SetActive(true);
+        resourcePanel.SetActive(true);
         createAccountPanel.SetActive(false);
         growPanel.SetActive(false);
         skinPanel.SetActive(false);
@@ -427,6 +428,7 @@ public class TitleManager : MonoBehaviour
                 loginPanel.SetActive(false);
                 createAccountPanel.SetActive(false);
                 standPanel.SetActive(true);
+                resourcePanel.SetActive(true);
 
                 //フェードイン（画面を開く）
                 StartCoroutine(fader.PlayFadeIn(data.MaskSpeed(MaskData.MaskType.IN)));
@@ -477,6 +479,9 @@ public class TitleManager : MonoBehaviour
             PlayerPrefs.DeleteKey("ClearStage");
             PlayerPrefs.DeleteKey("Stamina");
             PlayerPrefs.DeleteKey("StaminaRecovery");
+            PlayerPrefs.DeleteKey("LastSaveTime");
+
+            StaminaManager.Instance.StaminaLogOut();
 
             PlayerPrefs.Save();                              //セーブする
             Debug.Log("ログアウトしました（PlayerPrefsを削除）");

@@ -26,8 +26,8 @@ public class StaminaManager : MonoBehaviour
     public string NextRecoveryTimeISO => nextRecoveryTime.ToString("o");
 
     //PlayerPrefsのセーブ用キー名
-    private const string KEY_STAMINA = "LocalStamina";
-    private const string KEY_RECOVERY_TIME = "LocalStaminaRecoveryTime";
+    private const string KEY_STAMINA = "Stamina";
+    private const string KEY_RECOVERY_TIME = "StaminaRecovery";
 
     #endregion
 
@@ -145,6 +145,11 @@ public class StaminaManager : MonoBehaviour
         {
             nextRecoveryTime = DateTime.UtcNow;
         }
+    }
+
+    public void StaminaLogOut()
+    {
+        stamina = maxStamina;
     }
 
     #endregion

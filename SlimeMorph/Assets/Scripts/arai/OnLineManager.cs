@@ -236,7 +236,7 @@ public class OnLineManager : MonoBehaviour
                     bool hasLocalTime = DateTime.TryParse(localTimeStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out localTime);
                     bool hasServerTime = DateTime.TryParse(responseData.updated_at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out serverTime);
 
-                    //サーバーデータの方が新しい場合（機種変更や別端末プレイ後など）
+                    //サーバーデータの方が新しい場合
                     if (hasServerTime && (!hasLocalTime || serverTime > localTime))
                     {
                         Debug.Log("[LoadPlayer] サーバーデータが新しいため、クラウドデータで上書き適用します");
