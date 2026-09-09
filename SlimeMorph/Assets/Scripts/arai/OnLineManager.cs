@@ -114,7 +114,7 @@ public class OnLineManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// 新規ユーザー登録（TitleManagerから呼ばれる）
+    /// 新規ユーザー登録
     /// </summary>
     public void Register(string name, string pass, Action<bool, string> onResponse)
     {
@@ -122,7 +122,7 @@ public class OnLineManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 既存ユーザーでログイン（TitleManagerから呼ばれる）
+    /// 既存ユーザーでログイン
     /// </summary>
     public void Login(string name, string pass, Action<bool, string> onResponse)
     {
@@ -390,7 +390,7 @@ public class OnLineManager : MonoBehaviour
             else
             {
                 //通信失敗時：エラーログを出力し、失敗（false）を通知
-                Debug.LogError($"SavePlayer 通信エラー: {request.error}");
+                //Debug.LogError($"SavePlayer 通信エラー: {request.error}");
                 onResponse?.Invoke(false);
             }
         }
@@ -409,4 +409,5 @@ public class OnLineManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     #endregion
+
 }

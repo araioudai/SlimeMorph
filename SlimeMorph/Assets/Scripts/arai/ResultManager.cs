@@ -19,6 +19,8 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private TMP_Text baseCoinText;
     [SerializeField] private TMP_Text multiplierText;
     [SerializeField] private TMP_Text totalCoinText;
+    [Header("スタミナ警告パネル")]
+    [SerializeField] private GameObject staminaEnoughPanel;
 
     [Header("フェード処理関連")]
     [Header("マスクデータ")]
@@ -38,10 +40,9 @@ public class ResultManager : MonoBehaviour
     void Start()
     {
         //ロードUIは初期状態で非表示
-        if (loadingUI != null)
-        {
-            loadingUI.SetActive(false);
-        }
+        if (loadingUI != null) { loadingUI.SetActive(false); }
+        //スタミナ警告は非表示
+        if(staminaEnoughPanel != null) { staminaEnoughPanel.SetActive(false); }
 
         //リザルト画面が開いた瞬間に、裏で自動的にサーバーへデータ保存を開始
         SaveGameResult();
@@ -212,6 +213,17 @@ public class ResultManager : MonoBehaviour
 
     #endregion
 
+    #region スタミナ警告
+    /// <summary>
+    /// スタミナ警告非表示
+    /// </summary>
+    public void PushBackStaminaEnough()
+    {
+        staminaEnoughPanel.SetActive(false);
+    }
+
+    #endregion
+
     #region シーン遷移処理（ボタンから呼び出す関数）
 
     /// <summary>
@@ -222,7 +234,19 @@ public class ResultManager : MonoBehaviour
     {
         if (!isDirection) { return; }
 
-        // 遷移待ちのコルーチンを開始
+        //次のシーンが GameScene かつ スタミナが 0 以下の場合はブロック
+        if (nextSceneName == "GameScene" && StaminaManager.Instance.stamina <= 0)
+        {
+            if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
+
+            if (staminaEnoughPanel != null)
+            {
+                staminaEnoughPanel.SetActive(true); //スタミナ不足を表示
+            }
+            return; //シーン遷移させない
+        }
+
+        //遷移待ちのコルーチンを開始
         StartCoroutine(WaitAndChangeSceneCoroutine(nextSceneName));
     }
 

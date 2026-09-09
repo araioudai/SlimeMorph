@@ -8,6 +8,12 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class TitleManager : MonoBehaviour
 {
+    #region シングルトン
+    //シングルトン他のスクリプトからいつでもアクセスできるようにする
+    public static TitleManager Instance { get; private set; }
+
+    #endregion
+
     #region 列挙対
     //ログインか登録か
     private enum Input
@@ -86,7 +92,13 @@ public class TitleManager : MonoBehaviour
     #region Unityイベント関数
     void Awake()
     {
-
+        //シングルトン管理
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); //既にInstanceがあれば自分を破棄
+            return;
+        }
+        Instance = this;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -273,7 +285,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void OnLoginClick()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         //名前とパスワード
         string userName = nameInput[(int)Input.LOGIN].text;
@@ -316,7 +328,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void OnRegisterClick()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         //名前とパスワード
         string userName = nameInput[(int)Input.REGISTER].text;
@@ -441,7 +453,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushCreateAccount()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         ApplyStatusText((int)Input.LOGIN, StatusState.None);
         loginPanel.SetActive(false);
@@ -453,7 +465,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushBackLogin()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         ApplyStatusText((int)Input.LOGIN, StatusState.None);
         loginPanel.SetActive(true);
@@ -465,6 +477,8 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushLogout()
     {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
         StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
         {
             OnLineManager.Instance.ResetId();                //IDの削除
@@ -516,6 +530,8 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushStamina()
     {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
         staminaPanel.SetActive(true);
     }
 
@@ -524,6 +540,8 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushStaminaBack()
     {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
+
         staminaPanel.SetActive(false);
     }
     #endregion
@@ -558,7 +576,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushSkin()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         FadeCommon(standPanel, skinPanel, () =>
         {
@@ -574,7 +592,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushGrow()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         FadeCommon(standPanel, growPanel, () =>
         {
@@ -586,13 +604,22 @@ public class TitleManager : MonoBehaviour
     }
 
     /// <summary>
+    /// スタミナ警告非表示
+    /// </summary>
+    public void PushBackStaminaEnough()
+    {
+        staminaEnoughPanel.SetActive(false);
+        standPanel.SetActive(true);
+    }
+
+    /// <summary>
     /// 待機画面に戻る
     /// </summary>
     public void PushBackStand()
     {
-        SoundManager.Instance.PlaySE(common.SE.Cancel);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
 
-        FadeCommon(new GameObject[] { skinPanel, growPanel }, new GameObject[] { standPanel });
+        FadeCommon(new GameObject[] { skinPanel, growPanel}, new GameObject[] { standPanel });
     }
 
     #endregion
@@ -646,7 +673,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     public void PushPlay()
     {
-        SoundManager.Instance.PlaySE(common.SE.Decision);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
         if (StaminaManager.Instance.stamina <= 0)
         {
@@ -678,5 +705,27 @@ public class TitleManager : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
+    #endregion
+
+    #region 通信エラー時の処理
+    /// <summary>
+    /// 通信失敗時などに、どの画面からでも強制的に待機画面へ戻る
+    /// </summary>
+    public void ReturnToStandPanel()
+    {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
+
+        //今開いている可能性のあるパネルをすべて非表示対象にする
+        GameObject[] panelsToClose = new GameObject[]
+        {
+            growPanel,
+            skinPanel,
+            settingPanel,
+            staminaPanel
+        };
+
+        //待機画面へ移動
+        FadeCommon(panelsToClose, new GameObject[] { standPanel });
+    }
     #endregion
 }
