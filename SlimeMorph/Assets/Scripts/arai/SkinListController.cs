@@ -130,6 +130,8 @@ public class SkinListController : MonoBehaviour
     {
         Debug.Log($"[SkinList] スキン {selectedIndex} の選択を検知。枠の表示を更新");
 
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
         //選択されたインデックスをPlayerPrefsに保存
         PlayerPrefs.SetInt(SelectedSkinKey, selectedIndex);
         PlayerPrefs.Save();

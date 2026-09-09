@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +19,7 @@ public class GrowListController : MonoBehaviour
     [SerializeField] private List<GrowData> growDataList = new List<GrowData>();
 
     [Header("ロード画面")]
-    [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private GameObject loadingPanel;                              //ロード表示パネル
 
     //生成したスロットを管理するためのリスト
     private List<GrowItemSlot> spawnedSlots = new List<GrowItemSlot>();
@@ -25,30 +27,28 @@ public class GrowListController : MonoBehaviour
     //PlayerPrefsで使用する保存用のキー名
     private const string SelectedGrowKey = "SavedSelectedGrowIndex";
 
+    //通信失敗時のリトライおよびロールバック用、直前に操作したデータを一時保持変数
+    private string lastSelectedKey; //直前に選択した強化キー
+
     #endregion
 
     #region Unityイベント関数
 
     private void Awake()
     {
-        //開始時はロードパネルは非表示
-        if (loadingPanel != null)
-        {
-            loadingPanel.SetActive(false);
-        }
+        //開始時はロードパネルとエラーパネルは非表示
+        if (loadingPanel != null) { loadingPanel.SetActive(false); }
     }
 
     /// <summary>
-    /// スキンパネルが非表示になった瞬間に安全にコルーチンを止める
+    /// 非アクティブになった時にイベントを解除、コルーチンを止める
     /// </summary>
     private void OnDisable()
     {
         StopAllCoroutines();
 
-        if (loadingPanel != null)
-        {
-            loadingPanel.SetActive(false);
-        }
+        //パネルを非表示
+        if (loadingPanel != null) { loadingPanel.SetActive(false); }
     }
 
     #endregion
@@ -127,8 +127,12 @@ public class GrowListController : MonoBehaviour
         int neededCoin = data.GrowCoins[currentLevel];
         int myCoins = PlayerPrefs.GetInt("UserCoin", 0); //OnLineManagerが保存しているコインキー
 
+        //コインが足りているかどうか
         if (myCoins >= neededCoin)
         {
+            //通信失敗時ように、強化前の数値を記憶
+            lastSelectedKey = selectedKey;
+
             //通信を開始、ロード画面を表示
             if (loadingPanel != null) { loadingPanel.SetActive(true); }
 
@@ -136,67 +140,8 @@ public class GrowListController : MonoBehaviour
             int newCoin = myCoins - neededCoin;
             int newLevel = currentLevel + 1;
 
-            //ローカルに最新状態を保存する
-            PlayerPrefs.SetInt("UserCoin", newCoin);
-            PlayerPrefs.SetInt(levelKey, newLevel);
-
-            LocalCommon.SaveLocalTimeStamp();
-
-            //UIを即座にピンポイント再描画
-            GrowItemSlot slot = spawnedSlots.Find(s => s.GrowKey == selectedKey);
-            if (slot != null)
-            {
-                slot.UpdateLevel(currentLevel);
-            }
-
-            //他のステータス情報もPlayerPrefsから取得
-            int sideSpeedLv = PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
-            int defenceLv = PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
-            int shrinkLv = PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
-            int clearStage = PlayerPrefs.GetInt("ClearStage", 0);
-            int stamina = PlayerPrefs.GetInt("Stamina", 5);
-            string recoveryTime = PlayerPrefs.GetString("StaminaRecovery", "");
-
-            //サーバーへの同期処理
-            OnLineManager.Instance.SavePlayer(
-                newCoin,
-                sideSpeedLv,
-                defenceLv,
-                shrinkLv,
-                clearStage,
-                stamina,
-                recoveryTime,
-                (bool isSuccess) =>
-                {
-                    if(loadingPanel != null) { loadingPanel.SetActive(false); }
-
-                    if (isSuccess)
-                    {
-                        //成功時：UIを更新
-                        GrowItemSlot slot = spawnedSlots.Find(s => s.GrowKey == selectedKey);
-                        if (slot != null)
-                        {
-                            slot.UpdateLevel(newLevel);
-                        }
-
-                        //コイン表示更新
-                        if (SlimeMorph.UI.CoinDisplay.Instance != null)
-                        {
-                            SlimeMorph.UI.CoinDisplay.Instance.RefreshDisplay();
-                        }
-
-                        Debug.Log($"[強化・保存成功] Key: {selectedKey} -> 新レベル: {newLevel} (残りコイン: {newCoin})");
-                    }
-                    else
-                    {
-                        //失敗時：ローカルデータをもとに戻す
-                        PlayerPrefs.SetInt("UserCoin", myCoins);
-                        PlayerPrefs.SetInt(levelKey, currentLevel);
-                        PlayerPrefs.Save();
-
-                        Debug.LogError("サーバーへの保存に失敗したため、ローカルデータを元に戻しました。");
-                    }
-                });
+            //サーバーへ保存通信を開始
+            SendSaveRequest(selectedKey, newCoin, newLevel);
         }
         else
         {
@@ -205,14 +150,93 @@ public class GrowListController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// サーバーへ最新ステータスを同期送信する処理
+    /// </summary>
+    private void SendSaveRequest(string selectedKey, int newCoin, int newLevel)
+    {
+        //送信するパラメータのうち、今回強化するキーだけ newLevel を適用する
+        int sideSpeedLv = (selectedKey == "sidespeed_lv") ? newLevel : PlayerPrefs.GetInt("GrowLevel_sidespeed_lv", 0);
+        int defenceLv = (selectedKey == "defence_lv") ? newLevel : PlayerPrefs.GetInt("GrowLevel_defence_lv", 0);
+        int shrinkLv = (selectedKey == "shrink_lv") ? newLevel : PlayerPrefs.GetInt("GrowLevel_shrink_lv", 0);
+        //ローカルから取得
+        int clearStage = PlayerPrefs.GetInt("ClearStage", 0);
+        int stamina = PlayerPrefs.GetInt("Stamina", 5);
+        string recoveryTime = PlayerPrefs.GetString("StaminaRecovery", "");
+
+        //OnLineManagerを介してAPIリクエスト実行
+        OnLineManager.Instance.SavePlayer(
+            newCoin, sideSpeedLv, defenceLv, shrinkLv, clearStage, stamina, recoveryTime,
+            (bool isSuccess) =>
+            {
+                //通信完了のためローディング非表示
+                if (loadingPanel != null) { loadingPanel.SetActive(false); }
+
+                if (isSuccess)
+                {
+                    //通信が成功した瞬間にPlayerPrefsを更新とセーブ
+                    string levelKey = $"GrowLevel_{selectedKey}";
+                    PlayerPrefs.SetInt("UserCoin", newCoin);
+                    PlayerPrefs.SetInt(levelKey, newLevel);
+                    LocalCommon.SaveLocalTimeStamp();
+
+                    //UIの更新値を currentLevel（旧Lv）から newLevel（新Lv）へ修正
+                    GrowItemSlot slot = spawnedSlots.Find(s => s.GrowKey == selectedKey);
+                    if (slot != null)
+                    {
+                        slot.UpdateLevel(newLevel);
+                    }
+
+                    //【通信成功】確定処理
+                    //ヘッダー等のコイン表示UIを同期更新
+                    if (SlimeMorph.UI.CoinDisplay.Instance != null)
+                    {
+                        SlimeMorph.UI.CoinDisplay.Instance.RefreshDisplay();
+                    }
+
+                    Debug.Log($"[強化通信成功] Key: {selectedKey} -> 新Lv: {newLevel} (残りコイン: {newCoin})");
+                }
+                else
+                {
+                    //【通信失敗】エラーダイアログを表示（リトライ／ロールバック）
+                    ErrorManager.Instance.ShowError(
+                        onRetry: () => OnClickRetry(),
+                        onClose: () => OnClickErrorClose()
+                    );
+                }
+            }
+        );
+    }
+
     #endregion
 
+    #region エラーハンドリング・ロールバック処理
 
+    /// <summary>
+    /// エラーダイアログでリトライが押された時の処理
+    /// </summary>
+    private void OnClickRetry()
+    {
+        if (!string.IsNullOrEmpty(lastSelectedKey))
+        {
+            Debug.Log("[リトライ] 再度強化通信を行います。");
+            OnGrowSelected(lastSelectedKey);
+        }
+    }
 
+    /// <summary>
+    /// エラーダイアログで閉じるが押された時の処理
+    /// </summary>
+    private void OnClickErrorClose()
+    {
+        //待機画面に戻る
+        if (TitleManager.Instance != null)
+        {
+            TitleManager.Instance.ReturnToStandPanel();
+        }
+    }
 
-
-
-
+    #endregion
 
 
 

@@ -50,19 +50,23 @@ public class GrowItemSlot : MonoBehaviour
     #endregion
 
     #region Unityイベント関数
-    //アクティブになった時に言語変更イベントを登録
+    /// <summary>
+    /// アクティブになった時に言語変更イベントを登録
+    /// </summary>
     void OnEnable()
     {
         LanguageManager.OnLanguageChanged += OnLanguageChanged;
 
-        //画面に表示された（有効化した）瞬間に、最新の言語で再描画をかける
+        //画面に表示された瞬間に、最新の言語で再描画をかける
         if (LanguageManager.Instance != null)
         {
             ApplyStatusText();
         }
     }
 
-    //非アクティブになった時にイベントを解除
+    /// <summary>
+    /// 非アクティブになった時にイベントを解除
+    /// </summary>
     void OnDisable()
     {
         LanguageManager.OnLanguageChanged -= OnLanguageChanged;
@@ -101,18 +105,18 @@ public class GrowItemSlot : MonoBehaviour
         {
             if (currentLevel == 0)
             {
-                lockIcon.SetActive(true);
+                if(lockIcon != null) { lockIcon.SetActive(true); }
                 levelText.text = isEnglish ? "Locked" : "未解放";
                 
             }
             else if (currentLevel >= coinTable.Length)
             {
-                lockIcon.SetActive(false);
+                if (lockIcon != null) { lockIcon.SetActive(false); }
                 levelText.text = isEnglish ? "Lv. 11 (MAX)" : "Lv. 11 (最大)";
             }
             else
             {
-                lockIcon.SetActive(false);
+                if (lockIcon != null) { lockIcon.SetActive(false); }
                 levelText.text = $"Lv. {currentLevel}";
             }
         }
