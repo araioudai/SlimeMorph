@@ -164,8 +164,8 @@ public class GrowListController : MonoBehaviour
         int stamina = PlayerPrefs.GetInt("Stamina", 5);
         string recoveryTime = PlayerPrefs.GetString("StaminaRecovery", "");
 
-        //OnLineManagerを介してAPIリクエスト実行
-        OnLineManager.Instance.SavePlayer(
+        //PlayerBackend.Currentを介してAPIリクエスト実行
+        PlayerBackend.Current.SavePlayer(
             newCoin, sideSpeedLv, defenceLv, shrinkLv, clearStage, stamina, recoveryTime,
             (bool isSuccess) =>
             {
