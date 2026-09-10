@@ -167,7 +167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_ContentType
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_KeyboardType
@@ -175,7 +175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_CharacterValidation
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 890486620111436075, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_fontSize
@@ -1197,6 +1197,55 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 760998907449497374, guid: 672b9cb63a988bd4c9ddfcb55968624a, type: 3}
   m_PrefabInstance: {fileID: 11170751}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &110458251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110458253}
+  - component: {fileID: 110458252}
+  m_Layer: 0
+  m_Name: DebugMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &110458252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110458251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 576c872a49583304abfb0794827af3a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugMode
+  onLine:
+  - {fileID: 271538990}
+  offLine:
+  - {fileID: 1046949068}
+  debugMode: 1
+--- !u!4 &110458253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110458251}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.04497, y: 0, z: 92.45857}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &120384837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4435,7 +4484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_ContentType
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_KeyboardType
@@ -4443,7 +4492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 836722141142492421, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_CharacterValidation
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 890486620111436075, guid: c16cc125ba9eff245b4d6ef3ae659aa0, type: 3}
       propertyPath: m_fontSize
@@ -6379,6 +6428,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1046949068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1046949070}
+  - component: {fileID: 1046949069}
+  m_Layer: 0
+  m_Name: OffLineManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1046949069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046949068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fc9424cafef0348bc7f2bb29fa72a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OffLineManager
+--- !u!4 &1046949070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046949068}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.04497, y: 0, z: 92.45857}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1067360993
 GameObject:
   m_ObjectHideFlags: 0
@@ -12749,8 +12842,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 1816789810}
   - {fileID: 1418957144}
+  - {fileID: 110458253}
   - {fileID: 1229464407}
   - {fileID: 271538992}
+  - {fileID: 1046949070}
   - {fileID: 736953739}
   - {fileID: 1157502000}
   - {fileID: 350638742}
