@@ -5,6 +5,8 @@ public class IT_PlayerMove : MonoBehaviour
     [SerializeField] GameObject canvas;
     [SerializeField] GameObject player;
     [SerializeField] float flickSpeedMax = 10f;
+    [SerializeField] float mouseSensitivity = 0.5f; // 要調整
+    [SerializeField] float sampleWindow = 0.08f; // トラックパッド対策の平均化窓(要調整)
 
 
     [Header("Lv")]
@@ -12,6 +14,11 @@ public class IT_PlayerMove : MonoBehaviour
 
     int speedUpValue = 1; // スピードアップの倍率
     float percentSpeedUpValue = 1.5f; // スピードアップの倍率をパーセントで表す値
+
+    private Vector3 lastMousePosition;
+    private float accumulatedDeltaX = 0f;
+    private float accumulatedTime = 0f;
+    private float smoothedVelocity = 0f;
 
     void Start()
     {
@@ -50,40 +57,38 @@ public class IT_PlayerMove : MonoBehaviour
         //     }
         // }
 
-        // // PCではマウスのドラッグでプレイヤーを移動させる 上記のフリック操作と同じような挙動にする
+        // PCではマウス/トラックパッドのドラッグでプレイヤーを移動させる
+        if (Input.GetMouseButtonDown(0))
+        {
+            lastMousePosition = Input.mousePosition;
+            accumulatedDeltaX = 0f;
+            accumulatedTime = 0f;
+            smoothedVelocity = 0f;
+        }
+
         if (Input.GetMouseButton(0))
         {
-            // float mouseX = Input.GetAxis("Mouse X");
-            // float dragSpeed = Mathf.Abs(mouseX) / Time.deltaTime;
-            // if (dragSpeed > flickSpeedMax)
-            // {
-            //     dragSpeed = flickSpeedMax;
-            // }
-            // Vector3 moveDirection = new(Mathf.Sign(mouseX), 0, 0);
-            // Vector3 move = moveDirection * dragSpeed * Time.deltaTime;
+            Vector3 currentMousePosition = Input.mousePosition;
+            float deltaX = currentMousePosition.x - lastMousePosition.x;
+            lastMousePosition = currentMousePosition;
 
-            // if (player.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
-            // {
-            //     rb.MovePosition(rb.position + move);
-            // }
-            // else
-            // {
-            //     player.transform.Translate(move, Space.World);
-            // }
-            
-            // 横移動のみ取得
-            float mouseX = Input.GetAxis("Mouse X");
-            Vector3 moveDirection = new Vector3(mouseX, 0, 0).normalized;
-            float dragSpeed = Mathf.Abs(mouseX) / Time.deltaTime;
+            accumulatedDeltaX += deltaX;
+            accumulatedTime += Time.deltaTime;
 
-            dragSpeed *= percentSpeedUpValue; // 強化によるドラッグ速度上昇
-
-            if (dragSpeed > flickSpeedMax)
+            // 一定時間分たまったら速度を更新(トラックパッドの入力ムラを平均化)
+            if (accumulatedTime >= sampleWindow)
             {
-                dragSpeed = flickSpeedMax;
+                smoothedVelocity = (accumulatedDeltaX * mouseSensitivity) / accumulatedTime;
+                accumulatedDeltaX = 0f;
+                accumulatedTime = 0f;
             }
 
-            Vector3 move = moveDirection * dragSpeed * Time.deltaTime;
+            float velocity = smoothedVelocity * percentSpeedUpValue; // 強化による速度上昇
+
+            velocity = Mathf.Clamp(velocity, -flickSpeedMax, flickSpeedMax); // 速度(units/sec)としてクランプ
+
+            Vector3 move = new Vector3(velocity, 0, 0) * Time.deltaTime; // 1フレーム分の移動量に戻す
+
             if (player.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
             {
                 rb.MovePosition(rb.position + move);
