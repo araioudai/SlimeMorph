@@ -60,11 +60,11 @@ public class LanguageManager : MonoBehaviour
         //メモリ上の「現在の言語」を変数に上書き
         CurrentLanguage = lang;
 
-        //端末（PlayerPrefs）にint型（0か1）として保存する
+        //int型（0か1）として保存する
         PlayerPrefs.SetInt(LANGUAGE_KEY, (int)lang);
         PlayerPrefs.Save(); //データを確実に即時書き込み
 
-        //このイベントを登録（購読）しているすべてのUIスクリプトに向けて、
+        //このイベントを登録しているすべてのUIスクリプトに
         //言語が新しくなったことを一斉に飛ばす
         OnLanguageChanged?.Invoke(lang);
     }

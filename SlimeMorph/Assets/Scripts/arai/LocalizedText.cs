@@ -31,6 +31,15 @@ public class LoginLocalizedText : MonoBehaviour
         myTextMeshPro = GetComponent<TextMeshProUGUI>();
     }
 
+    void Start()
+    {
+        //Startのタイミングで、もう一度画面の文字を更新
+        if (LanguageManager.Instance != null)
+        {
+            RefreshText(LanguageManager.Instance.CurrentLanguage);
+        }
+    }
+
     void OnEnable()
     {
         //パネルが開いた瞬間に、現在の言語に合わせてテキストを表示する
@@ -41,15 +50,6 @@ public class LoginLocalizedText : MonoBehaviour
 
         //ゲーム中に言語が切り替わったら、文字を書き換える
         LanguageManager.OnLanguageChanged += RefreshText;
-    }
-
-    void Start()
-    {
-        //Startのタイミングで、もう一度画面の文字を更新
-        if (LanguageManager.Instance != null)
-        {
-            RefreshText(LanguageManager.Instance.CurrentLanguage);
-        }
     }
 
     void OnDisable()
