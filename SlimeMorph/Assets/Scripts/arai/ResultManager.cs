@@ -184,8 +184,8 @@ public class ResultManager : MonoBehaviour
         int currentStamina = StaminaManager.Instance.stamina;
         string recoveryTimeStr = StaminaManager.Instance.NextRecoveryTimeISO;
 
-        //OnLineManager経由でGASサーバーへデータを送信
-        OnLineManager.Instance.SavePlayer(
+        //PlayerBackend.Current経由でサーバーかローカルへデータを送信
+        PlayerBackend.Current.SavePlayer(
             currentCoin,
             sideSpeedLv,
             defenceLv,

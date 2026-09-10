@@ -21,7 +21,7 @@ public class LanguageManager : MonoBehaviour
 
     #endregion
 
-    // PlayerPrefsで使うためのキー名
+    //PlayerPrefsで使うためのキー名
     private const string LANGUAGE_KEY = "Selected_Language_SlimeMorph";
 
     //言語が切り替わったときに、ゲーム内の全UI（ボタンやテキスト）へ一斉通知
