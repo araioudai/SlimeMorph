@@ -79,7 +79,7 @@ public class SavePlayerResponseData
 
 #endregion
 
-public class OnLineManager : MonoBehaviour
+public class OnLineManager : MonoBehaviour, IPlayerBackend
 {
     #region シングルトン（他のスクリプトからInstanceでアクセスできるようにする）
     public static OnLineManager Instance { get; private set; }

@@ -236,7 +236,7 @@ public class TitleManager : MonoBehaviour
     void DrawLogin()
     {
         //ログイン済みかどうかで表示を分ける
-        if (OnLineManager.Instance.IsLoggedIn)
+        if (PlayerBackend.Current.IsLoggedIn)
         {
             //すでにログインIDがあれば、タイトルを表示
             loginPanel.SetActive(false);
@@ -308,7 +308,7 @@ public class TitleManager : MonoBehaviour
             StartLoadingAnim(statusText[(int)Input.LOGIN], "通信中");
         }
 
-        OnLineManager.Instance.Login(userName, password, (success, message) =>
+        PlayerBackend.Current.Login(userName, password, (success, message) =>
         {
             if (success)
             {
@@ -352,7 +352,7 @@ public class TitleManager : MonoBehaviour
             StartLoadingAnim(statusText[(int)Input.REGISTER], "登録中");
         }
 
-        OnLineManager.Instance.Register(userName, password, (success, message) =>
+        PlayerBackend.Current.Register(userName, password, (success, message) =>
         {
             if (success)
             {
@@ -481,24 +481,23 @@ public class TitleManager : MonoBehaviour
 
         StartCoroutine(fader.PlayFadeOut(data.MaskSpeed(MaskData.MaskType.OUT), () =>
         {
-            OnLineManager.Instance.ResetId();                //IDの削除
+            PlayerBackend.Current.ResetId();                 //IDの削除
             PlayerPrefs.DeleteKey("OnlineUserID");           //ユーザ情報を削除する
             PlayerPrefs.DeleteKey("SavedSelectedSkinIndex"); //スキン情報削除
             PlayerPrefs.DeleteKey("UserCoin");               //コイン情報削除
             PlayerPrefs.DeleteKey("Tutorial_Cleared");       //チュートリアルのクリアフラグを削除する
-            PlayerPrefs.DeleteKey("ClearStage");
-            PlayerPrefs.DeleteKey("GrowLevel_sidespeed_lv");
-            PlayerPrefs.DeleteKey("GrowLevel_defence_lv");
-            PlayerPrefs.DeleteKey("GrowLevel_shrink_lv");
-            PlayerPrefs.DeleteKey("ClearStage");
-            PlayerPrefs.DeleteKey("Stamina");
-            PlayerPrefs.DeleteKey("StaminaRecovery");
-            PlayerPrefs.DeleteKey("LastSaveTime");
+            PlayerPrefs.DeleteKey("ClearStage");             //ステージクリア数
+            PlayerPrefs.DeleteKey("GrowLevel_sidespeed_lv"); //横移動育成状況
+            PlayerPrefs.DeleteKey("GrowLevel_defence_lv");   //防御育成状況
+            PlayerPrefs.DeleteKey("GrowLevel_shrink_lv");    //減少率軽減育成状況
+            PlayerPrefs.DeleteKey("Stamina");                //スタミナ
+            PlayerPrefs.DeleteKey("StaminaRecovery");        //次スタミナ回復時間
+            PlayerPrefs.DeleteKey("LastSaveTime");           //最終更新時間
 
             StaminaManager.Instance.StaminaLogOut();
 
             PlayerPrefs.Save();                              //セーブする
-            Debug.Log("ログアウトしました（PlayerPrefsを削除）");
+            //Debug.Log("ログアウトしました（PlayerPrefsを削除）");
 
             if (StageIndex.Instance != null)
             {
