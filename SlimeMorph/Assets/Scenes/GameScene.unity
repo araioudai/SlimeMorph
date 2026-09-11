@@ -2295,7 +2295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IT_PlayerMove
   canvas: {fileID: 834651077}
   player: {fileID: 906161720}
-  flickSpeedMax: 7
+  flickSpeedMax: 7.5
   mouseSensitivity: 0.5
   sampleWindow: 0.08
 --- !u!114 &834651079
