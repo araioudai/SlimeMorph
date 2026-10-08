@@ -3,8 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Mesh;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
@@ -67,6 +66,10 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private GameObject skinPanel;
     [SerializeField] private SkinListController skinController;
 
+    [Header("ガチャ画面関連")]
+    [SerializeField] private GameObject gachaTopPanel;
+    [SerializeField] private GameObject gachaDirectionPanel;
+
     [Header("設定画面関連")]
     [SerializeField] private GameObject settingPanel;
 
@@ -83,9 +86,16 @@ public class TitleManager : MonoBehaviour
     [Header("フェード用スクリプト")]
     [SerializeField] private UIShaderFader fader;
 
+    [Header("ボタン参照")]
+    [SerializeField] private Button loginButton;    //ログイン
+    [SerializeField] private Button registerButton; //登録
+    [SerializeField] private Button growButton;     //育成
+    [SerializeField] private Button skinButton;     //スキン
+    [SerializeField] private Button playButton;     //プレイ
+    [SerializeField] private Button[] gachaButtons; //ガチャ
+
     //ログインと登録、それぞれの現在のステータス状態を記憶する配列
     private StatusState[] currentStates = new StatusState[(int)Input.MAX];
-    private Coroutine nullMessageCoroutine; //コルーチンの二重動作防止用
 
     #endregion
 
@@ -107,17 +117,14 @@ public class TitleManager : MonoBehaviour
         //初期化
         Init();
 
+        //ボタンイベント登録
+        RegisterButtonEvents();
+
         //ログイン画面分け
         DrawLogin();
 
         //フェード処理
         ShaderFade();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     //パネルがアクティブになった時に言語変更イベントを登録
@@ -130,6 +137,22 @@ public class TitleManager : MonoBehaviour
     void OnDisable()
     {
         LanguageManager.OnLanguageChanged -= OnLanguageChanged;
+
+        //シーン破棄時にリスナーを解除
+        if (loginButton != null) { loginButton.onClick.RemoveListener(OnLoginClick); }
+        if (registerButton != null) { registerButton.onClick.RemoveListener(OnRegisterClick); }
+        if (growButton != null) { growButton.onClick.RemoveListener(PushGrow); }
+        if (skinButton != null) { skinButton.onClick.RemoveListener(PushSkin); }
+        if (playButton != null) { playButton.onClick.RemoveListener(PushPlay); }
+        if(gachaButtons != null) {
+            foreach (var btn in gachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(PushGachaTop);
+                }
+            }
+        }
     }
 
     #endregion
@@ -218,15 +241,41 @@ public class TitleManager : MonoBehaviour
             statusText[i].text = "";
         }
 
+        //パネル関連の初期化
         loginPanel.SetActive(true);
         resourcePanel.SetActive(true);
         createAccountPanel.SetActive(false);
         growPanel.SetActive(false);
         skinPanel.SetActive(false);
         standPanel.SetActive(false);
+        gachaTopPanel.SetActive(false);
+        gachaDirectionPanel.SetActive(false);
         settingPanel.SetActive(false);
         staminaPanel.SetActive(false);
         staminaEnoughPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// ボタンイベントの一括登録
+    /// </summary>
+    private void RegisterButtonEvents()
+    {
+        //イベント登録
+        if (loginButton != null) { loginButton.onClick.AddListener(OnLoginClick); }
+        if (registerButton != null) { registerButton.onClick.AddListener(OnRegisterClick); }
+        if (growButton != null) { growButton.onClick.AddListener(PushGrow); }
+        if (skinButton != null) { skinButton.onClick.AddListener(PushSkin); }
+        if (playButton != null) { playButton.onClick.AddListener(PushPlay); }
+        if (gachaButtons != null)
+        {
+            foreach (var btn in gachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(PushGachaTop);
+                }
+            }
+        }
     }
     #endregion
 
@@ -283,7 +332,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// ログインボタンが押された時
     /// </summary>
-    public void OnLoginClick()
+    void OnLoginClick()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -326,7 +375,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// 新規登録ボタンが押された時
     /// </summary>
-    public void OnRegisterClick()
+    void OnRegisterClick()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -573,7 +622,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// スキンボタン押下処理
     /// </summary>
-    public void PushSkin()
+    void PushSkin()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -589,7 +638,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// 強化(育成)ボタン押下処理
     /// </summary>
-    public void PushGrow()
+    void PushGrow()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -600,6 +649,16 @@ public class TitleManager : MonoBehaviour
                 growController.InitializeGrowList();
             }
         });
+    }
+
+    /// <summary>
+    /// ガチャボタン押下処理
+    /// </summary>
+    void PushGachaTop()
+    {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
+        FadeCommon(standPanel, gachaTopPanel);
     }
 
     /// <summary>
@@ -618,7 +677,7 @@ public class TitleManager : MonoBehaviour
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
 
-        FadeCommon(new GameObject[] { skinPanel, growPanel}, new GameObject[] { standPanel });
+        FadeCommon(new GameObject[] { skinPanel, growPanel, gachaTopPanel}, new GameObject[] { standPanel });
     }
 
     #endregion
@@ -670,7 +729,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// ゲーム開始ボタン押下処理
     /// </summary>
-    public void PushPlay()
+    void PushPlay()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -720,6 +779,8 @@ public class TitleManager : MonoBehaviour
             growPanel,
             skinPanel,
             settingPanel,
+            gachaTopPanel,
+            gachaDirectionPanel,
             staminaPanel
         };
 
