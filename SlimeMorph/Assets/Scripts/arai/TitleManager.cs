@@ -3,8 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Mesh;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class TitleManager : MonoBehaviour
 
     #endregion
 
-    #region 列挙対
+    #region 列挙型
     //ログインか登録か
     private enum Input
     {
@@ -38,6 +37,12 @@ public class TitleManager : MonoBehaviour
         LoginSuccess,
         RegisterSuccess
     }
+
+    #endregion
+
+    #region 定数
+    //ガチャ最大数
+    private const int gachaMax = 3;
 
     #endregion
 
@@ -67,6 +72,10 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private GameObject skinPanel;
     [SerializeField] private SkinListController skinController;
 
+    [Header("ガチャ画面関連")]
+    [SerializeField] private GameObject gachaTopPanel;
+    [SerializeField] private GameObject gachaDirectionPanel;
+
     [Header("設定画面関連")]
     [SerializeField] private GameObject settingPanel;
 
@@ -83,9 +92,20 @@ public class TitleManager : MonoBehaviour
     [Header("フェード用スクリプト")]
     [SerializeField] private UIShaderFader fader;
 
+    [Header("ボタン参照")]
+    [SerializeField] private Button loginButton;                //ログイン
+    [SerializeField] private Button registerButton;             //登録
+    [SerializeField] private Button growButton;                 //育成
+    [SerializeField] private Button skinButton;                 //スキン
+    [SerializeField] private Button playButton;                 //プレイ
+    [SerializeField] private Button[] gachaButtons;             //ガチャへ飛ぶ
+    [SerializeField] private Button[] singleGachaButtons 
+                                        = new Button[gachaMax]; //1回ガチャ
+    [SerializeField] private Button[] multipleGachaButtons 
+                                        = new Button[gachaMax]; //10連ガチャ
+
     //ログインと登録、それぞれの現在のステータス状態を記憶する配列
     private StatusState[] currentStates = new StatusState[(int)Input.MAX];
-    private Coroutine nullMessageCoroutine; //コルーチンの二重動作防止用
 
     #endregion
 
@@ -107,6 +127,9 @@ public class TitleManager : MonoBehaviour
         //初期化
         Init();
 
+        //ボタンイベント登録
+        RegisterButtonEvents();
+
         //ログイン画面分け
         DrawLogin();
 
@@ -114,22 +137,56 @@ public class TitleManager : MonoBehaviour
         ShaderFade();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    //パネルがアクティブになった時に言語変更イベントを登録
+    /// <summary>
+    /// パネルがアクティブになった時にイベントを登録
+    /// </summary>
     void OnEnable()
     {
         LanguageManager.OnLanguageChanged += OnLanguageChanged;
     }
 
-    //パネルが非アクティブになった時にイベントを解除
+    /// <summary>
+    /// パネルが非アクティブになった時にイベントを解除
+    /// </summary>
     void OnDisable()
     {
         LanguageManager.OnLanguageChanged -= OnLanguageChanged;
+
+        //シーン破棄時にリスナーを解除
+        if (loginButton != null) { loginButton.onClick.RemoveListener(OnLoginClick); }
+        if (registerButton != null) { registerButton.onClick.RemoveListener(OnRegisterClick); }
+        if (growButton != null) { growButton.onClick.RemoveListener(PushGrow); }
+        if (skinButton != null) { skinButton.onClick.RemoveListener(PushSkin); }
+        if (playButton != null) { playButton.onClick.RemoveListener(PushPlay); }
+        if(gachaButtons != null) {
+            foreach (var btn in gachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(PushGachaTop);
+                }
+            }
+        }
+        if (singleGachaButtons != null)
+        {
+            foreach (var btn in singleGachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(PushGachaSingle);
+                }
+            }
+        }
+        if (multipleGachaButtons != null)
+        {
+            foreach (var btn in multipleGachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(PushGachaMultiple);
+                }
+            }
+        }
     }
 
     #endregion
@@ -218,15 +275,61 @@ public class TitleManager : MonoBehaviour
             statusText[i].text = "";
         }
 
+        //パネル関連の初期化
         loginPanel.SetActive(true);
         resourcePanel.SetActive(true);
         createAccountPanel.SetActive(false);
         growPanel.SetActive(false);
         skinPanel.SetActive(false);
         standPanel.SetActive(false);
+        gachaTopPanel.SetActive(false);
+        gachaDirectionPanel.SetActive(false);
         settingPanel.SetActive(false);
         staminaPanel.SetActive(false);
         staminaEnoughPanel.SetActive(false);
+    }
+
+    /// <summary>
+    /// ボタンイベントの一括登録
+    /// </summary>
+    private void RegisterButtonEvents()
+    {
+        //イベント登録
+        if (loginButton != null) { loginButton.onClick.AddListener(OnLoginClick); }
+        if (registerButton != null) { registerButton.onClick.AddListener(OnRegisterClick); }
+        if (growButton != null) { growButton.onClick.AddListener(PushGrow); }
+        if (skinButton != null) { skinButton.onClick.AddListener(PushSkin); }
+        if (playButton != null) { playButton.onClick.AddListener(PushPlay); }
+        if (gachaButtons != null)
+        {
+            foreach (var btn in gachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(PushGachaTop);
+                }
+            }
+        }
+        if(singleGachaButtons != null)
+        {
+            foreach (var btn in singleGachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(PushGachaSingle);
+                }
+            }
+        }
+        if (multipleGachaButtons != null)
+        {
+            foreach (var btn in multipleGachaButtons)
+            {
+                if (btn != null)
+                {
+                    btn.onClick.AddListener(PushGachaMultiple);
+                }
+            }
+        }
     }
     #endregion
 
@@ -283,7 +386,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// ログインボタンが押された時
     /// </summary>
-    public void OnLoginClick()
+    void OnLoginClick()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -326,7 +429,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// 新規登録ボタンが押された時
     /// </summary>
-    public void OnRegisterClick()
+    void OnRegisterClick()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -543,6 +646,16 @@ public class TitleManager : MonoBehaviour
 
         staminaPanel.SetActive(false);
     }
+
+    /// <summary>
+    /// スタミナ警告非表示
+    /// </summary>
+    public void PushBackStaminaEnough()
+    {
+        staminaEnoughPanel.SetActive(false);
+        standPanel.SetActive(true);
+    }
+
     #endregion
 
     #region メニュー関連
@@ -573,7 +686,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// スキンボタン押下処理
     /// </summary>
-    public void PushSkin()
+    void PushSkin()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -589,7 +702,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// 強化(育成)ボタン押下処理
     /// </summary>
-    public void PushGrow()
+    void PushGrow()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -602,14 +715,54 @@ public class TitleManager : MonoBehaviour
         });
     }
 
+    #region ガチャ関連
     /// <summary>
-    /// スタミナ警告非表示
+    /// ガチャボタン押下処理
     /// </summary>
-    public void PushBackStaminaEnough()
+    void PushGachaTop()
     {
-        staminaEnoughPanel.SetActive(false);
-        standPanel.SetActive(true);
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
+        FadeCommon(standPanel, gachaTopPanel);
     }
+
+    /// <summary>
+    /// 1回ガチャボタン押下処理
+    /// </summary>
+    void PushGachaSingle()
+    {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
+        //gachaTopPanelを隠し、gachaDirectionPanelを表示する
+        FadeCommon(gachaTopPanel, gachaDirectionPanel, () =>
+        {
+            // パネル切り替え完了後、単発ガチャの準備を行う
+            if (GachaManager.Instance != null)
+            {
+                GachaManager.Instance.PrepareGacha(false); //false = 単発
+            }
+        });
+    }
+
+    /// <summary>
+    /// 10連ガチャボタン押下処理
+    /// </summary>
+    void PushGachaMultiple()
+    {
+        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+
+        //gachaTopPanelを隠し、gachaDirectionPanelを表示する
+        FadeCommon(gachaTopPanel, gachaDirectionPanel, () =>
+        {
+            //パネル切り替え完了後、10連ガチャの準備（Tap to Start待ち）を行う
+            if (GachaManager.Instance != null)
+            {
+                GachaManager.Instance.PrepareGacha(true); //true = 10連
+            }
+        });
+    }
+
+    #endregion
 
     /// <summary>
     /// 待機画面に戻る
@@ -618,7 +771,7 @@ public class TitleManager : MonoBehaviour
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Cancel); }
 
-        FadeCommon(new GameObject[] { skinPanel, growPanel}, new GameObject[] { standPanel });
+        FadeCommon(new GameObject[] { skinPanel, growPanel, gachaTopPanel}, new GameObject[] { standPanel });
     }
 
     #endregion
@@ -670,7 +823,7 @@ public class TitleManager : MonoBehaviour
     /// <summary>
     /// ゲーム開始ボタン押下処理
     /// </summary>
-    public void PushPlay()
+    void PushPlay()
     {
         if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
 
@@ -720,6 +873,8 @@ public class TitleManager : MonoBehaviour
             growPanel,
             skinPanel,
             settingPanel,
+            gachaTopPanel,
+            gachaDirectionPanel,
             staminaPanel
         };
 

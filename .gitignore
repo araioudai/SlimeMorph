@@ -1,1 +1,3 @@
 SlimeMorph/.vscode/
+
+echo "SlimeMorph/Assets/Resources/Fonts/BulletHelll/Font/Resources/LINESeedJP-Bold SDF.asset" >> .gitignore

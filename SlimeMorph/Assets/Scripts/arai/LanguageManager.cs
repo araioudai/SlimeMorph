@@ -9,7 +9,7 @@ public class LanguageManager : MonoBehaviour
 
     #endregion
 
-    #region —ñ‹“‘Î
+    #region —ñ‹“Œ^
     //Œ¾Œê‚ð’è‹`‚·‚é—ñ‹“Œ^
     public enum Language
     {

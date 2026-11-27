@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StaminaDisplay : CurrencyDisplay
 {
-    #region 列挙対
+    #region 列挙型
     //現在のテキストの状態
     private enum StatusState
     {
