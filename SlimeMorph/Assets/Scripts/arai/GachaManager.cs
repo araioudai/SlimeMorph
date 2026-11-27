@@ -1,64 +1,62 @@
-ï»¿using DG.Tweening;
-using System.Collections.Generic;
+using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ã‚¬ãƒãƒ£ã®ãƒ¬ã‚¢åº¦åˆ—æŒ™å‹
+/// ƒKƒ`ƒƒ‚ÌƒŒƒA“x—ñ‹“Œ^
 /// </summary>
 public enum Rarity
 {
-    N,   //éŠ…
-    R,   //éŠ€
-    SR,  //é‡‘
-    SSR, //è™¹
-
+    N,   //“º
+    R,   //‹â
+    SR,  //‹à
+    SSR  //“ø
 }
 
 public class GachaManager : MonoBehaviour
 {
-    #region ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ï¼ˆä»–ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‹ã‚‰Instanceã§ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ï¼‰
+    #region ƒVƒ“ƒOƒ‹ƒgƒ“i‘¼‚ÌƒXƒNƒŠƒvƒg‚©‚çInstance‚ÅƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚·‚éj
     public static GachaManager Instance { get; private set; }
     #endregion
 
-    #region å¤‰æ•°
-    [Header("UIãƒ»æ¼”å‡ºé–¢é€£")]
-    [SerializeField] private CanvasGroup gachaLightCanvasGroup; //æºœã‚ä¸­ã®ç™ºå…‰ãƒ‘ãƒãƒ«
-    [SerializeField] private Image flashImage;                  //ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ç”¨ãƒ‘ãƒãƒ«
-    [SerializeField] private TMP_Text gachaText;                //Tap To Startãªã©ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ
-    [SerializeField] private Button tapToStartButton;           //ç”»é¢å…¨ä½“ã¾ãŸã¯ã‚¬ãƒãƒ£æ¼”å‡ºé–‹å§‹ç”¨ã®ãƒœã‚¿ãƒ³
+    #region •Ï”
+    [Header("UIE‰‰oŠÖ˜A")]
+    [SerializeField] private CanvasGroup gachaLightCanvasGroup; //—­‚ß’†‚Ì”­Œõƒpƒlƒ‹
+    [SerializeField] private Image flashImage;                  //ƒtƒ‰ƒbƒVƒ…—pƒpƒlƒ‹
+    [SerializeField] private TMP_Text gachaText;                //Tap To Start‚È‚Ç‚ğ•\¦‚·‚éƒeƒLƒXƒg
+    [SerializeField] private Button tapToStartButton;           //‰æ–Ê‘S‘Ì‚Ü‚½‚ÍƒKƒ`ƒƒ‰‰oŠJn—p‚Ìƒ{ƒ^ƒ“
 
-    [Header("ãƒªã‚¶ãƒ«ãƒˆUI")]
-    [SerializeField] private GameObject singleResultPanel;      //å˜ç™ºãƒªã‚¶ãƒ«ãƒˆãƒ‘ãƒãƒ«
-    [SerializeField] private TMP_Text skinNameText;             //ã‚¹ã‚­ãƒ³åè¡¨ç¤ºãƒ†ã‚­ã‚¹ãƒˆ
-    [SerializeField] private GameObject multipleResultPanel;    //10é€£ãƒªã‚¶ãƒ«ãƒˆãƒ‘ãƒãƒ«
+    [Header("ƒŠƒUƒ‹ƒgUI")]
+    [SerializeField] private GameObject singleResultPanel;      //’P”­ƒŠƒUƒ‹ƒgƒpƒlƒ‹
+    [SerializeField] private TMP_Text skinNameText;             //ƒXƒLƒ“–¼•\¦ƒeƒLƒXƒg
+    [SerializeField] private GameObject multipleResultPanel;    //10˜AƒŠƒUƒ‹ƒgƒpƒlƒ‹
 
-    [Header("3Dãƒã‚¸ã‚·ãƒ§ãƒ³")]
-    [SerializeField] private Transform spawnPoint;              //å¥¥ã®å‡ºç¾ä½ç½®
-    [SerializeField] private Transform singleCenterPoint;       //å˜ç™ºæ™‚ã®ç€åœ°ä¸­å¤®
-    [SerializeField] private Transform[] tenGridPoints;         //10é€£ã®é…ç½®ä½ç½®ï¼ˆ10å€‹ï¼‰
+    [Header("3Dƒ|ƒWƒVƒ‡ƒ“")]
+    [SerializeField] private Transform spawnPoint;              //‰œ‚ÌoŒ»ˆÊ’u
+    [SerializeField] private Transform singleCenterPoint;       //’P”­‚Ì’…’n’†‰›
+    [SerializeField] private Transform[] tenGridPoints;         //10˜A‚Ì”z’uˆÊ’ui10ŒÂj
 
-    [Header("æ¼”å‡ºè¨­å®š")]
-    [SerializeField] private float shineTime = 2.0f;            //å…‰ã‚’ãƒãƒ£ãƒ¼ã‚¸ã™ã‚‹ç§’æ•°
-    [SerializeField] private GameObject slimePrefab;            //ã‚¹ãƒ©ã‚¤ãƒ ãƒ—ãƒ¬ãƒãƒ–
+    [Header("‰‰oİ’è")]
+    [SerializeField] private float shineTime = 2.0f;            //Œõ‚ğƒ`ƒƒ[ƒW‚·‚é•b”
+    [SerializeField] private GameObject slimePrefab;            //ƒXƒ‰ƒCƒ€ƒvƒŒƒnƒu
 
-    [Header("ãƒ¬ã‚¢åº¦åˆ¥ã‚«ãƒ©ãƒ¼")]
-    [SerializeField] private Color colorN = new Color(0.8f, 0.5f, 0.3f);   // éŠ…ï¼ˆNï¼‰
-    [SerializeField] private Color colorR = new Color(0.7f, 0.7f, 0.7f);   // éŠ€ï¼ˆRï¼‰
-    [SerializeField] private Color colorSR = new Color(1.0f, 0.84f, 0.0f); // é‡‘ï¼ˆSRï¼‰
-    [SerializeField] private Color colorSSR = new Color(1.0f, 0.3f, 1.0f); // è™¹ï¼ˆSSRï¼‰
+    [Header("ƒŒƒA“x•ÊƒJƒ‰[")]
+    [SerializeField] private Color colorN = new Color(0.8f, 0.5f, 0.3f);    //“ºiNj
+    [SerializeField] private Color colorR = new Color(0.7f, 0.7f, 0.7f);    //‹âiRj
+    [SerializeField] private Color colorSR = new Color(1.0f, 0.84f, 0.0f);  //‹àiSRj
+    [SerializeField] private Color colorSSR = new Color(1.0f, 0.3f, 1.0f);  //“øiSSRj
 
-    //ç”Ÿæˆã—ãŸæ¼”å‡ºç”¨ã‚¹ãƒ©ã‚¤ãƒ ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä¿æŒã—ã€æ¬¡å›å®Ÿè¡Œæ™‚ã«ç ´æ£„ã™ã‚‹ãŸã‚ã®ãƒªã‚¹ãƒˆ
+    //¶¬‚µ‚½‰‰o—pƒXƒ‰ƒCƒ€‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ•Û‚µAŸ‰ñÀs‚É”jŠü‚·‚é‚½‚ß‚ÌƒŠƒXƒg
     private List<GameObject> activeSlimes = new List<GameObject>();
 
-    private bool isTenGacha = false;    //10é€£ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
-    private bool waitingForTap = false; //ã‚¿ãƒƒãƒ—å¾…ã¡çŠ¶æ…‹ã‹ã©ã†ã‹
-
+    private bool isTenGacha = false;    //10˜A‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    private bool waitingForTap = false; //ƒ^ƒbƒv‘Ò‚¿ó‘Ô‚©‚Ç‚¤‚©
     #endregion
 
-    #region Unityã‚¤ãƒ™ãƒ³ãƒˆé–¢æ•°
+    #region UnityƒCƒxƒ“ƒgŠÖ”
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -73,7 +71,7 @@ public class GachaManager : MonoBehaviour
     {
         Init();
 
-        //Tap To Start ãƒœã‚¿ãƒ³ã«ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™»éŒ²
+        //Tap To Start ƒ{ƒ^ƒ“‚ÉƒNƒŠƒbƒNƒCƒxƒ“ƒg‚ğ“o˜^
         if (tapToStartButton != null)
         {
             tapToStartButton.onClick.AddListener(OnTapToStart);
@@ -89,23 +87,23 @@ public class GachaManager : MonoBehaviour
     }
     #endregion
 
-    #region Startå‘¼ã³å‡ºã—é–¢æ•°
+    #region StartŒÄo‚µŠÖ”
 
-    #region åˆæœŸåŒ–
+    #region ‰Šú‰»
     /// <summary>
-    /// åˆæœŸåŒ–å‡¦ç†
+    /// ‰Šú‰»ˆ—
     /// </summary>
     void Init()
     {
-        gachaLightCanvasGroup.alpha = 0f;
+        if (gachaLightCanvasGroup != null) gachaLightCanvasGroup.alpha = 0f;
         if (flashImage != null) flashImage.gameObject.SetActive(false);
         if (singleResultPanel != null) singleResultPanel.SetActive(false);
         if (multipleResultPanel != null) multipleResultPanel.SetActive(false);
-        gachaText.text = "Tap To Start";
+        if (gachaText != null) gachaText.text = "Tap To Start";
     }
 
     /// <summary>
-    /// å‰å›ã®ã‚¬ãƒãƒ£æ¼”å‡ºã§ç”Ÿæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã™ã¹ã¦å‰Šé™¤
+    /// ‘O‰ñ‚ÌƒKƒ`ƒƒ‰‰o‚Å¶¬‚µ‚½ƒIƒuƒWƒFƒNƒg‚ğ‚·‚×‚Äíœ
     /// </summary>
     void ClearActiveSlimes()
     {
@@ -119,24 +117,24 @@ public class GachaManager : MonoBehaviour
 
     #endregion
 
-    #region å¤–éƒ¨å‘¼ã³å‡ºã—é–¢æ•°
+    #region ŠO•”ŒÄo‚µŠÖ”
     /// <summary>
-    /// ã‚¬ãƒãƒ£ã®ç¨®é¡ã‚’ä¿æŒã—ã¦å¾…æ©ŸçŠ¶æ…‹ã«ã™ã‚‹å‡¦ç†
+    /// ƒKƒ`ƒƒ‚Ìí—Ş‚ğ•Û‚µ‚Ä‘Ò‹@ó‘Ô‚É‚·‚éˆ—
     /// </summary>
-    /// <param name="isTen">true 10é€£ã€false å˜ç™º</param>
+    /// <param name="isTen">true: 10˜A, false: ’P”­</param>
     public void PrepareGacha(bool isTen)
     {
         isTenGacha = isTen;
         InitDirection();
 
-        // ã€ŒTap To Startã€ã®æ–‡å­—ã‚’è¡¨ç¤ºã—ã€ç‚¹æ»…ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é–‹å§‹
+        //uTap To Startv‚Ì•¶š‚ğ•\¦‚µA“_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚ğŠJn
         if (gachaText != null)
         {
             gachaText.text = "Tap To Start";
             StartTextBlink();
         }
 
-        //ã‚¿ãƒƒãƒ—å—ä»˜ã‚’æœ‰åŠ¹åŒ–
+        //ƒ^ƒbƒvó•t‚ğ—LŒø‰»
         if (tapToStartButton != null)
         {
             tapToStartButton.gameObject.SetActive(true);
@@ -148,7 +146,7 @@ public class GachaManager : MonoBehaviour
 
     void InitDirection()
     {
-        gachaLightCanvasGroup.alpha = 0f;
+        if (gachaLightCanvasGroup != null) gachaLightCanvasGroup.alpha = 0f;
         if (flashImage != null) flashImage.gameObject.SetActive(false);
         if (singleResultPanel != null) singleResultPanel.SetActive(false);
         if (multipleResultPanel != null) multipleResultPanel.SetActive(false);
@@ -157,30 +155,33 @@ public class GachaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ã‚¬ãƒãƒ£é–‹å§‹ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®å‡¦ç†
+    /// ƒKƒ`ƒƒŠJn‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Ìˆ—
     /// </summary>
     void OnTapToStart()
     {
         if (!waitingForTap) return;
         waitingForTap = false;
 
-        //ã‚¿ãƒƒãƒ—å—ä»˜ãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹åŒ–ãƒ»éè¡¨ç¤ºã«ã™ã‚‹
+        //ƒ^ƒbƒvó•t‚Ìƒ{ƒ^ƒ“‚ğ–³Œø‰»E”ñ•\¦‚É‚·‚é
         if (tapToStartButton != null)
         {
             tapToStartButton.interactable = false;
             tapToStartButton.gameObject.SetActive(false);
         }
 
-        //ãƒ†ã‚­ã‚¹ãƒˆã®ç‚¹æ»…ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’åœæ­¢ã—ã€æ–‡å­—ã‚’æ¶ˆã™
+        //ƒeƒLƒXƒg‚Ì“_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚ğ’â~‚µA•¶š‚ğÁ‚·
         if (gachaText != null)
         {
-            gachaText.DOKill(); //ç‚¹æ»…Tweenã‚’åœæ­¢
+            gachaText.DOKill(); //“_–ÅTween‚ğ’â~
             gachaText.text = "";
         }
 
-        if (SoundManager.Instance != null) { SoundManager.Instance.PlaySE(common.SE.Decision); }
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySE(common.SE.Decision);
+        }
 
-        //ã‚¬ãƒãƒ£ã®ç¨®é¡ã«å¿œã˜ã¦æ¼”å‡ºã‚’é–‹å§‹
+        //ƒKƒ`ƒƒ‚Ìí—Ş‚É‰‚¶‚Ä‰‰o‚ğŠJn
         if (isTenGacha)
         {
             StartCoroutine(PlayTenGachaSequence());
@@ -192,7 +193,7 @@ public class GachaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ãƒ†ã‚­ã‚¹ãƒˆã®ç‚¹æ»…ãƒ«ãƒ¼ãƒ—å‡¦ç†
+    /// ƒeƒLƒXƒg‚Ì“_–Åƒ‹[ƒvˆ—
     /// </summary>
     void StartTextBlink()
     {
@@ -201,121 +202,129 @@ public class GachaManager : MonoBehaviour
         gachaText.DOFade(0.0f, 1.0f)
             .SetEase(Ease.Linear)
             .SetLoops(-1, LoopType.Yoyo)
-            .SetId("GachaStartText"); //åœæ­¢ç”¨ID
+            .SetId("GachaStartText"); //’â~—pID
     }
-
     #endregion
 
-    #region å˜ç™ºã‚¬ãƒãƒ£
+    #region ’P”­ƒKƒ`ƒƒ
     /// <summary>
-    /// å˜ç™ºã‚¬ãƒãƒ£ã®æ¼”å‡ºã‚’å®Ÿè¡Œã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
+    /// ’P”­ƒKƒ`ƒƒ‚Ì‰‰o‚ğÀs‚·‚éƒRƒ‹[ƒ`ƒ“
     /// </summary>
     private IEnumerator PlaySingleGachaSequence()
     {
-        //æŠ½é¸å¾Œãƒ¬ã‚¢åº¦ã‚’æ±ºå®šã™ã‚‹
+        //’Š‘IŒãƒŒƒA“x‚ğŒˆ’è‚·‚é
         Rarity resultRarity = DrawRarity();
 
-        //å…‰ã®ãƒãƒ£ãƒ¼ã‚¸
-        yield return gachaLightCanvasGroup.DOFade(1.0f, shineTime).WaitForCompletion();
+        //Œõ‚Ìƒ`ƒƒ[ƒW
+        if (gachaLightCanvasGroup != null)
+        {
+            yield return gachaLightCanvasGroup.DOFade(1.0f, shineTime).WaitForCompletion();
+        }
 
-        //ãƒ¬ã‚¢åº¦ã«å¿œã˜ãŸè‰²ã§ç”»é¢ã‚’ä¸€ç¬ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
+        //ƒŒƒA“x‚É‰‚¶‚½F‚Å‰æ–Ê‚ğˆêuƒtƒ‰ƒbƒVƒ…
         PlayFlashEffect(resultRarity);
 
-        //ã‚¹ãƒ©ã‚¤ãƒ ãŒæ‰‹å‰ã¸ã‚¸ãƒ£ãƒ³ãƒ—ç€åœ°
+        //ƒXƒ‰ƒCƒ€‚ªè‘O‚ÖƒWƒƒƒ“ƒv’…’n
         GameObject slime = Instantiate(slimePrefab, spawnPoint.position, Quaternion.identity);
         SetLayerRecursively(slime, LayerMask.NameToLayer("GachaVisual"));
         activeSlimes.Add(slime);
         slime.transform.localScale = Vector3.zero;
 
-        //å¥¥ã‹ã‚‰ç”»é¢ä¸­å¤®ã¸å‘ã‹ã£ã¦ã€ç§»å‹•ã¨æ‹¡å¤§ã‚’åŒæ™‚ã«
+        //‰œ‚©‚ç‰æ–Ê’†‰›‚ÖŒü‚©‚Á‚ÄAˆÚ“®‚ÆŠg‘å‚ğ“¯‚És‚¤
         Sequence jumpSeq = DOTween.Sequence();
-        //å±±ãªã‚Šã«ã‚¸ãƒ£ãƒ³ãƒ—
+        //R‚È‚è‚ÉƒWƒƒƒ“ƒv
         jumpSeq.Append(slime.transform.DOJump(singleCenterPoint.position, 5.0f, 1, 0.6f).SetEase(Ease.OutQuad));
         jumpSeq.Join(slime.transform.DOScale(Vector3.one, 0.6f).SetEase(Ease.OutBack));
         yield return jumpSeq.WaitForCompletion();
 
-        //ç€åœ°ã—ãŸç¬é–“ã‚’è¡¨ç¾ã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+        //’…’n‚µ‚½uŠÔ‚ğ•\Œ»‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“
         yield return PlaySquishAnimation(slime.transform);
 
-        //ãƒãƒ¼ã‚º
+        //ƒ|[ƒY
         Sequence poseSeq = DOTween.Sequence();
         poseSeq.Append(slime.transform.DOJump(singleCenterPoint.position, 0.8f, 1, 0.4f));
         poseSeq.Join(slime.transform.DORotate(new Vector3(0, 360, 0), 0.4f, RotateMode.FastBeyond360));
         yield return poseSeq.WaitForCompletion();
 
-        //ãƒãƒ¼ã‚ºç€åœ°å¾Œã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+        //ƒ|[ƒY’…’nŒã‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
         yield return PlaySquishAnimation(slime.transform);
 
-        //å˜ç™ºãƒªã‚¶ãƒ«ãƒˆè¡¨ç¤º(ã‚¹ã‚­ãƒ³åã‚„ç²å¾—ç”»é¢ã®UI)
+        //’P”­ƒŠƒUƒ‹ƒg•\¦iƒXƒLƒ“–¼‚âŠl“¾‰æ–Ê‚ÌUIj
         if (singleResultPanel != null)
         {
             singleResultPanel.SetActive(true);
-            if (skinNameText != null) skinNameText.text = $"{resultRarity} ã‚¹ãƒ©ã‚¤ãƒ ã‚¹ã‚­ãƒ³";
+            if (skinNameText != null) skinNameText.text = $"{resultRarity} ƒXƒ‰ƒCƒ€ƒXƒLƒ“";
         }
     }
     #endregion
 
-    #region 10é€£ã‚¬ãƒãƒ£
+    #region 10˜AƒKƒ`ƒƒ
     /// <summary>
-    /// 10é€£ã‚¬ãƒãƒ£ã®æ¼”å‡ºã‚’å®Ÿè¡Œã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
+    /// 10˜AƒKƒ`ƒƒ‚Ì‰‰o‚ğÀs‚·‚éƒRƒ‹[ƒ`ƒ“
     /// </summary>
     private IEnumerator PlayTenGachaSequence()
     {
-        //10å›åˆ†ã®ãƒ¬ã‚¢åº¦ã‚’ã¾ã¨ã‚ã¦æŠ½é¸ã™ã‚‹
+        //10‰ñ•ª‚ÌƒŒƒA“x‚ğ‚Ü‚Æ‚ß‚Ä’Š‘I‚·‚é
         List<Rarity> results = new List<Rarity>();
         for (int i = 0; i < 10; i++) results.Add(DrawRarity());
 
-        //10ä½“ã®ä¸­ã§ä¸€ç•ªé«˜ã„ãƒ¬ã‚¢åº¦ã‚’å‰²ã‚Šå‡ºã—ã€ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã‚„ãƒãƒ£ãƒ¼ã‚¸ã®è‰²ã«åæ˜ ã•ã›ã‚‹
+        //10‘Ì‚Ì’†‚Åˆê”Ô‚‚¢ƒŒƒA“x‚ğŠ„‚èo‚µAƒtƒ‰ƒbƒVƒ…‚âƒ`ƒƒ[ƒW‚ÌF‚É”½‰f‚³‚¹‚é
         Rarity highestRarity = GetHighestRarity(results);
 
-        //å…‰ã®ãƒãƒ£ãƒ¼ã‚¸
-        yield return gachaLightCanvasGroup.DOFade(1.0f, shineTime).WaitForCompletion();
+        //Œõ‚Ìƒ`ƒƒ[ƒW
+        if (gachaLightCanvasGroup != null)
+        {
+            yield return gachaLightCanvasGroup.DOFade(1.0f, shineTime).WaitForCompletion();
+        }
 
-        //ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã‚’ç™ºç”Ÿã•ã›ã€ãƒãƒ£ãƒ¼ã‚¸å…‰ã¯è–„ãã—ã¦ç¶­æŒã™ã‚‹
+        //ƒtƒ‰ƒbƒVƒ…‚ğ”­¶‚³‚¹Aƒ`ƒƒ[ƒWŒõ‚Í”–‚­‚µ‚ÄˆÛ‚·‚é
         PlayFlashEffect(highestRarity);
-        gachaLightCanvasGroup.DOFade(0.2f, 0.5f);
+        if (gachaLightCanvasGroup != null)
+        {
+            gachaLightCanvasGroup.DOFade(0.2f, 0.5f);
+        }
 
-        //é€£ç¶šã‚¸ãƒ£ãƒ³ãƒ—æ¼”å‡ºï¼ˆ10ä½“ã‚’1ä½“ãšã¤ãƒ†ãƒ³ãƒã‚ˆãç”»é¢ã®ã‚°ãƒªãƒƒãƒ‰ã«é…ç½®ã—ã¦ã„ãï¼‰
+        //˜A‘±ƒWƒƒƒ“ƒv‰‰oi10‘Ì‚ğ1‘Ì‚¸‚Âƒeƒ“ƒ|‚æ‚­‰æ–Ê‚ÌƒOƒŠƒbƒh‚É”z’u‚µ‚Ä‚¢‚­j
         for (int i = 0; i < results.Count; i++)
         {
             Rarity currentRarity = results[i];
 
-            //ç”¨æ„ã—ãŸ10å€‹ã®é…ç½®å ´æ‰€ã‚’å–å¾—ã—ã€è¶³ã‚Šãªã„å ´åˆã¯å¥¥ã®ã‚¹ãƒãƒ¼ãƒ³åœ°ç‚¹ã«ã™ã‚‹
+            //—pˆÓ‚µ‚½10ŒÂ‚Ì”z’uêŠ‚ğæ“¾‚µA‘«‚è‚È‚¢ê‡‚Í‰œ‚ÌƒXƒ|[ƒ“’n“_‚É‚·‚é
             Transform targetPoint = (tenGridPoints != null && i < tenGridPoints.Length)
                 ? tenGridPoints[i]
                 : spawnPoint;
 
-            //ã‚¹ãƒ©ã‚¤ãƒ ã‚’ç”Ÿæˆã—ã¦ã‚µã‚¤ã‚ºã‚’0ã«ã™ã‚‹
+            //ƒXƒ‰ƒCƒ€‚ğ¶¬‚µ‚ÄƒTƒCƒY‚ğ0‚É‚·‚é
             GameObject slime = Instantiate(slimePrefab, spawnPoint.position, Quaternion.identity);
             SetLayerRecursively(slime, LayerMask.NameToLayer("GachaVisual"));
             activeSlimes.Add(slime);
-            slime.transform.localScale = new Vector3();
+            slime.transform.localScale = Vector3.zero;
 
-            //SSRãŒå‡ºãŸã¨ãã€ã‚²ãƒ¼ãƒ å…¨ä½“ã‚’ä¸€æ™‚çš„ã«ã‚¹ãƒ­ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã«
+            //SSR‚ªo‚½‚Æ‚«AƒQ[ƒ€‘S‘Ì‚ğˆê“I‚ÉƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚É
             if (currentRarity == Rarity.SSR)
             {
-                Time.timeScale = 0.3f;                         //æ™‚é–“ã®çµŒéé€Ÿåº¦ã‚’é…ãã™ã‚‹
-                yield return new WaitForSecondsRealtime(0.4f); //0.4ç§’å¾…æ©Ÿ
-                Time.timeScale = 1.0f;                         //æ™‚é–“ã‚’é€šå¸¸ã«æˆ»ã™
+                Time.timeScale = 0.3f;                         //ŠÔ‚ÌŒo‰ß‘¬“x‚ğ’x‚­‚·‚é
+                yield return new WaitForSecondsRealtime(0.4f); //0.4•b‘Ò‹@
+                Time.timeScale = 1.0f;                         //ŠÔ‚ğ’Êí‚É–ß‚·
             }
 
-            //å¥¥ã®ã‚¹ãƒãƒ¼ãƒ³åœ°ç‚¹ã‹ã‚‰ã€å„è‡ªã®å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸã‚°ãƒªãƒƒãƒ‰ä½ç½®ã¸ãƒãƒ³ã¨é£›ã³å‡ºã™ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+            //‰œ‚ÌƒXƒ|[ƒ“’n“_‚©‚çAŠe©‚ÌŠ„‚è“–‚Ä‚ç‚ê‚½ƒOƒŠƒbƒhˆÊ’u‚Öƒ|ƒ“‚Æ”ò‚Ño‚·ƒAƒjƒ[ƒVƒ‡ƒ“
             Sequence popSeq = DOTween.Sequence();
             popSeq.Append(slime.transform.DOJump(targetPoint.position, 1.5f, 1, 0.35f).SetEase(Ease.Linear));
-            popSeq.Join(slime.transform.DOScale(Vector3.one * 0.7f, 0.35f)); //ä¸€è¦§ç”¨ã«å°‘ã—å°ã•ã‚ã®ã‚µã‚¤ã‚ºã«ã™ã‚‹
+            popSeq.Join(slime.transform.DOScale(Vector3.one * 0.7f, 0.35f)); //ˆê———p‚É­‚µ¬‚³‚ß‚ÌƒTƒCƒY‚É‚·‚é
 
-            //ç€åœ°ã—ãŸç¬é–“ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+            //’…’n‚µ‚½uŠÔ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
             popSeq.Append(slime.transform.DOScaleY(0.5f, 0.08f));
             popSeq.Append(slime.transform.DOScaleY(0.7f, 0.08f));
 
-            //æ¬¡ã®ã‚¹ãƒ©ã‚¤ãƒ ãŒé£›ã³å‡ºã™ã¾ã§ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«
+            //Ÿ‚ÌƒXƒ‰ƒCƒ€‚ª”ò‚Ño‚·‚Ü‚Å‚ÌƒCƒ“ƒ^[ƒoƒ‹
             yield return new WaitForSeconds(0.15f);
         }
 
-        //é£›ã³å‡ºã—çµ‚ã‚ã£ã¦ã‹ã‚‰å°‘ã—ä½™éŸ»ã‚’å–ã‚‹
+        //”ò‚Ño‚µI‚í‚Á‚Ä‚©‚ç­‚µ—]‰C‚ğæ‚é
         yield return new WaitForSeconds(0.5f);
 
-        //10é€£ãƒªã‚¶ãƒ«ãƒˆä¸€è¦§è¡¨ç¤ºï¼šç²å¾—ã—ãŸã‚¹ãƒ©ã‚¤ãƒ ä¸€è¦§ãƒ‘ãƒãƒ«ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«
+        //10˜AƒŠƒUƒ‹ƒgˆê——•\¦FŠl“¾‚µ‚½ƒXƒ‰ƒCƒ€ˆê——ƒpƒlƒ‹‚ğƒAƒNƒeƒBƒu‚É
         if (multipleResultPanel != null)
         {
             multipleResultPanel.SetActive(true);
@@ -323,21 +332,21 @@ public class GachaManager : MonoBehaviour
     }
     #endregion
 
-    #region å…±é€šå‡¦ç†é–¢æ•°
+    #region ‹¤’Êˆ—ŠÖ”
     /// <summary>
-    /// ã‚¹ãƒ©ã‚¤ãƒ ã®ã·ã‚‹ã·ã‚‹ã‚’è¡¨ç¾ã™ã‚‹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
+    /// ƒXƒ‰ƒCƒ€‚Ì‚Õ‚é‚Õ‚é‚ğ•\Œ»‚·‚éƒ‚[ƒVƒ‡ƒ“
     /// </summary>
     private IEnumerator PlaySquishAnimation(Transform t)
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(t.DOScale(new Vector3(1.3f, 0.7f, 1.3f), 0.1f)); //ç€åœ°ã—ã¦æ¨ªã«åºƒãŒã‚‹
-        seq.Append(t.DOScale(new Vector3(0.8f, 1.2f, 0.8f), 0.1f)); //ç¸¦ã«ä¼¸ã³ã‚‹
-        seq.Append(t.DOScale(Vector3.one, 0.1f));                   //é€šå¸¸ã‚µã‚¤ã‚ºã«æˆ»ã‚‹
+        seq.Append(t.DOScale(new Vector3(1.3f, 0.7f, 1.3f), 0.1f)); //’…’n‚µ‚Ä‰¡‚ÉL‚ª‚é
+        seq.Append(t.DOScale(new Vector3(0.8f, 1.2f, 0.8f), 0.1f)); //c‚ÉL‚Ñ‚é
+        seq.Append(t.DOScale(Vector3.one, 0.1f));                   //’ÊíƒTƒCƒY‚É–ß‚é
         yield return seq.WaitForCompletion();
     }
 
     /// <summary>
-    /// ãƒ¬ã‚¢åº¦ã«å¿œã˜ãŸè‰²ã§ç”»é¢ã‚’ä¸€ç¬ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã•ã›ã€ã™ãã«ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã•ã›ã‚‹å‡¦ç†
+    /// ƒŒƒA“x‚É‰‚¶‚½F‚Å‰æ–Ê‚ğˆêuƒtƒ‰ƒbƒVƒ…‚³‚¹A‚·‚®‚ÉƒtƒF[ƒhƒAƒEƒg‚³‚¹‚éˆ—
     /// </summary>
     private void PlayFlashEffect(Rarity rarity)
     {
@@ -346,15 +355,15 @@ public class GachaManager : MonoBehaviour
         Color c = GetRarityColor(rarity);
         c.a = 1.0f;
         flashImage.color = c;
-        //1ç§’ã‹ã‘ã¦é€æ˜ã«ãªã‚ŠãªãŒã‚‰æ¶ˆãˆã‚‹
+        //1•b‚©‚¯‚Ä“§–¾‚É‚È‚è‚È‚ª‚çÁ‚¦‚é
         flashImage.DOFade(0f, 1.0f).OnComplete(() => flashImage.gameObject.SetActive(false));
     }
 
     /// <summary>
-    /// å­è¦ç´ ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚‚å¤‰æ›´å‡¦ç†
+    /// q—v‘f‚ÌƒŒƒCƒ„[‚à•ÏXˆ—
     /// </summary>
-    /// <param name="obj">ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ</param>
-    /// <param name="newLayer">å¤‰æ›´å¾Œãƒ¬ã‚¤ãƒ¤ãƒ¼</param>
+    /// <param name="obj">ƒIƒuƒWƒFƒNƒg</param>
+    /// <param name="newLayer">•ÏXŒãƒŒƒCƒ„[</param>
     void SetLayerRecursively(GameObject obj, int newLayer)
     {
         obj.layer = newLayer;
@@ -365,7 +374,7 @@ public class GachaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ç¢ºç‡ã«åŸºã¥ã„ã¦ãƒ¬ã‚¢åº¦ã‚’1ã¤æŠ½é¸ï¼ˆN: 50%, R: 35%, SR: 12%, SSR: 3%ï¼‰
+    /// Šm—¦‚ÉŠî‚Ã‚¢‚ÄƒŒƒA“x‚ğ1‚Â’Š‘IiN: 50%, R: 35%, SR: 12%, SSR: 3%j
     /// </summary>
     private Rarity DrawRarity()
     {
@@ -377,7 +386,7 @@ public class GachaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// è¤‡æ•°æŠ½é¸çµæœã®ä¸­ã‹ã‚‰æœ€ã‚‚é«˜ã„ãƒ¬ã‚¢åº¦ã‚’åˆ¤å®šã—ã¦è¿”ã™å‡¦ç†
+    /// •¡”’Š‘IŒ‹‰Ê‚Ì’†‚©‚çˆê”Ô‚‚¢ƒŒƒA“x‚ğ”»’è‚µ‚Ä•Ô‚·ˆ—
     /// </summary>
     private Rarity GetHighestRarity(List<Rarity> list)
     {
@@ -390,7 +399,7 @@ public class GachaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// æŒ‡å®šã—ãŸãƒ¬ã‚¢åº¦ã«å¯¾å¿œã™ã‚‹ã‚«ãƒ©ãƒ¼ã‚’å–å¾—å‡¦ç†
+    /// w’è‚µ‚½ƒŒƒA“x‚É‘Î‰‚·‚éƒJƒ‰[‚ğæ“¾ˆ—
     /// </summary>
     private Color GetRarityColor(Rarity rarity)
     {
@@ -402,6 +411,5 @@ public class GachaManager : MonoBehaviour
             default: return colorN;
         }
     }
-
     #endregion
 }

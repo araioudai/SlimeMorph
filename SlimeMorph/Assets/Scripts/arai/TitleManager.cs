@@ -310,6 +310,7 @@ public class TitleManager : MonoBehaviour
                 }
             }
         }
+
         if(singleGachaButtons != null)
         {
             foreach (var btn in singleGachaButtons)
